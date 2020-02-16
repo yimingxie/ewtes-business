@@ -7,17 +7,20 @@
 -->
 <div id="login">
   <div class="makeLoginCenter">
+    <div class="title">
+      <div class="title1">欢迎使用</div>
+      <div class="title2">EWTES疫情预警及溯源系统</div>
+    </div> 
     <div class="loginFormWrap">
       <div class="box">
         <form @submit.prevent="onSubmit" autocomplete="off" class="loginForm">
-          <div class="title">
-            <div class="title1">Welcome</div>
-            <div class="title2">电梯PHM-维保版</div>
-          </div> 
+          
           <div>
             <div v-if="warningTip!==''" class="loginInput warningTip tal">{{warningTip}}</div>
             <div class="inputWrap">
+              <div class="inputLabel">账户名</div>
               <input v-if="loginForm.type === 0" placeholder="请输入登录账号" v-model="loginForm.account" name="Name" type="text" class="loginInput">
+              
               <input v-if="loginForm.type === 1" placeholder="请输入登录账号（手机号）" v-model="loginForm.account" name="Name" type="text" class="loginInput">
             </div>
             <div class="inputWrap">
@@ -26,6 +29,7 @@
                 Password
               </label> -->
               <!-- <input placeholder="请输入密码" v-model="model.password" name="Password" type="password" required=""> -->
+              <div class="inputLabel inputLabelPsd">密码</div>
               <input v-if="loginForm.type === 0" placeholder="请输入密码" v-model="loginForm.password" name="Password" type="password" class="loginInput">
               <input v-if="loginForm.type === 1" placeholder="请输入验证码" v-model="loginForm.password" class="loginInput">
               <span v-if="loginForm.type === 1" v-show="sendAuthCode"  class="smsSpan" @click="getSms()">获取验证码</span>
@@ -42,10 +46,10 @@
           </div>
           <div class="wthreeText">
             <ul>
-              <li v-if="loginForm.type === 1" style="float:left" @click="loginForm.type = 0;warningTip = ''">账号密码登录
+              <!-- <li v-if="loginForm.type === 1" style="float:left" @click="loginForm.type = 0;warningTip = ''">账号密码登录
               </li>
               <li v-if="loginForm.type === 0" style="float:left" @click="loginForm.type = 1;warningTip = '';loginForm.password = ''">验证码登录
-              </li>
+              </li> -->
               <li style="float:right">
                 <label>
                   <radio-moni-radio class="radio_input">
@@ -61,15 +65,15 @@
         </form>
         <!-- .............................................. -->
         <!-- <div> -->
-          <img class="loginImg" src="../../assets/images/hs/lift@1x.png"/>
+          <!-- <img class="loginImg" src="../../assets/images/hs/lift@1x.png"/> -->
           <!-- <div class="shadow"></div> -->
         <!-- </div> -->
       </div>
     </div>
     
   </div>
-  <img class="loginLeft" src="../../assets/images/hs/loginLeft@1x.png"/>
-  <img class="loginRight" src="../../assets/images/hs/loginRight@1x.png"/>
+  <!-- <img class="loginLeft" src="../../assets/images/hs/loginLeft@1x.png"/>
+  <img class="loginRight" src="../../assets/images/hs/loginRight@1x.png"/> -->
   <span class="loginBrand"></span>
 </div>
 
@@ -289,6 +293,7 @@
   display: flex;
   align-items: center;
   justify-content center
+  background: url('../../assets/images/hs/loginBg.png') no-repeat center #3576FF;
   .loginLeft
     absolute bottom 0 left 0
   .loginRight
@@ -305,18 +310,17 @@
     font-size: 48px;
     color: #FFFFFF;
     text-align left 
-    margin-bottom: 50px;
+    width: 424px;
+    margin: 0 auto 32px;
     .title1
-      font-size: 48px;
       color: #FFFFFF;
-      line-height 67px
+      line-height 75px
       font-weight: 400;
-
+      font-size: 34px;
     .title2
-      font-size: 20px;
+      font-size: 24px;
       color: #FFFFFF;
       font-weight: 400;
-      text-indent: 9px;
   .makeLoginCenter
     vertical-align middle
     // border 1px solid red
@@ -324,49 +328,72 @@
     overflow: hidden;
     width 75%
   .loginFormWrap
-    size 937px 644px
-    
-    // border-image:-webkit-linear-gradient(left, red 0%, blue 30%, yellow 60%, rgba(0,0,0,0) 90%) 5;
+    size  424px 336px
     border-radius: 15px;
-    // border: 5px solid;
     box-sizing:  border-box;
     padding: 1px; 
+    margin: 0 auto;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 6px 6px 2px rgba(32,33,58,0.03);
+    border-radius: 10px;
     // border-image:-webkit-linear-gradient(left, red 0%, blue 30%, yellow 60%, rgba(0,0,0,0) 90%,  rgba(0,0,0,0) 100%) 5;
-    background-image: -webkit-linear-gradient(90deg, #C3D4FF 0%, rgba(255,255,255,0.00) 98%);
-    background-image: linear-gradient(90deg, #C3D4FF 0%, rgba(255,255,255,0.00) 98%);
+    // background-image: -webkit-linear-gradient(90deg, #C3D4FF 0%, rgba(255,255,255,0.00) 98%);
+    // background-image: linear-gradient(90deg, #C3D4FF 0%, rgba(255,255,255,0.00) 98%);
     .box
-      border-radius: 15px;
       size 100%
-      background-image: linear-gradient(90deg, #547FFF 0%, #4272FF 98%);
+      // background: rgba(255,255,255,0.06);
+      // border: 1px solid rgba(255,255,255,0.15);
+      // box-shadow: 0 6px 6px 2px rgba(32,33,58,0.03);
+      // border-radius: 10px;
   .loginForm
-    padding 116px 0 0 88px
-    size 460px 563px
+    // padding 116px 0 0 88px
+    size 424px 336px
     position relative
     text-align center
     z-index: 99;
     box-sizing:border-box
+    padding:0 52px
   .loginInput
-    border: 1px solid rgba(255,255,255,0.45);
     border-radius: 8px;
-    size 368px 48px
-    padding 0 20px
-    box-sizing:  border-box;
+    width: 100%;
+    height: 32px;
+    padding: 0 15px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     background: rgba(0,0,0,0);
     font-size: 14px;
     color: #fff;
+    background: rgba(18,46,109,0.14);
+    border-radius: 4px;
   .loginBtn
-    background: #FFFFFF;
-    box-shadow: 0 8px 20px -10px rgba(35,69,167,0.60);
-    border-radius: 24px;
-    size 240px 48px
-    font-size: 16px;
-    color: #4272FF;
+    // background: #FFFFFF;
+    // box-shadow: 0 8px 20px -10px rgba(35,69,167,0.60);
+    // border-radius: 24px;
+    size 240px 40px
     cursor pointer
-    margin-top 60px
+    margin-top 25px
     text-align center
-    absolute bottom 0 left 153px;
+    background: rgba(255,255,255,0.10);
+    border-radius: 4px;
+    font-size: 16px;
+    color: #FFFFFF;
+    width: 100%;
+  .inputLabel
+    font-size: 16px;
+    color: #FFFFFF;
+    background: url('../../assets/images/hs/account.png') 2px 7px no-repeat;
+    background-size 12px auto
+    text-align: left;
+    text-indent: 27px;
+    vertical-align: middle;
+    margin-bottom: 10px;
+  .inputLabelPsd
+    background: url('../../assets/images/hs/password.png') 2px 7px no-repeat;
+    background-size 12px auto
+
   .inputWrap
-    margin-top 22px
+    margin-top 26px
     position: relative;
   .wthreeText
     font-size: 14px;
@@ -403,23 +430,23 @@
     top: 14px;
     right: 17px;
     cursor: pointer;
-@media screen and (max-width: 1920px) {
-  #login {
+// @media screen and (max-width: 1920px) {
+//   #login {
     
-    .loginFormWrap{
-      margin: 56px 0 58px 96px;
-    }
+//     .loginFormWrap{
+//       margin: 56px 0 58px 96px;
+//     }
     
-  }
-}
+//   }
+// }
 @media screen and (max-width: 1680px) {
   #login {
     .makeLoginCenter {
       width 85.7%
     }
-    .loginFormWrap{
-      margin:41px 0 73px 107px;
-    }
+    // .loginFormWrap{
+    //   margin:41px 0 73px 107px;
+    // }
     .loginImg{
       absolute right 33px top 0
     }
@@ -431,9 +458,9 @@
     .makeLoginCenter {
       width 100%
     }
-    .loginFormWrap{
-      margin:58px 0 56px 153px;
-    }
+    // .loginFormWrap{
+    //   margin:58px 0 56px 153px;
+    // }
     .loginImg{
       absolute right 77px top 0
     }
@@ -442,9 +469,9 @@
 @media screen and (max-width: 1280px) {
   #login {
     
-    .loginFormWrap{
-      margin:10px 0 10px 53px;
-    }
+    // .loginFormWrap{
+    //   margin:10px 0 10px 53px;
+    // }
     .loginImg{
       absolute right 7px top -20px
     }

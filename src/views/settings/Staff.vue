@@ -1,9 +1,9 @@
 <template>
 <div class="main-wrap" id="staff">
+  <div class="pageTitle">人员防疫记录</div>
   <div class="row" >
 
-    <div class="panel" style="margin-bottom: 0px;border-bottom-left-radius: 0;border-bottom-right-radius: 0;padding: 0 25px 14px;">
-      <div class="title"><div class="label1">员工管理</div></div>
+    <div class="panel" style="margin-bottom: 0px;border-bottom-left-radius: 0;border-bottom-right-radius: 0;padding: 5px 25px 14px;height:80px;box-shadow: 0 5px 5px 0 rgba(196,203,239,0.39);z-index:888">
       <div class="subSelect">
         <!-- <el-cascader 
           filterable
@@ -15,9 +15,17 @@
           :show-all-levels="false">
         </el-cascader> -->
         <!-- 省市联动筛选 -->
-        <div class="llct-area">
+        <!-- <div class="llct-area">
           <city-choose @childVal="selectCity" :selectCity="selectArea"></city-choose>
-        </div>
+        </div> -->
+        <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部单位" class="regionPicker">
+          <el-option
+            v-for="item in getAllDepJson"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
         <span class="splitLine">|</span>
         <!-- <el-select clearable v-model="selectedDpt" placeholder="请选择部门" class="regionPicker">
           <el-option
@@ -28,7 +36,7 @@
             >
           </el-option>
         </el-select> -->
-        <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="请选择部门" class="regionPicker">
+        <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部部门" class="regionPicker">
           <el-option
             v-for="item in getAllDepJson"
             :key="item.id"
@@ -36,19 +44,27 @@
             :value="item.id">
           </el-option>
         </el-select>
-        <span class="splitLine">|</span>
-        <radio-group :items="periods" :value.sync="period">
+        <!-- <radio-group :items="periods" :value.sync="period">
           <span slot="label">作业状态：</span>
-        </radio-group>
+        </radio-group> -->
         <span class="splitLine">|</span>
         <radio-group :items="periods1" :value.sync="period1">
-          <span slot="label">账号状态：</span>
+          <span slot="label">人员状态：</span>
           <!-- <template slot="item" scope="props">
             <li>{{ props.text }}</li>
           </template> -->
         </radio-group>
+        <search-input v-model.trim="searchKey" placeholderValue="搜索人员姓名/手机号" @search="searchAccount()" @cancel="searchAccount()" style="height:30px;margin-top:6px">
+        </search-input>
       </div>
-      <div class="subBtns">
+    </div>
+  </div>
+  <div class="row" >
+
+    <div class="panel" style="margin-bottom: 0px;border-radius: 0;margin-top:5px;padding: 0 25px 14px;">
+      <!-- <div class="title"><div class="label1">员工管理</div></div> -->
+      
+      <!-- <div class="subBtns">
         <router-link :to="{ name: 'addStaff'}"><button class="btn blueBtn" >添加员工</button></router-link>
         
         <router-link :to="{ name: 'department'}"><button class="btn whiteBtn" >部门管理</button></router-link>
@@ -57,33 +73,31 @@
         </span>
         <button class="btn whiteBtn fr" @click="deleteStaffDialog()">删除员工</button>
         <button class="btn whiteBtn fr" @click="resetPasswordDialog()">重置密码</button>
-        <!-- <button class="btn whiteBtn fr" >更改部门</button> -->
-        <search-input v-model.trim="searchKey" placeholderValue="搜索员工姓名/手机号" @search="searchAccount()" @cancel="searchAccount()">
-          <!-- <span slot="btn" class="search_btn" @click="searchAccount()" @keyup.enter.native="searchAccount()"></span> -->
-        </search-input>
+        <button class="btn whiteBtn fr" >更改部门</button>
+        
 
-        <!-- <search-input v-model.trim="searchKey" placeholderValue="搜索部门名称" @search="searchAccount()" @cancel="searchAccount()">
-        </search-input> -->
-      </div>
-      <div class="splitBar"></div>
+        <search-input v-model.trim="searchKey" placeholderValue="搜索部门名称" @search="searchAccount()" @cancel="searchAccount()">
+        </search-input>
+      </div> -->
+      <!-- <div class="splitBar"></div> -->
     </div>
   </div>
   <!-- 员工列表 -->
   <div class="row" v-if="getAllAccountJson.length > 0">
-    <div class="panel" style="border-top-left-radius: 0;border-top-right-radius: 0; padding:0 13px 20px;margin-top: 0;">
+    <div class="panel" style="border-top-left-radius: 0;border-top-right-radius: 0;margin-top: 0;">
       <!-- 列表 Start -->
       <el-row >
-        <el-col :span="8" class="" v-for="(account, index) in getAllAccountJson" :key="index">
+        <el-col  :lg="8" :xl="6" class="" v-for="(account, index) in getAllAccountJson" :key="index">
           <div class="staff-grid-content bg-purple">
-              <div class="grid_checkbox">
+              <!-- <div class="grid_checkbox">
                 <el-checkbox-group v-model="checkedStaffs" @change="handleCheckedStaffsChange">
                   <el-checkbox :label="account.id" :key="index" class="checkbox16">{{nonetext}}</el-checkbox>
                 </el-checkbox-group>
-              </div>
+              </div> -->
               <div class="grid_content">
                 <div class="stf_content">
                   <span class="stf_pic">
-                    <img :src="account.url" alt="" width="88" height="132"/>
+                    <img :src="account.url" alt="" width="88" height="88"/>
                   </span>
                   <span class="stf_info">
                     <span class="stf_name">
@@ -93,8 +107,9 @@
                       <span v-else><img src="../../assets/images/hs/male.png"  alt="" /></span>
                     </span>
                     
-                    <div class="stf_department">{{account.depName}}</div>
-                    <div class="stf_p stf_phone">{{account.username}}</div>
+                    <div class="stf_department">{{account.username}}</div>
+                    <div class="stf_wendu"><span style="margin-right:20px">36.7℃</span><span>1号餐厅</span></div>
+                    <!-- <div class="stf_p stf_phone">{{account.username}}</div> -->
                     <div class="stf_p stf_area">{{account.area}}</div>
                     <div class="stf_p stf_liftnum">{{account.mngTotal}} </div>
                   </span>
@@ -104,7 +119,7 @@
                 </div>
                 
               </div>
-              <div class="stf_status">
+              <!-- <div class="stf_status">
                 <el-switch
                   v-model="account.valid"
                   :active-value="1"
@@ -113,7 +128,7 @@
                   @change='changeStatus($event,account)'
                 >
                 </el-switch>
-              </div>
+              </div> -->
             
           </div>
         </el-col>
@@ -218,7 +233,7 @@
     <div class="dialog-delete">
       <div class="dia-heading">
         <div class="dia-con-pic">
-          <img src="../../assets/images/xym/dia-warn.png" alt="">
+          <img src="../../assets/images/hs/dia-warn.png" alt="">
         </div>
         <div class="dia-con-p">
           <div class="confirDialogText1">是否确认重置以下员工密码</div>
@@ -240,7 +255,7 @@
     <div class="dialog-delete">
       <div class="dia-heading">
         <div class="dia-con-pic">
-          <img src="../../assets/images/xym/dia-warn.png" alt="">
+          <img src="../../assets/images/hs/dia-warn.png" alt="">
         </div>
         <div class="dia-con-p">
           <div class="confirDialogText1">是否确认删除以下员工</div>
@@ -340,7 +355,7 @@ export default {
       periods1: [
         { label: '全部', value: "" },
         { label: '正常', value: "1" },
-        { label: '停用', value: "0" },
+        { label: '异常', value: "0" },
       ],
       period1: "",
       bindRoleForm:{
@@ -756,28 +771,33 @@ export default {
 @import '../../assets/stylus/utilities'
 
 #staff
+  .subSelect
+    height: 70px;
+    padding-top: 16px;
   a
     text-decoration: none;
+    color #333
     &:hover
       text-decoration: none;
   .staff-grid-content 
     min-height: 36px;
-    padding 15px
+    padding 16px 20px 20px 20px
     border-radius 8px;
     border: 1px solid #E8E8E8;
     vertical-align middle
-    margin 12px
+    margin 20px
     clear both
     clearfix()
-    min-width: 350px
+    height: 200px;
+    // min-width: 350px
   .grid_checkbox
     float:left
     width:30px;
     height 132px;
     padding-top: 55px;
   .grid_content
-    margin-left:30px;
-    border-bottom: 1px solid #E9E9E9;
+    // margin-left:30px;
+    // border-bottom: 1px solid #E9E9E9;
     position relative
   .stf_content
     padding-bottom 13px
@@ -786,30 +806,38 @@ export default {
     width:88px
     height 132px
     display inline-block
-    margin-right 19px;
-    
+    margin: 0 29px 0 6px;
     img
-      border-radius 4px;
+      border-radius 50%
       object-fit: cover;
+      margin-top: 43%;
   .stf_info
     height 132px
     display inline-block
     vertical-align: top;
-    width: calc(100% - 119px);
+    width: calc(100% - 131px);
   .stf_name
     font-size: 20px;
     color: #34414C;
-    line-height 1
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+    max-width 150px 
+    display:inline-block
     &:hover
       text-decoration: none!important;
     img
       vertical-align -3px
   .stf_department
-    color: #7E8A95;
-    margin 5px 0 15px 0
+    color: #999999;
+    margin 1px 0 7px 0
+  .stf_wendu
+    font-size: 18px;
+    margin-bottom 16px
   .stf_p
     text-indent 20px
-    margin: 4px 0;
+    margin: 12px 0;
   .stf_phone
     background url('../../assets/images/hs/phone.png') no-repeat left center;
     
@@ -836,6 +864,7 @@ export default {
       display: inline-block
       position relative
       margin-right: 4px;
+      box-sizing:border-box
       &:before
         content: ''
         background: #4BCC8F;

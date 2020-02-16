@@ -200,7 +200,7 @@
 
 // ----------------- 导航 ---------------------------
 .el-menu
-  box-shadow: 2px 0 6px 0 rgba(43,108,239,0.10)!important;
+  // box-shadow: 2px 0 6px 0 rgba(43,108,239,0.10)!important;
   z-index 99
 .el-menu--collapse {
   flex: 0 0 80px!important;
@@ -209,19 +209,27 @@
   width: 80px;
 }
 .el-menu-item, .el-submenu__title
-  height: 45px!important;
-  line-height: 45px!important;
-  color: #7e8a95!important;
+  height: 32px!important;
+  line-height: 32px!important;
+  color: #333333!important;
+  font-size: 12px!important;
+  margin: 20px 0 30px!important;
+  padding-left: 15px!important;
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  flex: 0 0 256px;
-  max-width: 256px;
-  min-width: 256px;
-  width: 256px;
+  flex: 0 0 120px;
+  max-width: 120px;
+  min-width: 120px;
+  width: 120px;
 }
 
 .el-menu-item.is-active,
 .el-menu-item.is-active:hover:not(.disabled)
-  color: #4272FF!important;
+  color: #fff!important;
+  background-image: linear-gradient(-137deg, #3572FF 0%, #3596FF 100%)!important;
+  box-shadow: 0 2px 4px 0 rgba(61,61,61,0.57)!important;
+  width: 140px!important;
+  border-radius: 0 10px 10px 0!important;
+  font-size 14px!important;
 .el-menu-item:hover,
 .el-menu-item:focus,
 .el-submenu__title:hover 
@@ -234,27 +242,39 @@
 //   background: rgba(66,114,255,0.10)!important;
 .el-submenu.is-active
   .el-submenu__title
-    color: #4272FF!important;
+    // color: #4272FF!important;
   .el-menu-item.is-active
-    border-left: 4px solid #4272FF!important;
-    background: #F1F5F7!important;
-    color: #34414C!important;
+    // border-left: 4px solid #4272FF!important;
+    // background: #F1F5F7!important;
+    color: #fff!important;
+    padding: 0!important;
+    text-align: center
 .el-menu--popup //悬浮框
   .el-menu-item.is-active
     background: rgba(66,114,255,0.10)!important;
 
 .el-submenu .el-menu-item
-  border-left: 4px solid rgba(0,0,0,0)!important;
-  padding-left: 51px!important
-  height: 45px!important;
-  line-height: 45px!important;
+  // border-left: 4px solid rgba(0,0,0,0)!important;
+  padding-left: 25px!important
+  height: 32px!important;
+  line-height: 32px!important;
+  color: #999999!important;
+  min-width: 140px!important;
+  margin 0 0 30px!important;
+.el-submenu .el-menu-item + .el-menu-item
+  margin 20px 0 0!important;
 .el-menu-item.is-disabled
   opacity: 1!important
 .el-submenu.is-disabled .el-menu-item, .el-submenu.is-disabled .el-submenu__title
   opacity: 1!important
+// .el-submenu__icon-arrow
+//   &:before
+//     content:''!important
 .el-submenu__icon-arrow
-  &:before
-    content:''!important
+  right: 10px!important
+  margin-top: -4px!important
+.el-submenu__title i
+  color: #999999!important
 // -----------------导航  end---------------------------
 
 // .el-tooltip__popper.is-dark

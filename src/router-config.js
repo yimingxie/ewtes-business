@@ -16,7 +16,33 @@ const router = new Router({
       },
       component: (resolve) => require(['./views/common/Login.vue'], resolve)
     },
-    
+    {
+      path: "/map",
+      name: "map",
+      meta: {
+        title: "批量上传",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./components/mutiUpload.vue'], resolve)
+    },
+    {
+      path: "/staff",
+      name: "staff",
+      meta: {
+        title: "员工管理",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/settings/Staff.vue'], resolve)
+    },
+    {
+      path: "/staffDetails/:staffId",
+      name: "staffDetails",
+      meta: {
+        title: "员工详情",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/settings/StaffDetails.vue'], resolve)
+    },
   ]
 })
 

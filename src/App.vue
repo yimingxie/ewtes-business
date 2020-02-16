@@ -13,60 +13,64 @@
       
       <!-- 维保 -->
       <el-menu @select="routerSelect" v-if="type !== 'administrator' && layout === 'admin' && corpType == '维保'" router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-        <div class="logoCollapse" v-if="isCollapse">
+        <div class="logoCollapse">
         </div>
-        <!-- {{$route.path}} -->
-        <div class="logoUncollapse" v-if="!isCollapse">
-          <div class="bg"></div>
-          <div class="tac">
-            <i class="headPic"></i>
-            <div class="name">{{getAccountDetail.name}}</div>
-            <p v-if="getAccountDetail.roleName" class="perTitle">{{getAccountDetail.roleName.join(",")}}</p>
-            <p v-if="getAccountDetail.type == 'administrator'" class="perTitle">超级管理员</p>
-            <!-- <div class="perTitle">例行维保项目组-高级主管</div> -->
-          </div>
-        </div>
-        <!-- disabled class="disabled" -->
         <!-- 深色版只显示可用菜单；浅色版显示所有菜单，禁用不可用菜单 -->
-        <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('作业地图')) || theme !== 'theme2')" index="/map" route="/map" :disabled="ifDisabled('作业地图')" :class="{'disabled' :ifDisabled('作业地图')}"> 
+        <!-- <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('作业地图')) || theme !== 'theme2')" index="/map" route="/map" :disabled="ifDisabled('作业地图')" :class="{'disabled' :ifDisabled('作业地图')}"> 
           <i class="icon-map"></i>
-          <span slot="title">作业地图</span>
+          <span slot="title">数字防疫点</span>
+        </el-menu-item> -->
+        <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('作业地图')) || theme !== 'theme2')" index="/map" route="/map" :disabled="ifDisabled('作业地图')" :class="{'disabled' :ifDisabled('作业地图')}"> 
+          <i class="menu_icon icon-prevent"></i>
+          <span slot="title">数字防疫点</span>
         </el-menu-item>
-        <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('数字电梯')) || theme !== 'theme2')" index="/lift-list" route="/lift-list" :disabled="ifDisabled('数字电梯')" :class="{'disabled' :ifDisabled('数字电梯')}">
+        <!-- <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('数字电梯')) || theme !== 'theme2')" index="/lift-list" route="/lift-list" :disabled="ifDisabled('数字电梯')" :class="{'disabled' :ifDisabled('数字电梯')}">
           <i class="icon-lift"></i>
           <span slot="title">数字电梯</span>
-        </el-menu-item>
+        </el-menu-item> -->
         <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('检测诊断')) || theme !== 'theme2')" index="/detection-query" route="/detection-query" :disabled="ifDisabled('检测诊断')" :class="{'disabled' :ifDisabled('检测诊断')}">
-          <i class="icon-diagnosis"></i>
+          <i class="menu_icon icon-diagnosis"></i>
           <span slot="title">检测诊断</span>
         </el-menu-item>
-        <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('任务管理')) || theme !== 'theme2')" :index="auth.mission && auth.mission.show && auth.mission.show == true ? '' : '/mission'" :route="auth.mission && auth.mission.show && auth.mission.show == true ? '' : '/mission'" :disabled="ifDisabled('任务管理')" :class="{'disabled' :ifDisabled('任务管理')}">
+        <!-- <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('任务管理')) || theme !== 'theme2')" :index="auth.mission && auth.mission.show && auth.mission.show == true ? '' : '/mission'" :route="auth.mission && auth.mission.show && auth.mission.show == true ? '' : '/mission'" :disabled="ifDisabled('任务管理')" :class="{'disabled' :ifDisabled('任务管理')}">
           <i class="icon-task"></i>
           <span slot="title">任务管理</span>
-        </el-menu-item>
-        <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('经营报表')) || theme !== 'theme2')" index="" route="" :disabled="ifDisabled('经营报表')" :class="{'disabled' :ifDisabled('经营报表')}">
+        </el-menu-item> -->
+        <!-- <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('经营报表')) || theme !== 'theme2')" index="" route="" :disabled="ifDisabled('经营报表')" :class="{'disabled' :ifDisabled('经营报表')}">
           <i class="icon-business"></i>
           <span slot="title">经营报表</span>
-        </el-menu-item>
+        </el-menu-item> -->
         <!-- <el-menu-item index="/account" route="/account">
           
           <span slot="title">系统设置</span>
         </el-menu-item> -->
         <el-submenu v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('系统设置')) || theme !== 'theme2')" index="1" :disabled="ifDisabled('系统设置')" :class="{'disabled' :ifDisabled('系统设置')}">
           <template slot="title">
-            <i class="icon-setting"></i>
-            <span slot="title">系统设置</span>
+            <i class="menu_icon icon-record"></i>
+            <span slot="title">防疫记录</span>
           </template>
-          <!-- <el-menu-item-group title=""> -->
-          <el-menu-item index="/account" route="/account">账号管理</el-menu-item>
+          <!-- <el-menu-item index="/account" route="/account"></el-menu-item> -->
 
-          <el-menu-item index="/staff" route="/staff" >员工管理</el-menu-item>
+          <el-menu-item index="/staff" route="/staff" >人员防疫记录</el-menu-item>
 
-          <el-menu-item index="/device" route="/device">设备管理</el-menu-item>
+          <el-menu-item index="/device" route="/device">防疫点出入记录</el-menu-item>
           <!-- </el-menu-item-group> -->
           
         </el-submenu>
 
+        <el-submenu v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('系统设置')) || theme !== 'theme2')" index="2" :disabled="ifDisabled('系统设置')" :class="{'disabled' :ifDisabled('系统设置')}">
+          <template slot="title">
+            <i class="menu_icon icon-setting"></i>
+            <span slot="title">系统</span>
+          </template>
+          <!-- <el-menu-item index="/account" route="/account"></el-menu-item> -->
+
+          <el-menu-item index="/1" route="/1" >账号管理</el-menu-item>
+
+          <el-menu-item index="/2" route="/2">员工管理</el-menu-item>
+          <!-- </el-menu-item-group> -->
+          
+        </el-submenu>
         <!-- <template>
           <el-menu-item v-for="(item,index) in modulesJson" :key="index" >
             <i class="el-icon-menu"></i>
@@ -81,14 +85,12 @@
         <keep-alive>
           <transition name="header" mode="out-in">
             <header class="header the-header" v-if="layout==='admin'" >
-              <!-- <el-radio-group v-model="isCollapse" style="position:absolute;z-index: 999;" v-if="layout==='admin'">
-                <el-radio-button :label="false">展开</el-radio-button>
-                <el-radio-button :label="true">收起</el-radio-button>
-              </el-radio-group> -->
-              <div class="collapseImg" v-if="isCollapse" @click="openSidebar">
+              
+              <!-- <div class="collapseImg" v-if="isCollapse" @click="openSidebar">
               </div>
               <div class="collapseImg unCollapseImg" v-if="!isCollapse" @click="isCollapse = true">
-              </div>
+              </div> -->
+
               <!-- <div id="contentDiv">
                 <p @click="changeTheme('theme1')">111</p >
                 <p @click="changeTheme('theme2')">222</p >
@@ -102,17 +104,17 @@
                 </span>
               </div> -->
               <div class="user_navigation">
-                <el-badge :value="9" :max="99" class="item" v-if="corpType == '维保'">
+                <!-- <el-badge :value="9" :max="99" class="item" v-if="corpType == '维保'">
                   <a class="infoAram" @click="aaa()"></a>
                 </el-badge>
-                <span v-if="corpType == '维保'" style="margin: 0 15px;border-left:1px solid #919EA5;width:1px;height:10px "></span>
+                <span v-if="corpType == '维保'" style="margin: 0 15px;border-left:1px solid #919EA5;width:1px;height:10px "></span> -->
                 <el-dropdown @command="clickDrop">
                   <a class="personalCenter"></a>
                   <el-dropdown-menu slot="dropdown">
                     <!-- <el-dropdown-item @click.prevent="gotoCenter"><span>账户设置</span></el-dropdown-item>
                     <el-dropdown-item @click.prevent="quit"><span>退出登录</span></el-dropdown-item> -->
-                    <el-dropdown-item command="center">账户设置</el-dropdown-item>
-                    <el-dropdown-item command="quit">退出登录</el-dropdown-item>
+                    <el-dropdown-item command="center">个人中心</el-dropdown-item>
+                    <el-dropdown-item command="quit">注销</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>
@@ -151,7 +153,7 @@
         appKey: 1, // 监听地址栏参数
         title:'电梯行业监管战情室',
         // showMenu: true,
-        isCollapse: true,
+        isCollapse: false,
         modulesJson: window.localStorage.getItem("modules"),
         type: window.localStorage.getItem("type"),
         getAccountDetail:[],
@@ -352,10 +354,10 @@
 
     // bg_color_main("")
     // bg_pic('hs','chaoshi.png')
-    -webkit-box-shadow: 0 1px 4px 0 rgba(81,108,100,0.25);
-    box-shadow: 0 1px 4px 0 rgba(81,108,100,0.25);
+    -webkit-box-shadow: 0 3px 10px 0 rgba(196,203,239,0.39);
+    box-shadow: 0 3px 10px 0 rgba(196,203,239,0.39);
     position relative
-    z-index: 99;
+    z-index: 999;
   // 头部淡入淡出
   .header-enter-active, .header-leave-active
     transition transform 0.4s, opacity 0.4s
@@ -387,7 +389,7 @@
     flex: auto;
     flex-direction: column;
     min-height: 0;
-    background: #F1F5F7;
+    background: #F5F7FD;
     // bg_color_submain("")
     min-height: calc(100vh);
     position: relative;
@@ -397,7 +399,7 @@
     flex-direction: row;
   }
   .user_navigation {
-    size 113px 100%
+    size 93px 100%
     display inline-block
     float: right;
     // margin-top 20px
@@ -416,7 +418,8 @@
   }
   .personalCenter {
     background url('assets/images/hs/perCenter.png') no-repeat center
-    size 20px
+    background-size 18px auto;
+    size 18px
     display inline-block
   }
   .logoCollapse
@@ -463,104 +466,79 @@
     background url('assets/images/hs/sliderUnco.png') no-repeat center;
   .el-menu-vertical-demo
     .el-menu-item,.el-submenu__title
-      i
-        size 32px 16px
+      .menu_icon
+        size 12px
+        background-size 12px
         display inline-block
-  
+        margin-right: 10px;
+
   // 设置侧边栏图标 小图标 灰色图标
-  .icon-map
-    background url('assets/images/hs/submenuIcon/openMap2.png') no-repeat center;
-  .icon-lift
-    background url('assets/images/hs/submenuIcon/openLift2.png') no-repeat center;
-  .icon-diagnosis
-    background url('assets/images/hs/submenuIcon/openZhen2.png') no-repeat center;
-  .icon-task
-    background url('assets/images/hs/submenuIcon/openTask2.png') no-repeat center;
-  .icon-business
-    background url('assets/images/hs/submenuIcon/openTable2.png') no-repeat center;
-  .icon-setting
-    background url('assets/images/hs/submenuIcon/openSet2.png') no-repeat center;
+  // .icon-map
+  //   background url('assets/images/hs/submenuIcon/openMap2.png') no-repeat center;
+  // .icon-lift
+  //   background url('assets/images/hs/submenuIcon/openLift2.png') no-repeat center;
+  // .icon-diagnosis
+  //   background url('assets/images/hs/submenuIcon/openZhen2.png') no-repeat center;
+  // .icon-task
+  //   background url('assets/images/hs/submenuIcon/openTask2.png') no-repeat center;
+  // .icon-business
+  //   background url('assets/images/hs/submenuIcon/openTable2.png') no-repeat center;
   
+  .icon-prevent
+    background url('assets/images/hs/submenuIcon/prevent2.png') no-repeat center;
+  .icon-diagnosis
+    background url('assets/images/hs/submenuIcon/jian2.png') no-repeat center;
+  .icon-record
+    background url('assets/images/hs/submenuIcon/record2.png') no-repeat center;
+    background-size 12px
+  .icon-setting
+    background url('assets/images/hs/submenuIcon/set2.png') no-repeat center;
+    background-size 12px
   // 鼠标移动后菜单高亮 黑色图标
-  .el-menu-item:not(.disabled):hover
-    .icon-map
-      background url('assets/images/hs/submenuIcon/openMap3.png') no-repeat center;
-    .icon-lift
-      background url('assets/images/hs/submenuIcon/openLift3.png') no-repeat center;
-    .icon-diagnosis
-      background url('assets/images/hs/submenuIcon/openZhen3.png') no-repeat center;
-    .icon-task
-      background url('assets/images/hs/submenuIcon/openTask3.png') no-repeat center;
-    .icon-business
-      background url('assets/images/hs/submenuIcon/openTable3.png') no-repeat center;
-  .el-submenu:not(.disabled):hover
-    .icon-setting
-      background url('assets/images/hs/submenuIcon/openSet3.png') no-repeat center;
+  // .el-menu-item:not(.disabled):hover
+  //   .icon-map
+  //     background url('assets/images/hs/submenuIcon/openMap3.png') no-repeat center;
+  //   .icon-lift
+  //     background url('assets/images/hs/submenuIcon/openLift3.png') no-repeat center;
+  //   .icon-diagnosis
+  //     background url('assets/images/hs/submenuIcon/openZhen3.png') no-repeat center;
+  //   .icon-task
+  //     background url('assets/images/hs/submenuIcon/openTask3.png') no-repeat center;
+  //   .icon-business
+  //     background url('assets/images/hs/submenuIcon/openTable3.png') no-repeat center;
+  // .el-submenu:not(.disabled):hover
+  //   .icon-setting
+  //     background url('assets/images/hs/submenuIcon/openSet3.png') no-repeat center;
   // 点击后菜单高亮 蓝色图标
   .el-menu-item.is-active:not(.disabled)
-    .icon-map
-      background url('assets/images/hs/submenuIcon/openMap1.png') no-repeat center;
-    .icon-lift
-      background url('assets/images/hs/submenuIcon/openLift1.png') no-repeat center;
+    // .icon-map
+    //   background url('assets/images/hs/submenuIcon/openMap1.png') no-repeat center;
+    // .icon-lift
+    //   background url('assets/images/hs/submenuIcon/openLift1.png') no-repeat center;
+    
+    // .icon-task
+    //   background url('assets/images/hs/submenuIcon/openTask1.png') no-repeat center;
+    // .icon-business
+    //   background url('assets/images/hs/submenuIcon/openTable1.png') no-repeat center;
+    .icon-prevent
+      background url('assets/images/hs/submenuIcon/prevent1.png') no-repeat center;
+      background-size 12px
+      margin-right 15px
     .icon-diagnosis
-      background url('assets/images/hs/submenuIcon/openZhen1.png') no-repeat center;
-    .icon-task
-      background url('assets/images/hs/submenuIcon/openTask1.png') no-repeat center;
-    .icon-business
-      background url('assets/images/hs/submenuIcon/openTable1.png') no-repeat center;
-  .el-submenu.is-active:not(.disabled)
-    .icon-setting
-      background url('assets/images/hs/submenuIcon/openSet1.png') no-repeat center;
+      background url('assets/images/hs/submenuIcon/jian1.png') no-repeat center;
+      background-size 12px
+      margin-right 15px
+    
+  // .el-submenu.is-active:not(.disabled)
+  //   .icon-record
+  //     background url('assets/images/hs/submenuIcon/record2.png') no-repeat center;
+  //     background-size 12px
+  //   .icon-setting
+  //     background url('assets/images/hs/submenuIcon/set2.png') no-repeat center;
+  //     background-size 12px
     // 设置侧边栏图标 end
 
-  // 折叠菜单栏 大图标
-  .el-menu--collapse
-    // 设置侧边栏图标
-    .icon-map
-      background url('assets/images/hs/submenuIcon/map2.png') no-repeat center;
-    .icon-lift
-      background url('assets/images/hs/submenuIcon/lift2.png') no-repeat center;
-    .icon-diagnosis
-      background url('assets/images/hs/submenuIcon/zhen2.png') no-repeat center;
-    .icon-task
-      background url('assets/images/hs/submenuIcon/task2.png') no-repeat center;
-    .icon-business
-      background url('assets/images/hs/submenuIcon/table2.png') no-repeat center;
-    .icon-setting
-      background url('assets/images/hs/submenuIcon/set2.png') no-repeat center;
-    // 鼠标移动后菜单高亮
-    .el-menu-item:hover:not(.disabled)
-      .icon-map
-        background url('assets/images/hs/submenuIcon/map3.png') no-repeat center;
-      .icon-lift
-        background url('assets/images/hs/submenuIcon/lift3.png') no-repeat center;
-      .icon-diagnosis
-        background url('assets/images/hs/submenuIcon/zhen3.png') no-repeat center;
-      .icon-task
-        background url('assets/images/hs/submenuIcon/task3.png') no-repeat center;
-      .icon-business
-        background url('assets/images/hs/submenuIcon/table3.png') no-repeat center;
-    .el-submenu:hover:not(.disabled)
-      .icon-setting
-        background url('assets/images/hs/submenuIcon/set3.png') no-repeat center;
-    // 点击后菜单高亮
-    .el-menu-item.is-active:not(.disabled)
-      .icon-map
-        background url('assets/images/hs/submenuIcon/map1.png') no-repeat center;
-      .icon-lift
-        background url('assets/images/hs/submenuIcon/lift1.png') no-repeat center;
-      .icon-diagnosis
-        background url('assets/images/hs/submenuIcon/zhen1.png') no-repeat center;
-      .icon-task
-        background url('assets/images/hs/submenuIcon/task1.png') no-repeat center;
-      .icon-business
-        background url('assets/images/hs/submenuIcon/table1.png') no-repeat center;
-    .el-submenu.is-active:not(.disabled)
-      .icon-setting
-        background url('assets/images/hs/submenuIcon/set1.png') no-repeat center;
-      // 设置侧边栏图标 end
-  .icon-map,.icon-lift,.icon-diagnosis,.icon-task,.icon-business,.icon-setting
-    background-size: 16px auto!important;
+
   #contentDiv
     position: absolute;
     top: 0;

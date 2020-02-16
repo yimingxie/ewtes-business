@@ -63,8 +63,9 @@ export default {
     line-height: 12px;
     text-align: center;
     z-index: 1;
-    border: 1px solid rgba(255,255,255,0.30);
-    border-radius: 50%;
+    // border: 1px solid rgba(255,255,255,0.30);
+    background: rgba(18,46,109,0.14);
+    border-radius: 1px;
     top 3px
     left 0
     // border: 1px solid #ddd
@@ -72,22 +73,22 @@ export default {
     //   border: 1px solid blue
   i:after
     content: ""
-    background-color: #DDDDDD
+    // background-color: #DDDDDD
     transition all 0.15s
     transform: scale(0)
   /*设置选中的input的样式*/
 
   /* + 是兄弟选择器,获取选中后的i元素*/
   input[type="checkbox"]:checked + i:after
-    content: "";
+    content: '\2714';
     display: block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: white;
+    // width: 6px;
+    // height: 6px;
+    // border-radius: 50%;
+    // background-color: white;
     position: relative;
-    top: 2px
-    left 2px
+    // top: 2px
+    // left 2px
     transform: scale(1)
 
 

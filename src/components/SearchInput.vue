@@ -93,7 +93,8 @@
     right 1px;
     width 35px
     height 30px;
-    background #fff url('../assets/images/xym/delete.png') no-repeat center center;
+    // background #fff url('../assets/images/xym/delete.png') no-repeat center center;
+    background #fff no-repeat center center;
     cursor pointer
     opacity 0;
   }

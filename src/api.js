@@ -18,9 +18,10 @@
 
 
 import log from './api/login'
+import accountApi from './api/accountApi'
 
 
 export default {
   log,
-
+  accountApi,
 }

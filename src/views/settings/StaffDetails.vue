@@ -1,80 +1,101 @@
 <template>
   <div id="staffDetails">
-    <div class="bread-nav">
+    <!-- <div class="bread-nav">
       <router-link to="/staff">
         <span>员工管理</span>
       </router-link>
       <em>/</em>
       <span class="on">{{getStaffInfo.name}} - 员工详情</span>
-    </div>
+    </div> -->
     <div class="main-wrap" >
       <div class="row" >
-        <div class="panel" style="padding:0">
+        <div class="panel" style="padding:0;margin-top:0;border-radius: 0px 0px 20px 20px;">
           <!-- <el-avatar shape="square" :size="210" :fit="fits" :src="url" class="s_pic" style=""></el-avatar> -->
           <div class="s_pic" style="">
-            <img :src="url"  alt="" width="210" height="210"/>
+            <img :src="url"  alt="" width="190" height="190"/>
           </div>
           <div class="s_contain">
-            <router-link :to="{ name: 'editStaff', params: { staffId: this.$route.params.staffId }}"><span class="s_de_edit" ></span></router-link>
+            <!-- <router-link :to="{ name: 'editStaff', params: { staffId: this.$route.params.staffId }}"><span class="s_de_edit" ></span></router-link> -->
 
             <p class="s_de_name">{{getStaffInfo.name}}
               <img v-if="getStaffInfo.gender == '0'" src="../../assets/images/hs/female.png"  alt="" />
               <img v-else src="../../assets/images/hs/male.png"  alt="" />
             </p>
-            <p class="s_de_department">{{getStaffInfo.depName}}</p>
+            <!-- <p class="s_de_department">{{getStaffInfo.depName}}</p> -->
             <div class="s_de_details">
-              <ul>
-                <li><span class="tie">手机号码：</span><span >{{getStaffInfo.username}}</span></li>
-                <li><span class="tie">出生日期：</span>
-                  <span v-if="getStaffInfo.birthday">{{ getStaffInfo.birthday | dateformat(dateFormat)}} &nbsp;{{ birthdayFrom}}</span>
-                  <span v-else>--</span>
-                </li>
-                <li><span class="tie">从业资格证：</span><span style="color: #4272FF;">从业资格证.jpg</span></li>
-                <li><span class="tie">从业日期：</span>
-                  <span v-if="getStaffInfo.empTime">{{ getStaffInfo.empTime | dateformat(dateFormat)}} &nbsp;{{ empTimeFrom}}</span>
-                  <span v-else>--</span>
-                </li>
-                <li><span class="tie">入职日期：</span>
-                  <span v-if="getStaffInfo.entryTime">{{ getStaffInfo.entryTime | dateformat(dateFormat)}} &nbsp;{{ entryTimeFrom}}</span>
-                  <span v-else>--</span>
-                </li>
-                <li><span class="tie">管辖电梯数：</span><span>{{ getStaffInfo.elevatorTotal }}部</span></li>
-                <li><span class="tie">管辖区域：</span>
-                  <span v-if="getStaffInfo.areaName">{{ getStaffInfo.areaName }}</span>
-                  <span v-else>--</span>
-                </li>
-              </ul>
+              <table>
+                <tr>
+                  <td><span class="tie" style="font-size: 38px;color: #3572FF;">36.8<span style="font-size: 16px;color: color: #173000;">℃</span></span></td>
+                  <td><span class="tie">手机号码：</span><span >{{getStaffInfo.username}}</span></td>
+                  <td><span class="tie">出生日期：</span>
+                    <span v-if="getStaffInfo.birthday">{{ getStaffInfo.birthday | dateformat(dateFormat)}} &nbsp;{{ birthdayFrom}}</span>
+                    <span v-else>--</span>
+                  </td>
+                  <td><span class="tie">身份证号：</span><span style="color: #4272FF;">从业资格证.jpg</span></td>
+                  
+                </tr>
+                <tr>
+                  <td>
+                    <div class="tie" style="font-size: 14px;">深林上城</div>
+                    <div class="tie" style="font-size: 14px;">2020-02-10 16:29</div>
+                   
+                  </td>
+                  <td><span class="tie">所属单位：</span><span>{{ getStaffInfo.elevatorTotal }}部</span></td>
+                  <td><span class="tie">所属部门：</span>
+                    <span v-if="getStaffInfo.areaName">{{ getStaffInfo.areaName }}</span>
+                    <span v-else>--</span>
+                  </td>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
       </div>
       
       <div class="row" >
+        <div class="bigTitle">测温记录</div>
+      </div>
+
+      <div class="row" >
           
         <div class="panel" :class="open ? '':'closePanel'">
           <div class="title" style="border-bottom:none">
             <!-- <div class="label1">管辖电梯<span class="open" @click="open = !open" v-text="open ? '收起' : '展开'"></span></div> -->
-            <div class="label1">管辖电梯
+            <!-- <div class="label1">管辖电梯 -->
               <!-- <span class="open">展开</span> -->
-            </div>
+            <!-- </div> -->
           </div>
         
           <!-- 表格 Start -->
           <div style="position:relative;display:flex;">
             &nbsp;
             <el-table :data="elevatorList" style="margin-top:0!important;">
-              <el-table-column prop="elevCode" label="电梯编号">
+              <el-table-column prop="elevCode" label="时间">
               </el-table-column>
           
-              <el-table-column prop="areaName" label="区域-片区">
+              <el-table-column prop="areaName" label="位置">
               </el-table-column>
               
-              <el-table-column  label="使用地点">
+              <el-table-column  label="所属单位">
                 <template slot-scope="scope">
                   <span v-html="scope.row.address"></span>
                 </template>
               </el-table-column>
-             
+
+              <el-table-column prop="elevCode" label="防疫点">
+              </el-table-column>
+          
+              <el-table-column prop="areaName" label="检测点">
+              </el-table-column>
+              
+              <el-table-column prop="elevCode" label="体温">
+              </el-table-column>
+          
+              <el-table-column prop="areaName" label="检测状态">
+              </el-table-column>
+
+              <el-table-column prop="areaName" label="处理结果">
+              </el-table-column>
              
               <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
@@ -108,10 +129,16 @@
         
       </div>
 
+       <div class="row" >
+        <div class="bigTitle">接触记录</div>
+      </div>
+
       <div class="row" >
           
         <div class="panel">
-          <div class="title" style="border-bottom:none"><div class="label1">作业记录</div></div>
+          <div class="title" style="border-bottom:none">
+            <!-- <div class="label1">作业记录</div> -->
+          </div>
           
           <!-- 表格 Start -->
           <div style="position:relative;;display:flex;">
@@ -400,27 +427,29 @@ export default {
     span 
       display: inline-block;
       font-size: 16px;
-      color: #7e8a95;
+      color: #999999;
       &.on
         color: #34414C;
     em
       display: inline-block;
       font-size: 16px;
-      color: #7e8a95;
+      color: #999999;
       margin: 0 10px;
 
   
   .s_contain
-    height 210px
+    height 238px
     padding: 33px 0
-    margin-left:220px
+    margin-left:273px
   .s_pic
-    height 210px
-    width 210px
+    height 190px
+    width 190px
     position:absolute;
-    box-shadow: 0 8px 20px -12px rgba(66,114,255,0.30);
+    margin: 23px 50px;
+    // box-shadow: 0 8px 20px -12px rgba(66,114,255,0.30);
     img
-      border-radius: 8px 0 0 8px;
+      border-radius: 50%
+      box-shadow: 0 4px 6px 1px rgba(154,154,154,0.31);
   .s_de_edit
     background url('../../assets/images/hs/edit.png') no-repeat center;
     width 14px
@@ -431,18 +460,21 @@ export default {
     right 26px
     cursor pointer
   .s_de_name
-    font-size: 24px;
+    font-size: 34px;
     margin-left: 36px
     margin-bottom 0
+    img
+      margin-left:20px
   .s_de_department
     font-size: 14px;
-    color: #7E8A95;
+    color: #999999;
     margin 10px 0 20px 36px
   .s_de_details 
-    li
-      float left
+    margin-top: 20px;
+    td
+      // float left
       font-size: 14px;
-      padding: 5px 7px 5px 37px;
+      padding: 2px 7px 2px 37px;
       min-width: 201px;
       max-width: 301px;
       overflow: hidden;
@@ -450,7 +482,7 @@ export default {
       text-overflow: ellipsis;
     .tie
       font-size: 12px;
-      color: #7E8A95;
+      color: #999999;
   .open
     color: #4272FF;
     float: right;

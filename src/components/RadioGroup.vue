@@ -51,11 +51,11 @@
   
   .btn
     position relative
-    height 22px
-    line-height 22px
+    height 24px
+    line-height 24px
     text-align: center;
     cursor pointer
-    padding 0 7px
+    padding 0 21px
     display: inline-block;
     transition: background .3s; 
     font-size: 14px;

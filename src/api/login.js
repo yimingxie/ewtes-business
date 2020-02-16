@@ -43,5 +43,8 @@ export default  {
       `${http.localURL}/arctic/refresh/token`, params
     )
   },
-  
+  // 批量录入电梯（地产）
+  batchAddLift(params) {
+    return http.post(`${http.localURL}/arctic/upload/parks/file`, params, 5 * 60 * 1000)
+  },
 }
