@@ -91,7 +91,8 @@ axios.interceptors.request.use(config => {
 
   if (token) { // 判断是否存在token，如果存在的话，则每个http header都加上token
     // config.headers.token = `${token}`;
-    config.headers['G-Token'] = token;
+    // config.headers['G-Token'] = token;
+    config.headers['token'] = token;
   }
   return config;
 }, err => {
@@ -223,7 +224,7 @@ if (process.env.NODE_ENV == 'development') {
   localURL = `${protocol}//192.168.100.8:8080`
   // localURL = `${protocol}//127.0.0.1`
   // localURL = `${protocol}//iot.gidomino.com`
-  localURL = `${protocol}//192.168.100.3`
+  // localURL = `${protocol}//192.168.100.3`
   // localURL = `${protocol}//192.168.100.17:8080`
   // localURL = `${protocol}//192.168.100.8:8080`
   // localURL = `${protocol}//192.168.100.89:8080`

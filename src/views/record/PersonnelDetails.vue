@@ -1,5 +1,6 @@
 <template>
-  <div id="staffDetails">
+  <div id="PersonnelDetails">
+    
     <!-- <div class="bread-nav">
       <router-link to="/staff">
         <span>员工管理</span>
@@ -8,15 +9,20 @@
       <span class="on">{{getStaffInfo.name}} - 员工详情</span>
     </div> -->
     <div class="main-wrap" >
+      <div class="pageTitle">
+        <router-link to="/personnel">
+          <span class="preTitle">人员防疫记录</span>
+        </router-link>
+       / 人员详情</div>
       <div class="row" >
-        <div class="panel" style="padding:0;margin-top:0;border-radius: 0px 0px 20px 20px;">
+        <div class="panel topPanel highlightDiv hightLight">
           <!-- <el-avatar shape="square" :size="210" :fit="fits" :src="url" class="s_pic" style=""></el-avatar> -->
           <div class="s_pic" style="">
             <img :src="url"  alt="" width="190" height="190"/>
           </div>
           <div class="s_contain">
             <!-- <router-link :to="{ name: 'editStaff', params: { staffId: this.$route.params.staffId }}"><span class="s_de_edit" ></span></router-link> -->
-
+            <div class="releaseBtn" @click="dialogRelease = true">解除异常状态</div>
             <p class="s_de_name">{{getStaffInfo.name}}
               <img v-if="getStaffInfo.gender == '0'" src="../../assets/images/hs/female.png"  alt="" />
               <img v-else src="../../assets/images/hs/male.png"  alt="" />
@@ -69,39 +75,42 @@
           <!-- 表格 Start -->
           <div style="position:relative;display:flex;">
             &nbsp;
-            <el-table :data="elevatorList" style="margin-top:0!important;">
+            <el-table :data="elevatorList" style="margin-top:0!important;" >
               <el-table-column prop="elevCode" label="时间">
               </el-table-column>
           
-              <el-table-column prop="areaName" label="位置">
+              <el-table-column prop="areaName" label="防疫点">
               </el-table-column>
               
-              <el-table-column  label="所属单位">
+              <el-table-column  label="检测区域">
                 <template slot-scope="scope">
                   <span v-html="scope.row.address"></span>
                 </template>
               </el-table-column>
 
-              <el-table-column prop="elevCode" label="防疫点">
+              <el-table-column prop="elevCode" label="所属单位">
               </el-table-column>
           
-              <el-table-column prop="areaName" label="检测点">
+              <el-table-column prop="areaName" label="体温">
               </el-table-column>
               
-              <el-table-column prop="elevCode" label="体温">
+              <el-table-column prop="elevCode" label="检测状态">
               </el-table-column>
           
-              <el-table-column prop="areaName" label="检测状态">
-              </el-table-column>
-
               <el-table-column prop="areaName" label="处理结果">
               </el-table-column>
+
+              <el-table-column prop="areaName" label="接触人数">
+              </el-table-column>
              
+              <el-table-column prop="areaName" label="是否为高危地点">
+              </el-table-column>
+
               <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
                   <!-- 1.在封装好的组件上使用，所以要加上.native才能click
                   2.prevent就相当于..event.preventDefault() -->
-                  <el-button @click.native.prevent="goDetection(scope.row.elevCode)" type="text">查看详情
+                  <el-button @click.native.prevent="openCheckDetails(scope.row)" type="text">查看详情
                   </el-button>
                  
                 </template>
@@ -129,79 +138,98 @@
         
       </div>
 
-       <div class="row" >
-        <div class="bigTitle">接触记录</div>
-      </div>
+      <!-- 解除异常状态 弹窗-->
+      <el-dialog width="500px" :show-close="false" title="解除异常状态" :visible.sync="dialogRelease">
+        <div class="dialog-delete">
+          <div class="dia-heading">
+            <div class="dia-con-pic">
+              <!-- <img src="../../assets/images/xym/dia-warn.png" alt=""> -->
+            </div>
+            <div class="dia-con-p">
+              <div class="confirDialogText1">是否解除该人员异常状态？</div>
+            </div>
+          </div>
+        
+        </div>
+        <div slot="footer"  class="dialog-footer tar">
+          <span @click="dialogRelease = false" class="dialogCancel">取 消</span>
+          <el-button type="primary" @click="confirmRelease()" class="dialogSure">确 认</el-button>
+        </div>
+      </el-dialog>
+      <!-- 解除异常状态 弹窗 end-->
 
-      <div class="row" >
+      <!-- 接触记录  弹窗  Start -->
+      <el-dialog  width="954px" title="接触记录" :visible.sync="checkDetailsDialog" class="detailDialog">
+        <!-- <div class="showName">{{ EditAccountForm.name }}</div> -->
+        <el-form style="overflow: hidden;" :model="detailsList" ref="editForm" label-position="top" >
           
-        <div class="panel">
-          <div class="title" style="border-bottom:none">
-            <!-- <div class="label1">作业记录</div> -->
-          </div>
-          
-          <!-- 表格 Start -->
-          <div style="position:relative;;display:flex;">
-            &nbsp;
-            <el-table :data="jobRecord" style="margin-top:0!important;">
-              <el-table-column prop="taskId" label="工单编号">
-              </el-table-column>
-          
-              <el-table-column label="作业类型">
-                <template slot-scope="scope">
-                  <span v-html="typeText[scope.row.type]" :class="getTypeColor(typeText[scope.row.type])"></span>
-                </template>
-              </el-table-column>
-              
-              <el-table-column prop="elevCode" label="作业电梯">
-              </el-table-column>
-          
-              <el-table-column label="处理进度">
-                <template slot-scope="scope">
-                  <span >{{statusText[scope.row.status]}}</span>
-                </template>
-              </el-table-column>
-              
-              <el-table-column label="完成时间">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.recordTime }}</span>
-                </template>
-              </el-table-column>
+          <div class="detailsDiv">
+            <span class="detailsSpan clearfix">
+              <el-form-item label="位置" prop="account">
+                <span class="formShowContent">{{detailsList.elevCode}}</span>
+              </el-form-item>
             
-              <el-table-column label="操作" width="75">
-                <template slot-scope="scope">
-                  <!-- 1.在封装好的组件上使用，所以要加上.native才能click
-                  2.prevent就相当于..event.preventDefault() -->
-                  <el-button @click.native.prevent="goToDetail(scope.$index, scope.row)" type="text">查看详情
-                  </el-button>
-                 
-                </template>
-              </el-table-column>
-            </el-table>
-            &nbsp;
+              <el-form-item label="时间" prop="gender">
+                <span class="formShowContent">{{detailsList.elevCode}}</span>
+              </el-form-item>
+            
+            </span>
+            <span class="detailsSpan">
+              <el-form-item label="所属单位" prop="account">
+                <span class="formShowContent">{{detailsList.elevCode}}</span>
+              </el-form-item>
+            
+              <el-form-item label="是否为高危地点" prop="gender">
+                <span class="formShowContent">{{detailsList.elevCode}}</span>
+              </el-form-item>
+            
+            </span>
+            <span class="detailsSpan" style="padding: 21px 0 0 70px;">
+              <el-form-item label="接触人数" prop="account">
+                <span class="formShowContent" style="font-size:30px">{{detailsList.elevCode}}</span><span>人</span>
+              </el-form-item>
+            
+            </span>
           </div>
-          <!-- 表格 End -->
-          
-          <!-- 分页 Start -->
-          <div class="pagination_block">
-            <el-pagination
-              @size-change="handleSizeChange2"
-              @current-change="handleCurrentChange2"
-              :page-sizes="[10, 20, 30]"
-              :page-size="taskListParams.limit"
-              :current-page="taskListParams.offset"
-              layout="prev, pager, next, sizes, jumper"
-              :total="totalPageSize2">
-            </el-pagination>
-          </div>
-          <!-- 分页 End -->
+        </el-form>
+
+        <!-- 表格 Start -->
+        <div style="position:relative;display:flex;">
+          &nbsp;
+          <el-table :data="elevatorList" style="margin-top:0!important;margin-bottom: 32px;" height="450">
+            <el-table-column prop="elevCode" label="姓名">
+            </el-table-column>
+        
+            <el-table-column prop="areaName" label="检测时间">
+            </el-table-column>
+            
+            <el-table-column prop="elevCode" label="测温结果">
+            </el-table-column>
+        
+            <el-table-column prop="areaName" label="检测状态">
+            </el-table-column>
+        
+            <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <!-- 1.在封装好的组件上使用，所以要加上.native才能click
+                2.prevent就相当于..event.preventDefault() -->
+                <el-button @click.native.prevent="openCheckDetails(scope.row)" type="text">查看详情
+                </el-button>
+                
+              </template>
+            </el-table-column>
+          </el-table>
+          &nbsp;
+        </div>
+        <!-- 表格 End -->
+
+        <div slot="footer" class="dialog-footer tar">
+          <el-button type="primary" @click="confirmRelease" class="dialogSure">确 定</el-button>
 
         </div>
-        
-      </div>
+      </el-dialog>
+      <!-- 接触详情 弹窗 End -->
 
-     
-   
       <fotter></fotter>
     </div>
   </div>
@@ -209,7 +237,7 @@
 
 <script>
 import Vue from 'vue'
-import api from 'api'
+import api from 'api' //api.person
 import RadioGroup from "../../components/RadioGroup";
 import SearchInput from "../../components/SearchInput";
 import fotter from "../../views/common/fotter";
@@ -269,7 +297,10 @@ export default {
         userId:this.$route.params.staffId,
         limit:10,
         offset:1
-      }
+      },
+      dialogRelease: false,
+      checkDetailsDialog: false,
+      detailsList:[]
     }
   },
   components: {
@@ -285,7 +316,17 @@ export default {
     // console.log("111111111111111::" + moment("20121031", "YYYYMMDD").fromNow())
   },
   methods: {
+    
     moment,
+    // 打开查看详情弹窗
+    openCheckDetails(row){
+      this.detailsList = row
+      this.checkDetailsDialog = true
+    },
+    // 确认解除异常状态
+    confirmRelease(){
+      this.dialogRelease = false
+    },
     getTypeColor(type){
       var colorClass =  ''
       if(type == '故障处理'){
@@ -417,7 +458,24 @@ export default {
 </script>
 
 <style lang="stylus">
-#staffDetails
+#PersonnelDetails
+  .detailDialog
+    .el-table th
+      padding: 10px 0 !important;
+  .detailsSpan
+    float left
+    padding 0 70px 10px 0;
+  .releaseBtn
+    border: 1px solid #FFFFFF;
+    box-shadow: 0 1px 4px 0 rgba(186,126,95,0.40);
+    border-radius: 4px;
+    display inline-block
+    padding: 5px 22px;
+    position: absolute;
+    right: 30px;
+    cursor pointer
+  .hightLight
+    background-image: linear-gradient(50deg, #F46D26 0%, #FD8D54 100%);
   .bread-nav
     padding: 0 20px;
     height: 52px;
@@ -462,7 +520,7 @@ export default {
   .s_de_name
     font-size: 34px;
     margin-left: 36px
-    margin-bottom 0
+    margin-bottom 21px
     img
       margin-left:20px
   .s_de_department
@@ -470,11 +528,11 @@ export default {
     color: #999999;
     margin 10px 0 20px 36px
   .s_de_details 
-    margin-top: 20px;
+    // margin-top: 20px;
     td
       // float left
       font-size: 14px;
-      padding: 2px 7px 2px 37px;
+      padding: 2px 35px 2px 37px;
       min-width: 201px;
       max-width: 301px;
       overflow: hidden;

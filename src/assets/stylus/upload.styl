@@ -1,0 +1,138 @@
+  .dia-download-link{
+    font-size: 14px;
+    color: #4272FF;
+    line-height 32px;
+    text-decoration: underline;
+  }
+  .dia-upload-icon{
+    position relative;
+    width 104px;
+    // background: url('assets/images/xym/upload.png') no-repeat center center;
+    background-size: 104px;
+    cursor pointer;
+  }
+  .dia-upfile{
+    opacity: 0;
+    width: 100%; 
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index 10
+  }
+  .dia-citem-label{
+    color: #999
+    margin-bottom 15px
+  }
+  .dia-upload-icon-p1{
+    position: relative;
+    font-size: 12px;
+    color: #3572FF;
+    text-align: center;
+    padding 2px ;
+    z-index 2;
+    border: 1px solid #3572FF;
+    border-radius: 16px;
+    // background: url('assets/images/hs/upload.png') no-repeat center center;
+    background: url('../../assets/images/hs/upload.png') no-repeat 17px 6px
+    background-size: 12px;
+    text-indent: 12px;
+
+  }
+  .dia-upload-icon-p2{
+    position: relative;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    color: rgba(255,255,255,0.65);
+    z-index 2;
+  }
+  .dia-upload-list{
+    position relative;
+  }
+  .dia-upload-list-icon{
+    float left;
+    width 32px;
+    height 40px;
+    background: url('../../assets/images/hs/uploadSuccess.png') no-repeat center
+    background-size: 32px auto;
+  }
+  .dia-upload-list-icon.upFileForwardError{
+    // background: url('assets/images/xym/check-file-fail.png') no-repeat center center;
+    background-size: 32px;
+  }
+  .dia-upload-list-del{
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width 14px;
+    height 14px;
+    // background: url('assets/images/xym/delete.png') no-repeat center center;
+    background-size: 14px;
+    cursor pointer;
+  }
+  .dia-upload-list-del:hover{
+    // background: url('assets/images/xym/delete-on.png') no-repeat center center;
+    background-size: 14px;
+  }
+  .dia-upload-list-p{
+    float left;
+  }
+  .dia-upload-list-p-name{
+    font-size: 14px;
+    color: #34414C;
+    line-height: 22px;
+    margin-top 20px;
+    margin-left 10px;
+    width 370px;
+    overflow hidden;
+    text-overflow: ellipsis;
+    white-space nowrap;
+  }
+  .dia-upload-list-p-error{
+    font-size: 12px;
+    color: #FA4F43;
+    margin-left 10px;
+    width 370px;
+  }
+  .dia-upload-list-p-name.upFileForwardError{
+    margin-top 1px;
+  }
+  .dia-loading{
+    position: fixed;
+    top: 0;
+    left 0;
+    width: 100%;
+    height 100%;
+    z-index 999999999;
+    // background: rgba(255,255,255,0.6) url('assets/images/xym/loading.gif') no-repeat center center;
+  }
+  .dia-loading-p{
+    position: absolute;
+    text-align: center;
+    top: 56%;
+    left 0;
+    width 100%;
+    font-size: 16px;
+    font-weight: bold
+  }
+  .batch-result-item-title{
+    font-size: 16px;
+    color: #34414C;
+    font-weight: bold;
+  }
+  .batch-result-item-title.success{
+    color: #4272FF;    
+  }
+  .batch-result-item-p{
+    font-size: 14px;
+    color: #34414C;
+    line-height: 22px;
+    margin-top 8px;
+  }
+  .batch-result-item-p .batch-result-p-info{
+    color: #4272FF;
+  }
+  .batch-result-item-p .batch-result-p-error{
+    color: #FA4F43;
+  }

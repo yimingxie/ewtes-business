@@ -16,7 +16,7 @@ export default  {
     return http.post(
       // `${url2}/login`, params
 
-      `${http.localURL}/arctic/login`, params
+      `${http.localURL}/ewtes/login`, params
       // `${http.localURL}/domino/login`, params
     )
   },
@@ -26,7 +26,7 @@ export default  {
       // `${url2}/login`, params
 
       // `${http.localURL}/elevcorp/login`, params
-      `${http.localURL}/arctic/admin/login`, params
+      `${http.localURL}/ewtes/admin/login`, params
     )
   },
   // 获取验证码
@@ -40,7 +40,7 @@ export default  {
   },
   refreshToken(params) {
     return http.post(
-      `${http.localURL}/arctic/refresh/token`, params
+      `${http.localURL}/ewtes/refresh/token`, params
     )
   },
   // 批量录入电梯（地产）
