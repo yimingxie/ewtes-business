@@ -1,7 +1,8 @@
 <template>
   <!-- 批量导入 -->
   <div>
-    <div class="llcb-btn" style="position: relative" @click="openSubmitFile">批量录入</div>
+    <!-- <div class="llcb-btn" style="position: relative" >批量导入</div> -->
+    <button class="btn whiteBtn" @click="openSubmitFile">批量导入</button>
     <!-- 批量导入 -->
     <div class="dia-loading" v-show="diaLoading">
       <div class="dia-loading-p">导入时间较长，请耐心等待...</div>

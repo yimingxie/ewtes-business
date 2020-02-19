@@ -254,15 +254,7 @@ export default {
         let detail = res.data.data
 
 
-        // 用于检测区域下拉
-        this.observePointOptions = []
-        detail.checkPoint.forEach(item => {
-          this.observePointOptions.push({
-            value: item.pointId, 
-            label: item.pointName,
-            pointData: item.pointData
-          })
-        })
+        
       })
     },
 
@@ -270,6 +262,17 @@ export default {
     getObservePointOptions() {
       api.digital.getEpidemicMonitorList(this.parentCode).then(res => {
         console.log('下拉', res.data)
+        let detail = res.data.data
+
+        // 用于检测区域下拉
+        this.observePointOptions = []
+        detail.forEach(item => {
+          this.observePointOptions.push({
+            value: item.pointId, 
+            label: item.pointName,
+            pointData: item.pointData
+          })
+        })
       })
 
     },

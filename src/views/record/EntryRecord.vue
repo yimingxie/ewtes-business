@@ -1,11 +1,19 @@
 <template>
-<div class="main-wrap" id="staff">
-  <div class="pageTitle">员工管理</div>
+<div class="main-wrap" id="entryRecord">
+  <div class="pageTitle">防疫点出入记录</div>
   <div class="row" >
 
     <div class="panel topSelect">
-      <div class="subSelect">
-       
+       <div class="subSelect">
+        <el-date-picker
+          v-model="value1"
+          class="datePicker"
+          type="date"
+          placeholder="选择日期"
+          
+          >
+        </el-date-picker>
+        <span class="splitLine">|</span>
         <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部单位" class="regionPicker">
           <el-option
             v-for="item in getAllDepJson"
@@ -16,29 +24,17 @@
         </el-select>
         <span class="splitLine">|</span>
 
-        <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部部门" class="regionPicker">
-          <el-option
-            v-for="item in getAllDepJson"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select>
-        <!-- <span class="splitLine">|</span>
+        <!-- <radio-group :items="periods" :value.sync="period">
+          <span slot="label">角色类型：</span>
+        </radio-group>
+        <span class="splitLine">|</span> -->
         <radio-group :items="periods1" :value.sync="period1">
           <span slot="label">防疫点类型：</span>
-         
-        </radio-group> -->
-        <search-input v-model.trim="searchKey" placeholderValue="搜索员工姓名/手机号" @search="searchAccount()" @cancel="searchAccount()"></search-input>
-      </div>
-      <div class="subBtns">
-        <button class="btn blueBtn" @click="addAccountDialog">添加员工</button>
-        <!-- <router-link :to="{ name: 'addStaff'}"><button class="btn blueBtn" >添加员工</button></router-link> -->
-        
-        <button class="btn whiteBtn" @click="openSubmitFile">批量导入</button>
-
-        <button class="btn fr deleteList" @click="deleteStaffDialog()">删除员工</button>
-       
+          <!-- <template slot="item" scope="props">
+            <li>{{ props.text }}</li>
+          </template> -->
+        </radio-group>
+        <search-input v-model.trim="searchKey" placeholderValue="搜索防疫点名称" @search="searchAccount()" @cancel="searchAccount()"></search-input>
       </div>
     </div>
   </div>
@@ -49,27 +45,59 @@
       <!-- 表格 Start -->
       <div style="position:relative;;display:flex;">
         &nbsp;
-        <el-table :data="getAllAccountJson" @selection-change="handleSelectionChange">
-          <el-table-column
-            type="selection"
-            width="55">
-          </el-table-column>
-          <el-table-column prop="username" label="姓名">
+        <el-table :data="getAllAccountJson">
+          <el-table-column prop="username" label="防疫点名称">
           </el-table-column>
       
           <el-table-column prop="name" label="所属单位">
           </el-table-column>
           
-          <el-table-column  label="部门">
+          <el-table-column  label="检测区域数">
             <template slot-scope="scope">
               <span v-if="scope.row.roleName" v-html="scope.row.roleName" ></span>
               <span v-if="scope.row.type == 'administrator'" >超级管理员</span>
             </template>
           </el-table-column>
-          
-          <el-table-column prop="username" label="手机号">
+          <!-- <el-table-column  label="账号状态">
+            <template slot-scope="scope">
+              <span v-html="scope.row.status"></span>
+              <el-switch
+                v-model="scope.row.status"
+                active-color="#E2E6E8"
+                inactive-color="#E3E7E9"
+                :active-value="1"
+                :inactive-value="0"
+                active-text="启用"
+                inactive-text="停用"
+                :width=28
+                
+                @change='changeStatus($event,scope.$index,scope.row)'
+                >
+              </el-switch>
+            </template>
+          </el-table-column> -->
+          <!-- <el-table-column  label="日人流量" align="center">
+            <template slot-scope="scope" >
+              <el-switch
+                v-model="scope.row.valid"
+                active-color="#E2E6E8"
+                inactive-color="#E3E7E9"
+                :active-value="1"
+                :inactive-value="0"
+                :width=28
+                @change='changeStatus($event,scope.$index,scope.row)'
+              >
+              </el-switch>
+            </template>
+          </el-table-column> -->
+          <el-table-column prop="username" label="日人流量">
           </el-table-column>
 
+          <el-table-column label="告警数">
+            <template slot-scope="scope">
+              <span v-text="scope.row.name" style="color: #F56B25;"></span>
+            </template>
+          </el-table-column>
 
           <el-table-column label="操作" width="90">
             <template slot-scope="scope">
@@ -106,137 +134,72 @@
     
   </div>
 
-  <!-- 添加员工  弹窗  Start -->
-  <el-dialog width="700px" title="添加员工" :visible.sync="add_dialogFormVisible">
-    <el-form :model="addAccountForm" :label-width="formLabelWidth" :rules="addAccountRules" ref="addForm" label-position="top">
-      <el-row :gutter="78">
-        <el-col :span="12">
-          <el-form-item label="姓名" prop="account">
-            <el-input v-model="addAccountForm.account" placeholder="请输入姓名" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="性别" prop="gender">
-            <el-radio-group v-model="addAccountForm.gender">
-              <el-radio :label="1">男</el-radio>
-              <el-radio :label="0">女</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="78">
-        <el-col :span="12">
-          <el-form-item label="手机号" prop="account">
-            <el-input v-model="addAccountForm.account" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          
-        </el-col>
-      </el-row>
-
-      <el-row :gutter="78">
-        <el-col :span="12">
-          <el-form-item label="身份证类型" prop="roleId" >
-            <el-select v-model="addAccountForm.roleId" placeholder="请选择身份证类型" size="small">
-              <el-option
-                v-for="item in rolesJson"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="身份证号" prop="roleId" >
-            <el-input v-model="addAccountForm.account" placeholder="请输入身份证号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
+  <!-- 添加账号  弹窗  Start -->
+  <el-dialog width="662px" title="添加账号" :visible.sync="add_dialogFormVisible">
+    <el-form :model="addAccountForm" :label-width="formLabelWidth" :rules="addAccountRules" ref="addForm" :hide-required-asterisk='true'>
+      <el-form-item label="登录账号：" prop="account">
+        <el-input v-model="addAccountForm.account" placeholder="请输入登录账号，即手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+      </el-form-item>
+      <el-form-item label="真实姓名：" prop="name">
+        <el-input v-model="addAccountForm.name" placeholder="请输入账号真实姓名" auto-complete="off" clearable size="small"></el-input>
+      </el-form-item>
       
-      <el-row :gutter="78">
-        <el-col :span="12">
-          <el-form-item label="所属部门" prop="roleId" >
-            <el-select v-model="addAccountForm.roleId" placeholder="请选择所属部门" size="small">
-              <el-option
-                v-for="item in rolesJson"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          
-        </el-col>
-      </el-row>
     
-      
+      <el-form-item label="角色：" prop="roleId" >
+        <el-select v-model="addAccountForm.roleId" placeholder="请选择角色" size="small">
+          <el-option
+            v-for="item in rolesJson"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
     </el-form>
-    <div slot="footer"  class="dialog-footer tar">
-      <span @click="add_dialogFormVisible = false" class="dialogCancel">取 消</span>
+    <div slot="footer"  class="dialog-footer tac">
+      <el-button @click="add_dialogFormVisible = false" class="dialogCancel">取 消</el-button>
       <el-button type="primary" @click="confirmAddAccount()" class="dialogSure">确 认</el-button>
 
     </div>
   </el-dialog>
-  <!--添加员工  弹窗 End -->
+  <!--添加账号  弹窗 End -->
 
-  <!-- 编辑员工  弹窗  Start -->
-  <el-dialog  width="700px" title="员工详情" :visible.sync="edit_dialogFormVisible" custom-class="addAccount" @closed="editDialogClose">
-    <!-- <div class="showName">{{ EditAccountForm.name }}</div> -->
-    <el-form :model="EditAccountForm" :label-width="formLabelWidth" ref="editForm" label-position="top" class="detailDialog">
+  <!-- 编辑账号  弹窗  Start -->
+  <el-dialog  width="662px" title="编辑账号" :visible.sync="edit_dialogFormVisible" custom-class="addAccount" @closed="editDialogClose">
+    <div class="showName">{{ EditAccountForm.name }}</div>
+    <el-form :model="EditAccountForm" :label-width="formLabelWidth" :rules="editAccountRules" ref="editForm" :hide-required-asterisk='true'>
+      <el-form-item label="登录账号：" prop="account">
+        <el-input v-model="EditAccountForm.account" placeholder="请输入登录账号，即手机号" auto-complete="off" disabled clearable size="small"></el-input>
+      </el-form-item>
+      <el-form-item label="真实姓名：" prop="name">
+        <el-input v-model="EditAccountForm.name" placeholder="请输入账号真实姓名" auto-complete="off" clearable size="small"></el-input>
+      </el-form-item>
       
-      <el-row :gutter="18">
-        <el-col :span="12">
-          <el-form-item label="姓名" prop="account">
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="性别" prop="gender">
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="18">
-        <el-col :span="12">
-          <el-form-item label="手机号" prop="account">
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          
-        </el-col>
-      </el-row>
-
-      <el-row :gutter="18">
-        <el-col :span="12">
-          <el-form-item label="身份证类型" prop="roleId" >
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="身份证号" prop="roleId" >
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      
-      <el-row :gutter="18">
-        <el-col :span="12">
-          <el-form-item label="所属部门" prop="roleId" >
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          
-        </el-col>
-      </el-row>
+      <!-- <el-form-item label="手机号：" prop="phoneNumber">
+        <el-input v-model="EditAccountForm.phoneNumber" auto-complete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="所属单位id：" prop="ownerUnitId" >
+        <el-select v-model="EditAccountForm.ownerUnitId" placeholder="请选择角色所属单位id">
+          <el-option v-for="enterprise in allEnterprise_Json" :key="enterprise.unitName" :label="enterprise.unitName" :value="enterprise.id"></el-option>
+        </el-select>
+      </el-form-item> -->
+      <el-form-item label="角色：" prop="roleId" v-if="adType !='administrator'">
+        <!-- <el-input v-model="addRoleForm.ownerUnitId" auto-complete="off"></el-input> -->
+        <!-- <el-select v-model="edit_roleNameArr" multiple placeholder="请选择账户角色"  @change="changeSelect">
+          <el-option v-for="role in rolesJson" :key="role.name" :label="role.name" :value="role.name"></el-option>
+        </el-select> -->
+        <el-select v-model="EditAccountForm.roleId" placeholder="请选择角色" size="small">
+          <el-option
+            v-for="item in rolesJson"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer tar">
-      <span @click="edit_dialogFormVisible = false" class="dialogCancel">取 消</span>
+    <div slot="footer" class="dialog-footer tac">
+      <el-button @click="edit_dialogFormVisible = false" class="dialogCancel">取 消</el-button>
       <el-button type="primary" @click="confirmEdit" class="dialogSure">确 认</el-button>
 
     </div>
@@ -298,115 +261,6 @@
   </el-dialog>
   <!-- 关闭确认 弹窗 end-->
 
-  <!-- 删除员工 弹窗-->
-  <el-dialog width="500px" :show-close="false" title="删除员工" :visible.sync="dialogDelete">
-    <div class="dialog-delete">
-      <div class="dia-heading">
-        <div class="dia-con-pic">
-          <!-- <img src="../../assets/images/xym/dia-warn.png" alt=""> -->
-        </div>
-        <div class="dia-con-p">
-          <div class="confirDialogText1">是否确认删除所选员工，删除后不可复原，请谨慎操作</div>
-        </div>
-      </div>
-      <!-- <ul class="dia-ul clearfix">
-        <li :class="checkedStaffs.length <= 1 ? 'single' : ''" v-for="(item, i) in checkedStaffsName" :key="i">{{item}}</li>
-      </ul> -->
-      <!-- <div class="diaN-btn-con clearfix">
-        <div class="diaN-btn diaN-btn-cancel" @click="dialogDelete=false">取消</div>
-        <div class="diaN-btn diaN-btn-red" @click="deleteStaff">确认</div>
-      </div> -->
-    </div>
-    <div slot="footer" class="dialog-footer tar">
-      <span @click="dialogDelete=false" class="dialogCancel">取 消</span>
-      <el-button @click="deleteStaff" type="primary" class="dialogSure">完 成</el-button>
-    </div>
-  </el-dialog>
-  <!-- 删除员工 弹窗 end-->
-
-  <!-- 批量导入 -->
-  <div class="dia-loading" v-show="diaLoading">
-    <div class="dia-loading-p">导入时间较长，请耐心等待...</div>
-  </div>
-  <el-dialog :visible.sync="dialogBatch" title="批量导入" :show-close="false" width="500px">
-    <div>
-      <div class="dia-content">
-        <div class="dia-clist">
-          <div class="dia-citem clearfix">
-            <div class="dia-citem-label">下载模板</div>
-            <div class="dia-citem-ib">
-              <a class="dia-download-link" href="https://iot.gidomino.com/elevator/template/batch-import-template-property.xlsx" target="_blank">《完整模板.excel》</a>
-              <span style="color: #D8D8D8;margin:0 10px">|</span>
-              <a class="dia-download-link" href="https://iot.gidomino.com/elevator/template/batch-import-template-property.xlsx" target="_blank">《简要模板.excel》</a>
-            </div>
-          </div>
-          <div class="dia-citem clearfix" style="margin-top: 24px;">
-            <div class="dia-citem-label" >上传文件</div>
-            <div class="dia-citem-ib">
-              <div class="dia-upload-icon">
-                <div class="dia-upload-icon-p1">上传</div>
-                <!-- <div class="dia-upload-icon-p2">请按模板填写</div> -->
-                <input id="liftInputFile" name="file" class="dia-upfile" @change="changeUpfile" type="file" value="">
-              </div>
-            </div>
-          </div>
-          <div class="dia-citem clearfix" style="margin-top: 30px;">
-            <div class="dia-citem-label">已上传</div>
-            <div class="dia-citem-ib">
-              <div class="dia-upload-list clearfix" v-if="upfile !== ''">
-                <div class="dia-upload-list-icon" :class="upFileForwardFlag == 'error' ? 'upFileForwardError' : ''"></div>
-                <div class="dia-upload-list-p">
-                  <div class="dia-upload-list-p-name" :class="upFileForwardFlag == 'error' ? 'upFileForwardError' : ''">{{this.upfile.name}}</div>
-                  <div class="dia-upload-list-p-error" v-if="upFileForwardFlag == 'error'">上传失败，请检查文件有效性后重新上传</div>
-                </div>
-                <div class="dia-upload-list-del" @click="deleteUpfileForward"></div>
-              </div>
-
-            </div>
-          </div>
-      
-        </div>
-
-      </div>
-
-      
-
-    </div>
-    <div slot="footer" class="dialog-footer tar">
-      <span @click="dialogBatch = false" class="dialogCancel">取 消</span>
-      <el-button @click="submitFile" type="primary" class="dialogSure">完 成</el-button>
-      <!-- <input class="dia-btn dia-btn-cancel" type="button" value="取消" @click="dialogBatch = false">
-          <input class="dia-btn dia-btn-submit" @click="submitFile" type="button" value="确认"> -->
-    </div>
-  </el-dialog>
-
-  <!-- 导入结果 -->
-  <el-dialog :visible.sync="dialogBatchResult" title="提示" :show-close="false" width="690px">
-    <div>
-      <div class="dia-content">
-        <div class="batch-result">
-          <div class="batch-result-item">
-            <div class="batch-result-item-title success">导入成功</div>
-            <div class="batch-result-item-p">
-              成功导入<span class="batch-result-p-info">{{batchRes.successCnt}}部</span>电梯！其中，存在<span class="batch-result-p-error">{{batchRes.paramIncompleteCnt}}部</span>电梯需要补充材料；存在<span class="batch-result-p-error">{{batchRes.otherBrandCnt}}部</span>电梯品牌未匹配，暂定电梯品牌为「其他」
-            </div>
-          </div>
-          <div class="batch-result-item" style="margin-top: 36px;">
-            <div class="batch-result-item-title">导入失败</div>
-            <div class="batch-result-item-p">
-              导入失败{{batchRes.failCnt}}部电梯，可下载错误日志，查看失败原因。
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="diaN-btn-con clearfix" style="margin-top: 30px;">
-        <div class="diaN-btn diaN-btn-cancel" @click="dialogBatchResult=false">好的</div>
-        <div class="diaN-btn diaN-btn-red" @click="downloadError">下载错误日志</div>
-      </div>
-    </div>
-  </el-dialog>
-
   <fotter></fotter>
 </div>
 </template>
@@ -417,7 +271,6 @@ import api from 'api'
 import RadioGroup from "../../components/RadioGroup";
 import SearchInput from "../../components/SearchInput";
 import fotter from "../../views/common/fotter";
-import mutiUpload from "../../components/mutiUpload";
 
 export default {
   data() {
@@ -435,7 +288,6 @@ export default {
         // accountType: "1",
         // userType: 1, //维保创建自己的账号 类型为0；通用创建维保管理员 类型为1；通用创建通用为2
         roleId:'',
-        gender:1
       },
       edit_dialogFormVisible: false,
       EditAccountForm: {
@@ -510,9 +362,6 @@ export default {
         roleId: [
           { required: true, message: '请选择角色', trigger: 'change' }
         ],
-        gender: [
-          {required: true, message: '请选择角色', trigger: 'change' }
-        ],
       
       },
       editAccountRules: {
@@ -532,9 +381,6 @@ export default {
         roleId: [
           {required: true, message: '请选择角色', trigger: 'change' }
         ],
-        gender: [
-          {required: true, message: '请选择角色', trigger: 'change' }
-        ],
       
       },
       resetPasswordDialogVisoble: false,
@@ -542,17 +388,7 @@ export default {
       deleteDialogVisoble: false,
       confirmDelete:{},
       getAllDepJson:[],
-      value1:'',
-      multipleSelection:[],
-      dialogDelete: false,
-      // 批量录入电梯
-      dialogBatch: false,
-      upfile: '',
-      upFileForwardFlag: '',
-      diaLoading: false,
-      batchRes: {},
-      // 录入结果
-      dialogBatchResult: false,
+      value1:''
     }
   },
   components: {
@@ -577,137 +413,6 @@ export default {
     this.getAllDepartmentData()
   },
   methods: {
-    // 打开批量录入弹窗
-    openSubmitFile() {
-      // reset TODO
-      this.diaLoading = false
-      this.upfile = ''
-      this.upFileForwardFlag = ''
-      this.dialogBatch = true
-      setTimeout(() => {
-        let fileBtn = document.getElementById('liftInputFile')
-        fileBtn.value = ''
-      }, 200)
-    },
-
-    // 删除前端上传文件
-    deleteUpfileForward() {
-      this.upfile = ''
-      this.upFileForwardFlag = ''
-      setTimeout(() => {
-        let fileBtn = document.getElementById('liftInputFile')
-        fileBtn.value = ''
-      }, 200)
-    },
-
-    // 上传文件变化
-    changeUpfile() {
-      let fileBtn = document.getElementById('liftInputFile')
-      console.log('监听', fileBtn.files[0])
-      let name = fileBtn.files[0].name
-      var suffix = name.substr(name.lastIndexOf("."));
-      if(suffix == ".xls" || suffix == ".xlsx" ){
-        this.upfile = fileBtn.files[0]
-        this.upFileForwardFlag = 'success'
-      } else {
-        this.upfile = fileBtn.files[0]
-        this.upFileForwardFlag = 'error'
-      }
-    },
-
-    // 提交批量录入
-    submitFile() {
-      // 如果不是excel，则不允许上传
-      if (this.upFileForwardFlag === '' || this.upFileForwardFlag == 'error') {
-        return this.$message.error('请上传Excel文件')
-      }
-      let fileBtn = document.getElementById('liftInputFile')
-      let formData = new FormData();
-      console.log('uploadFile', fileBtn.files[0])
-      formData.append('file', fileBtn.files[0])
-      // console.log('formData', formData)
-
-      // 请求
-      this.diaLoading = true
-      api.log.batchAddLift(formData).then(res => {
-        console.log('录入', res)
-        this.diaLoading = false
-        this.batchRes = res.data.data
-
-        // 展示出结果框
-        this.dialogBatch = false
-        this.dialogBatchResult = true
-
-      }).catch(error => {
-        // 超时
-        this.diaLoading = false
-
-      })
-    },
-
-    // 下载错误日志
-    downloadError() {
-      if (this.batchRes.failCnt !== 0) {
-        let url = `${http.localURL}/arctic/download/file?fileName=` + this.batchRes.fileName
-        window.open(url);
-      } else {
-        return this.$message.info('无错误日志')
-      }
-
-    },
-    ///////////批量导入end////////////
-    // 删除员工对话框
-    deleteStaffDialog () {
-      if (this.multipleSelection.length === 0) {
-        return this.$message.error('请勾选需要删除的员工。员工删除后无法复原，请谨慎操作');
-      } else {
-         console.log("multipleSelection-===" + JSON.stringify(this.multipleSelection))
-        // this.checkedStaffsName = []
-        // this.multipleSelection.forEach(item =>{
-        //   var obj = this.getAllAccountJson.filter(function(value) {
-        //     return value.id == item;
-        //   })
-        //   // this.checkedStaffsName.push(obj[0].name)
-        // })
-      }
-      this.dialogDelete = true
-    },
-    // 删除员工账号
-    deleteStaff(index, row){
-      api.accountApi.deleteStaff(this.multipleSelection).then((res) => {
-        if (res.data.code === 200) {
-          this.$message.success('删除成功！');
-          this.getAllAccountData()
-          this.dialogDelete = false
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch((res) => {
-        this.$message.error(res.data.message);
-      })
-      
-    },
-    // 多选框勾选
-    handleSelectionChange(val) {
-        
-      this.multipleSelection = [];
-      // this.selectData[Number(this.mParam.offset-1)] = []
-
-      console.log("fdsg==" + JSON.stringify(val))
-
-      val.forEach((item, index) =>{
-        this.multipleSelection.push(item.id)
-        // this.selectData[Number(this.mParam.offset-1)].push(index)
-      })
-
-      
-      // val.forEach((item, index) => {
-      //   console.log("fdsg==" + Number(this.mParam.offset-1))
-      //   this.selectData[Number(this.mParam.offset-1)].push(index)
-      // })
-
-      // console.log("this.selectData===" + JSON.stringify(this.selectData))
-    },
     // 查询所有部门
     getAllDepartmentData(){
       api.accountApi.getDepartments(this.queryDepartParam).then((res) => {
@@ -1063,14 +768,11 @@ export default {
 </script>
 
 <style lang="stylus">
-@import '../../assets/stylus/upload'
-#staff
-
+#entryRecord
   .showName
     font-size: 30px;
     color: #34414C;
     text-align: center;
     line-height 42px
     padding 0 0 30px 0
-  
 </style>

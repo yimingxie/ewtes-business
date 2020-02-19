@@ -1,15 +1,10 @@
 <template>
-<!-- 
-  administrator  通用超管 
-  admin     物业/维保超管
-  manager   物业/维保管理员
-  staff     员工
--->
+<!-- 通用后台 登录页面 -->
 <div id="login">
   <div class="makeLoginCenter">
     <div class="title">
       <div class="title1">欢迎使用</div>
-      <div class="title2">EWTES疫情预警及溯源系统</div>
+      <div class="title2">防疫防控客户运营后台</div>
     </div> 
     <div class="loginFormWrap">
       <div class="box">
@@ -19,21 +14,13 @@
             <div v-if="warningTip!==''" class="loginInput warningTip tal">{{warningTip}}</div>
             <div class="inputWrap">
               <div class="inputLabel">账户名</div>
-              <input  placeholder="请输入登录账号" v-model="loginForm.username" name="Name" type="text" class="loginInput">
-              
-              <!-- <input v-if="loginForm.type === 1" placeholder="请输入登录账号（手机号）" v-model="loginForm.username" name="Name" type="text" class="loginInput"> -->
+              <input placeholder="请输入登录账号" v-model="loginForm.username" name="Name" type="text" class="loginInput">
+              <!-- <input placeholder="请输入登录账号（手机号）" v-model="loginForm.username" name="Name" type="text" class="loginInput"> -->
             </div>
             <div class="inputWrap">
-              <!-- <label>
-                <i class="fas fa-unlock-alt"></i>
-                Password
-              </label> -->
-              <!-- <input placeholder="请输入密码" v-model="model.password" name="Password" type="password" required=""> -->
               <div class="inputLabel inputLabelPsd">密码</div>
               <input placeholder="请输入密码" v-model="loginForm.password" name="Password" type="password" class="loginInput">
-              <!-- <input v-if="loginForm.type === 1" placeholder="请输入验证码" v-model="loginForm.password" class="loginInput">
-              <span v-if="loginForm.type === 1" v-show="sendAuthCode"  class="smsSpan" @click="getSms()">获取验证码</span>
-              <span v-if="loginForm.type === 1" v-show="!sendAuthCode"  class="smsSpan"> <span class="auth_text_blue">{{auth_time}}</span>s</span>  -->
+              <!-- <input v-if="loginForm.type === 1" placeholder="请输入验证码" v-model="loginForm.password" class="loginInput"> -->
             </div>
             <!-- <div class="inputWrap">
               <label>
@@ -44,12 +31,12 @@
             </div> -->
             <!-- checkbox -->
           </div>
-          <div class="wthreeText">
+          <!-- <div class="wthreeText">
             <ul>
-              <!-- <li v-if="loginForm.type === 1" style="float:left" @click="loginForm.type = 0;warningTip = ''">账号密码登录
+              <li v-if="loginForm.type === 0" style="float:left" @click="loginForm.type = 1">账号密码登录
               </li>
-              <li v-if="loginForm.type === 0" style="float:left" @click="loginForm.type = 1;warningTip = '';loginForm.password = ''">验证码登录
-              </li> -->
+              <li v-if="loginForm.type === 1" style="float:left" @click="loginForm.type = 0">验证码登录
+              </li>
               <li style="float:right">
                 <label>
                   <radio-moni-radio class="radio_input">
@@ -59,9 +46,9 @@
                 </label>
               </li>
             </ul>
-          </div>
+          </div> -->
           <!-- //checkbox -->
-          <input type="submit" value="登录" @keyup.enter="onSubmit" class="loginBtn">
+          <input type="submit" value="登录" @keyup.enter="onSubmit" class="loginBtn" style="margin-top: 53px;">
         </form>
         <!-- .............................................. -->
         <!-- <div> -->
@@ -103,70 +90,36 @@
         loginForm: {
           username: '',
           password: '',
-          // type:0,
-          // client:0
+          // type:0
         },
         isLoginSuccess: false,
         rememberPwd: Boolean(this.getCookie('rememberPwd')) || false,
-        warningTip:'',
-        sms:'',
-        sendAuthCode:true,/*布尔值，通过v-show控制显示‘获取按钮’还是‘倒计时’ */
-        auth_time: 0, /*倒计时 计数器*/
+        warningTip:''
       }
     },
     watch: {
      
     },
     mounted () {
-      if (this.rememberPwd) {
-        // 解密
-        this.loginForm.username = window.atob(this.getCookie('username'))
-        this.loginForm.password = window.atob(this.getCookie('password'))
-      }
+      // if (this.rememberPwd) {
+      //   this.loginForm.username = this.getCookie('account')
+      //   this.loginForm.password = this.getCookie('password')
+      // }
     },
     methods: {
-      getSms(){
-        api.log.getSms({"phone" : this.loginForm.account}).then((res) => {
-          if(res.data.code === 200){
-
-            this.warningTip = ''
-            this.sendAuthCode = false;
-            this.auth_time = 60;
-            var auth_timetimer =  setInterval(()=>{
-                this.auth_time--;
-                if(this.auth_time <= 0){
-                    this.sendAuthCode = true;
-                    clearInterval(auth_timetimer);
-                }
-            }, 1000);
-
-
-          } else {
-            this.warningTip = res.data.message
-          }
-
-        })
-      },
       onSubmit () {
         
-        api.log.login(this.loginForm).then((res) => {
+        api.log.login1(this.loginForm).then((res) => {
           if(res.data.code === 200){
             
-            // 存储token,modules,corpId,theme
+            // 存储token、refreshToken、type
             window.localStorage.setItem('accessToken', res.data.data.token)
-            window.localStorage.setItem('refreshToken', res.data.data.refreshToken)
-            // window.localStorage.setItem('type', res.data.data.type)
-            // 企业类型
-            // if(res.data.data.corpType){
-            //   window.localStorage.setItem('corpType', res.data.data.corpType)
-            // }
-            // 页面json
-            // if(res.data.data.ui){
-            //   window.localStorage.setItem('auth', res.data.data.ui)
-            // }
-            // let theme = res.data.data.description && res.data.data.description.indexOf('深色') > -1 ? 'theme2' : 'theme1'
-            
+            window.localStorage.setItem('refreshToken', res.data.data.token)
+            window.localStorage.setItem('type', res.data.data.type)
 
+            this.$message.success('登录成功！');
+            window.localStorage.setItem('theme', 'theme1')
+            this.$router.push('/corp')
             // if(res.data.data.modules){
             //   window.localStorage.setItem('modules', JSON.stringify(res.data.data.modules))
             // }
@@ -175,44 +128,26 @@
             // }
             // 设置记住密码
             // console.log('this.rememberPwd===' + this.rememberPwd)
-            if (this.rememberPwd) {
-              this.setCookie('rememberPwd', true)
-              // 加密
-              this.setCookie('username', window.btoa(this.loginForm.username))
-              this.setCookie('password', window.btoa(this.loginForm.password))
-
-            } else {
-              this.delCookie('rememberPwd')
-              this.delCookie('username')
-              this.delCookie('password')
-            }
+            // if (this.rememberPwd) {
+            //   this.setCookie('rememberPwd', true)
+            //   this.setCookie('account', this.loginForm.u)
+            //   this.setCookie('password', this.loginForm.password)
+            // } else {
+            //   this.delCookie('rememberPwd')
+            //   this.delCookie('account')
+            //   this.delCookie('password')
+            // }
             // 获取用户权限,并跳转页面
-            // if(res.data.data.type == 'admin' || res.data.data.type.indexOf('manager') > -1 || res.data.data.type.indexOf('staff') > -1) { // GI管理员
+            // if(res.data.data.type == 'administrator' || res.data.data.type.indexOf('manager') > -1) { // GI管理员
             //   this.$message.success('登录成功！');
             //   this.$router.push('/map')
-            // } else if(res.data.data.type == 'administrator') { // 通用超级管理员
+            // } else if(res.data.data.type == 'domino') { // 通用超级管理员
             //   this.$message.success('登录成功！');
             //   this.$router.push('/corpApi')
             // } else if(!res.data.data.modules){
             //   this.$message.error('暂无权限，请联系管理员');
             // }
-
-            // if(res.data.data.type == 'admin' || res.data.data.type.indexOf('manager') > -1 || res.data.data.type.indexOf('staff') > -1) { // 维保管理员
-              this.$message.success('登录成功！');
-                // 维保
-              // if(res.data.data.corpType == "维保"){
-                // window.localStorage.setItem('theme', 'theme1')
-                this.$router.push('/map')
-              // } else {
-              //   // 物业
-              //   window.localStorage.setItem('theme', 'theme2')
-              //   this.$router.push('/parkMap')
-              // }
-              
-
-            // } else {
-            //   this.$message.error('暂无权限，请联系管理员');
-            // }
+            
           } else {
             this.warningTip = res.data.message
           }
@@ -478,5 +413,3 @@
   }
 }
 </style>
-
-

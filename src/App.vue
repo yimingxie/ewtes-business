@@ -12,107 +12,62 @@
       <!-- Start: 菜单栏 -->
       
       <!-- 维保 -->
-      <el-menu @select="routerSelect" v-if="type !== 'administrator' && layout === 'admin' && corpType == '维保'" router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+      <el-menu v-if="layout === 'admin'" @select="routerSelect" router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
         <div class="logoCollapse">
         </div>
-        <!-- 深色版只显示可用菜单；浅色版显示所有菜单，禁用不可用菜单 -->
-        <!-- <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('作业地图')) || theme !== 'theme2')" index="/map" route="/map" :disabled="ifDisabled('作业地图')" :class="{'disabled' :ifDisabled('作业地图')}"> 
-          <i class="icon-map"></i>
-          <span slot="title">数字防疫点</span>
-        </el-menu-item> -->
-        <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('作业地图')) || theme !== 'theme2')" index="/map" route="/map" :disabled="ifDisabled('作业地图')" :class="{'disabled' :ifDisabled('作业地图')}"> 
+       
+        <el-menu-item  index="/digital-list" route="/digital-list"> 
           <i class="menu_icon icon-prevent"></i>
           <span slot="title">数字防疫点</span>
         </el-menu-item>
-        <!-- <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('数字电梯')) || theme !== 'theme2')" index="/lift-list" route="/lift-list" :disabled="ifDisabled('数字电梯')" :class="{'disabled' :ifDisabled('数字电梯')}">
-          <i class="icon-lift"></i>
-          <span slot="title">数字电梯</span>
-        </el-menu-item> -->
-        <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('检测诊断')) || theme !== 'theme2')" index="/detection-query" route="/detection-query" :disabled="ifDisabled('检测诊断')" :class="{'disabled' :ifDisabled('检测诊断')}">
+        
+        <el-menu-item  index="/detection-query" route="/detection-query" >
           <i class="menu_icon icon-diagnosis"></i>
           <span slot="title">检测诊断</span>
         </el-menu-item>
-        <!-- <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('任务管理')) || theme !== 'theme2')" :index="auth.mission && auth.mission.show && auth.mission.show == true ? '' : '/mission'" :route="auth.mission && auth.mission.show && auth.mission.show == true ? '' : '/mission'" :disabled="ifDisabled('任务管理')" :class="{'disabled' :ifDisabled('任务管理')}">
-          <i class="icon-task"></i>
-          <span slot="title">任务管理</span>
-        </el-menu-item> -->
-        <!-- <el-menu-item v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('经营报表')) || theme !== 'theme2')" index="" route="" :disabled="ifDisabled('经营报表')" :class="{'disabled' :ifDisabled('经营报表')}">
-          <i class="icon-business"></i>
-          <span slot="title">经营报表</span>
-        </el-menu-item> -->
-        <!-- <el-menu-item index="/account" route="/account">
-          
-          <span slot="title">系统设置</span>
-        </el-menu-item> -->
-        <el-submenu v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('系统设置')) || theme !== 'theme2')" index="1" :disabled="ifDisabled('系统设置')" :class="{'disabled' :ifDisabled('系统设置')}">
+     
+        <el-submenu index="1" >
           <template slot="title">
             <i class="menu_icon icon-record"></i>
             <span slot="title">防疫记录</span>
           </template>
-          <!-- <el-menu-item index="/account" route="/account"></el-menu-item> -->
 
-          <el-menu-item index="/staff" route="/staff" >人员防疫记录</el-menu-item>
+          <el-menu-item index="/personnel" route="/personnel" >人员防疫记录</el-menu-item>
 
-          <el-menu-item index="/device" route="/device">防疫点出入记录</el-menu-item>
-          <!-- </el-menu-item-group> -->
+          <el-menu-item index="/entryRecord" route="/entryRecord">防疫点出入记录</el-menu-item>
           
         </el-submenu>
 
-        <el-submenu v-if="type !== 'administrator' && ((theme == 'theme2' && !ifDisabled('系统设置')) || theme !== 'theme2')" index="2" :disabled="ifDisabled('系统设置')" :class="{'disabled' :ifDisabled('系统设置')}">
+        <el-submenu index="2" >
           <template slot="title">
             <i class="menu_icon icon-setting"></i>
             <span slot="title">系统</span>
           </template>
-          <!-- <el-menu-item index="/account" route="/account"></el-menu-item> -->
 
-          <el-menu-item index="/1" route="/1" >账号管理</el-menu-item>
+          <el-menu-item index="/account" route="/account" >账号管理</el-menu-item>
 
-          <el-menu-item index="/2" route="/2">员工管理</el-menu-item>
-          <!-- </el-menu-item-group> -->
-          
+          <el-menu-item index="/staff" route="/staff">员工管理</el-menu-item>
+
         </el-submenu>
-        <!-- <template>
-          <el-menu-item v-for="(item,index) in modulesJson" :key="index" >
-            <i class="el-icon-menu"></i>
-            <span slot="title">{{item.name}}</span>
-          </el-menu-item>
-        </template> -->
+     
       </el-menu>
       <!-- 维保 end -->
+      
+      
 
       <div class="ant-layout">
         <!-- Start: 头部 -->
         <keep-alive>
-          <transition name="header" mode="out-in">
+          <!-- <transition name="header" mode="out-in"> -->
             <header class="header the-header" v-if="layout==='admin'" >
               
-              <!-- <div class="collapseImg" v-if="isCollapse" @click="openSidebar">
-              </div>
-              <div class="collapseImg unCollapseImg" v-if="!isCollapse" @click="isCollapse = true">
-              </div> -->
-
-              <!-- <div id="contentDiv">
-                <p @click="changeTheme('theme1')">111</p >
-                <p @click="changeTheme('theme2')">222</p >
-              </div> -->
+            
               <a class="logo"></a>
-              
-              <!-- <div @mouseover="isShowUserNav = true" @mouseout="isShowUserNav = false" class="user-navigation">
-                <span class="user-name">
-                  <router-link to='/account'><i class="headPic"> </i><span style="margin:0 30px 0 74px">sss</span></router-link>
-                  <a href="#" @click.prevent="openComfirmModal" class="quit"></a>
-                </span>
-              </div> -->
+            
               <div class="user_navigation">
-                <!-- <el-badge :value="9" :max="99" class="item" v-if="corpType == '维保'">
-                  <a class="infoAram" @click="aaa()"></a>
-                </el-badge>
-                <span v-if="corpType == '维保'" style="margin: 0 15px;border-left:1px solid #919EA5;width:1px;height:10px "></span> -->
                 <el-dropdown @command="clickDrop">
                   <a class="personalCenter"></a>
                   <el-dropdown-menu slot="dropdown">
-                    <!-- <el-dropdown-item @click.prevent="gotoCenter"><span>账户设置</span></el-dropdown-item>
-                    <el-dropdown-item @click.prevent="quit"><span>退出登录</span></el-dropdown-item> -->
                     <el-dropdown-item command="center">个人中心</el-dropdown-item>
                     <el-dropdown-item command="quit">注销</el-dropdown-item>
                   </el-dropdown-menu>
@@ -120,16 +75,16 @@
               </div>
               
             </header>
-          </transition>
+          <!-- </transition> -->
         </keep-alive>
         <!-- End: 头部 -->
 
         <!-- Start: 路由视图 -->
-        <transition name="view" mode="out-in">
+        <!-- <transition name="view" mode="out-in"> -->
           <keep-alive>
             <router-view></router-view>
           </keep-alive>
-        </transition>
+        <!-- </transition> -->
         <!-- End: 路由视图 -->
       </div>
       
@@ -423,11 +378,10 @@
     display inline-block
   }
   .logoCollapse
-    background url('assets/images/hs/logo1.png') no-repeat center #F4F6FC;
-    // background url('assets/images/hs/logo33.png') no-repeat center #F4F6FC;
-
+    background url('assets/images/hs/logo.png') no-repeat center ;
     size 100% 64px
     display inline-block
+    box-shadow: 0 2px 6px 0 rgba(196,203,239,0.39);
   .logoUncollapse
     size 100% 250px
     .bg

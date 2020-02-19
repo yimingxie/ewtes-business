@@ -149,22 +149,26 @@
   border-radius: 8px!important;
 
 .el-dialog__header
-  padding: 15px 24px!important
+  padding: 20px 25px!important
   border-bottom:1px solid #E9E9E9!important;
   border-radius: 8px 8px 0 0!important;
   
 .el-dialog__title
-  font-size: 16px!important;
-  color: #34414C!important;
+  font-size: 24px!important;
+  color: #333333!important;
   line-height: 24px!important;
 
 .el-dialog__body
-  padding: 35px 47px 0 47px!important
+  padding: 23px 32px 0 !important
 
 .el-dialog__footer
-  padding: 10px 20px 31px!important;
+  padding: 15px 32px 31px!important;
 .noneTitle .el-dialog__header
   border-bottom: none!important
+.el-form-item
+  margin-bottom 16px!important
+.el-form--label-top .el-form-item__label
+  padding 0!important
 
 
   
@@ -172,6 +176,8 @@
 
 
 // -----------------按钮---------------------------
+// .el-button
+//   padding: 10px 1px!important;
 .el-button--primary
   background-color: #4272FF!important;
   border-color: #4272FF!important;
@@ -184,16 +190,16 @@
 .el-button--text:not(.deleteTextBtn)
   color: #4272ff!important;
 .dialogCancel
-  background: #7E8A95!important;
-  box-shadow: 0 8px 20px -10px rgba(66,114,255,0.60)!important;
-  border-radius: 24px!important;
-  width: 208px!important;
-  color: white!important
+  // background: #7E8A95!important;
+  // box-shadow: 0 8px 20px -10px rgba(66,114,255,0.60)!important;
+  // border-radius: 24px!important;
+  // width: 208px!important;
+  color: #3572FF!important
 .dialogSure
-  background-image: linear-gradient(90deg, #6159FF 0%, #4272FF 100%)!important;
-  box-shadow: 0 8px 20px -10px rgba(27,69,191,0.60)!important;
-  border-radius: 24px!important;
-  width: 208px!important;
+  background-image: linear-gradient(-137deg, #3572FF 0%, #3596FF 100%);
+  box-shadow: 0 2px 4px 0 rgba(152,152,152,0.50);
+  border-radius: 18px;
+  width: 120px!important;
 .dialogCancel+.dialogSure
   margin-left: 45px!important
 // -----------------按钮  end---------------------------
@@ -296,8 +302,8 @@
 // --------------------------下拉框- end-------------------------------
 
 // --------------------------日期选择-------------------------------
-.el-input--prefix .el-input__inner
-  padding-left 15px !important
+// .el-input--prefix .el-input__inner
+//   padding-left 15px !important
   // --------------------------日期选择-end-------------------------------
 
   
@@ -352,8 +358,9 @@
   line-height: 1 !important;
 }
 .el-form-item__label {
+  font-size: 12px;
+  color: #999999;
   line-height: 32px !important;
-  color: #34414c;
 }
 .el-input__inner {
   color: $font-color-theme!important;
@@ -409,13 +416,20 @@
     padding: 0;
     font-size: 20px;
     color: #34414C;
-  .el-cascader__label
-    padding: 0;
-  .el-input__prefix, .el-input__suffix
-    color: #2f4e8e;
-
+  
 // --------------------------区域选择-end-------------------------------
-
+.datePicker
+  width 130px!important
+  .el-input__inner
+    border: none!important
+    padding-left: 19px !important
+  .el-cascader__label //日期选择
+    padding: 0 0 0 20px!important;
+  .el-input__prefix
+    color: #2f4e8e;
+    left -5px!important;
+  .el-input__suffix
+    right 5px!important
 // --------------------------tag--------------------------------
 .conTag.el-tag
     border: 1px solid #D8DDDF!important;
@@ -547,8 +561,8 @@
 }
 // -------------------------- 删除确认弹窗样式 end -------------------------- 
 
-.el-input__prefix
-  display: none!important;
+// .el-input__prefix
+//   display: none!important;
 
 // ------------element 日历--------------
 .el-date-table td.end-date span, .el-date-table td.start-date span{
@@ -604,14 +618,24 @@
 
 // ------------穿梭框------------
 .el-transfer-panel__body{
-  height: 546px!important;
+  height: 400px!important;
 }
 .el-transfer-panel__list.is-filterable{
-  height: 496px!important;
+  height: 360px!important;
 }
 .el-transfer-panel{
-  width: 570px!important;
+  width: 300px!important;
 }
+
+// .el-transfer-panel__body{
+//   height: 546px!important;
+// }
+// .el-transfer-panel__list.is-filterable{
+//   height: 496px!important;
+// }
+// .el-transfer-panel{
+//   width: 570px!important;
+// }
 // ------------穿梭框-end-----------
 
 
@@ -658,3 +682,10 @@
     margin-bottom: 0px !important;
   }
 }
+
+
+// ------------------树形结构------------------
+.el-tree-node__content{
+  margin: 10px 0!important;
+}
+// ------------------树形结构end------------------

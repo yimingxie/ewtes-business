@@ -20,6 +20,7 @@
 import log from './api/login'
 import accountApi from './api/accountApi'
 import digital from './api/digital'
+import person from './api/person'
 
 
 export default {
@@ -29,4 +30,6 @@ export default {
 
 
   digital,
+  person,
+
 }

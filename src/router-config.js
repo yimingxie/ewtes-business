@@ -26,22 +26,67 @@ const router = new Router({
       component: (resolve) => require(['./components/mutiUpload.vue'], resolve)
     },
     {
+      path: "/personnel",
+      name: "personnel",
+      meta: {
+        title: "人员防疫记录",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/record/Personnel.vue'], resolve)
+    },
+    {
+      path: "/personnel/:staffId",
+      name: "personnelDetails",
+      meta: {
+        title: "人员详情",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/record/PersonnelDetails.vue'], resolve)
+    },
+    {
+      path: "/entryRecord",
+      name: "entryRecord",
+      meta: {
+        title: "员工详情",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/record/EntryRecord.vue'], resolve)
+    },
+    {
+      path: "/account",
+      name: "account",
+      meta: {
+        title: "账号管理",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/settings/Account.vue'], resolve)
+    },
+    {
+      path: "/tree",
+      name: "tree",
+      meta: {
+        title: "员工管理",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/settings/Tree.vue'], resolve)
+    },
+    {
       path: "/staff",
       name: "staff",
       meta: {
-        title: "员工管理",
+        title: "员工详情",
         auto: false // 是否需要权限
       },
       component: (resolve) => require(['./views/settings/Staff.vue'], resolve)
     },
     {
-      path: "/staffDetails/:staffId",
-      name: "staffDetails",
+      path: "/center",
+      name: "center",
       meta: {
-        title: "员工详情",
+        title: "个人中心",
         auto: false // 是否需要权限
       },
-      component: (resolve) => require(['./views/settings/StaffDetails.vue'], resolve)
+      component: (resolve) => require(['./views/common/Center.vue'], resolve)
     },
 
 
@@ -85,6 +130,16 @@ const router = new Router({
       component: (resolve) => require(['./views/digital/ObserveList.vue'], resolve)
     },
 
+    // {
+    //   path: "/opbackend",
+    //   name: "LoginAdmin",
+    //   meta: {
+    //     title: "防疫防控客户运营后台",
+    //     auto: false // 是否需要权限
+    //   },
+    //   component: (resolve) => require(['./views/common/LoginAdmin.vue'], resolve)
+    // },
+    
   ]
 })
 
@@ -95,7 +150,7 @@ router.beforeEach((to, from, next) => {
   let token = window.localStorage.getItem('accessToken')
   let refreshToken = window.localStorage.getItem('refreshToken')
 
-  if((!token || token === null || !refreshToken || refreshToken === null) && to.path != '/') { //未登录，强制登录
+  if((!token || token === null || !refreshToken || refreshToken === null) && to.path != '/' ) { //未登录，强制登录
     // console.log("234-=-" + token)
     // next({
     //   name:"Login"  // 将跳转的路由name作为参数，登录成功后跳转到该路由
