@@ -19,9 +19,14 @@
 
 import log from './api/login'
 import accountApi from './api/accountApi'
+import digital from './api/digital'
 
 
 export default {
   log,
   accountApi,
+
+
+
+  digital,
 }

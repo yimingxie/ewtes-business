@@ -43,6 +43,48 @@ const router = new Router({
       },
       component: (resolve) => require(['./views/settings/StaffDetails.vue'], resolve)
     },
+
+
+
+
+    // 数字防疫点
+    {
+      path: "/digital-list",
+      name: "digital-list",
+      meta: {
+        title: "数字防疫点",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/digital/DigitalList.vue'], resolve)
+    },
+    {
+      path: "/digital-add-result",
+      name: "digital-add-result",
+      meta: {
+        title: "添加防疫点",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/digital/DigitalAddResult.vue'], resolve)
+    },
+    {
+      path: "/digital-detail",
+      name: "digital-detail",
+      meta: {
+        title: "防疫点档案",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/digital/DigitalDetail.vue'], resolve)
+    },
+    {
+      path: "/observe-list",
+      name: "observe-list",
+      meta: {
+        title: "观察任务管理",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/digital/ObserveList.vue'], resolve)
+    },
+
   ]
 })
 
@@ -55,9 +97,11 @@ router.beforeEach((to, from, next) => {
 
   if((!token || token === null || !refreshToken || refreshToken === null) && to.path != '/') { //未登录，强制登录
     // console.log("234-=-" + token)
-    next({
-      name:"Login"  // 将跳转的路由name作为参数，登录成功后跳转到该路由
-    });
+    // next({
+    //   name:"Login"  // 将跳转的路由name作为参数，登录成功后跳转到该路由
+    // });
+    next();
+
   } else {
     // 设置标题
     if (to.meta.title) {
