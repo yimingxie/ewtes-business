@@ -10,12 +10,12 @@
       <div class="x-list">
         <div class="xlist-choose clearfix">
           <div class="xlist-choose-content clearfix">
-            <div class="xcc-box">
+            <div class="xcc-box xcc-box-city">
               <city-choose2 :selectCity="selectCityFa" @childVal="selectCity"></city-choose2>
             </div>
             <div class="xcc-splitLine"></div>
-            <div class="xcc-box">
-              <el-select v-model="useDepartmentValue" clearable placeholder="全部单位" size="small">
+            <div class="xcc-box" style="width: 110px;">
+              <el-select class="x-select" v-model="useDepartmentValue" clearable placeholder="全部单位" size="small">
                 <el-option v-for="item in useDepartmentOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </div>
@@ -23,14 +23,14 @@
           </div>
           <div class="xlist-choose-si">
             <!-- <search-input ref="searchInputRef" placeholderValue="搜索园区名称/创建人" @search="searchTask" @cancel="clearTask"></search-input> -->
-            <search-input ref="searchInputRef" placeholderValue="搜索防疫点名称/内部编号"></search-input>
+            <search-input ref="searchInputRef" @search="searchTask" @cancel="clearTask" placeholderValue="搜索防疫点名称/内部编号"></search-input>
           </div>
         </div>
 
         <div class="xlist-operator">
           <div class="xlist-operator-content clearfix">
             <div class="xop-btn-submit" @click="$router.push('/digital-add-result')">添加防疫点</div>
-            <div class="xop-btn-delete">删除防疫点</div>
+            <div class="xop-btn-delete" @click="openDialogDeleteCheckPoint">删除防疫点</div>
           </div>
         </div>
 
@@ -50,7 +50,7 @@
               <div class="llt-th">所属单位</div>
               <div class="llt-th">监测数</div>
               <div class="llt-th">上次告警</div>
-              <div class="llt-th">状态</div>
+              <!-- <div class="llt-th">状态</div> -->
               <div class="llt-th">操作</div>
             </div>
           </div>
@@ -58,7 +58,7 @@
           <div class="llt-tbody">
             <div class="list-no-data" v-show="digitalList.length == 0">暂无数据</div>
 
-            <div class="llt-tr clearfix" :class="item.status == 1 ? '' : 'offline'" v-for="(item, i) in digitalList" :key="i">
+            <div class="llt-tr clearfix" :class="item.status ? '' : 'offline'" v-for="(item, i) in digitalList" :key="i">
               <div class="llt-tr-container clearfix">
                 <div class="llt-td">
                   <el-checkbox-group v-model="checkedLifts" @change="checkedLiftsChange">
@@ -71,18 +71,18 @@
                 <div class="llt-td">{{item.address}}</div>
                 <div class="llt-td">{{item.useDepartment}}</div>
                 <div class="llt-td">{{item.monitorNum}}</div>
-                <div class="llt-td">{{item.lastTime}}</div>
-                <div class="llt-td">
+                <div class="llt-td">{{item.lastTime ? item.lastTime : '--'}}</div>
+                <!-- <div class="llt-td">
                   <div class="ll-table-switch">
                     <el-switch v-model="item.status" active-color="#E2E6E8" inactive-color="#E3E7E9" :active-value="1" :inactive-value="0" :width=28 @change="switchChange($event, item.id)"></el-switch>
                   </div>
-                </div>
+                </div> -->
                 <div class="llt-td">
                   <span class="llt-td-a" @click="goDetail(item.epedId)">档案</span>
                   <em class="llt-td-line">|</em>
                   <span class="llt-td-a">设置监测</span>
                   <em class="llt-td-line">|</em>
-                  <span class="llt-td-a">诊断</span>
+                  <span class="llt-td-a" @click="goDetection(item.epedId)">诊断</span>
                 </div>
               </div>
             </div>
@@ -115,6 +115,23 @@
     <!-- 底部 -->
     <footer-temp></footer-temp>
 
+    <!-- 删除防疫点弹窗 -->
+    <el-dialog :visible.sync="dialogDeleteCheckPoint" title="删除防疫点" :show-close="false" width="700px">
+      <div class="dia-content">
+        <div class="dia-con-p">
+          <h4>是否确认删除</h4>
+          <!-- <p>删除后不可复原，请谨慎操作</p> -->
+        </div>
+        <!-- <ul class="dia-ul clearfix">
+          <li :class="checkedLifts.length <= 1 ? 'single' : ''" v-for="(item, i) in checkedLifts" :key="i">{{item}}</li>
+        </ul> -->
+        <div class="dia-btn-con" style="text-align: right;">
+          <div class="dia-btn dia-btn-cancel" @click="dialogDeleteCheckPoint=false">取消</div>
+          <div class="dia-btn dia-btn-submit" @click="deleteCheckPoint">确认</div>
+        </div>
+      </div>
+    </el-dialog>
+
 
   </div>
 </template>
@@ -133,8 +150,8 @@ export default {
       // --筛选条件--
       selectCityFa: [],
       useDepartmentOptions: [
-        {value: '选项1', label: '黄金糕'}, 
-        {value: '选项2', label: '双皮奶'},
+        {value: '选项1', label: '单位TODO1'}, 
+        {value: '选项2', label: '单位TODO2'},
       ],
       useDepartmentValue: '',
 
@@ -156,6 +173,9 @@ export default {
       totalPage: 1,
       pageSize: 10,
 
+      // --弹窗--
+      dialogDeleteCheckPoint: false,
+
     }
   },
   mounted() {
@@ -168,13 +188,36 @@ export default {
     // 查询数字化设备列表
     getDigitalList() {
       api.digital.getEpidemicList(this.epListParams).then(res => {
-        this.digitalList = res.data.data
+        this.digitalList = res.data.data.records
+        // liftselevCodeOptions
+
+        // 将所有电梯注册码填入选项，用于全选
+        this.liftselevCodeOptions = []
+        this.digitalList.forEach(item => {
+          this.liftselevCodeOptions.push(item.epedId)
+        })
+
+        // 分页
+        this.currentPage = res.data.data.current
+        this.totalPage = res.data.data.total
       })
     },
 
     // 区域筛选
     selectCity(cityArr, cnName) {
-      console.loog('区域筛选')
+      if (cityArr.length === 0) {
+        this.epListParams = {
+          "epedId": "",
+          "areaCode": "",
+          "useDepartment": "",
+          "limit": 10,
+          "offset": 1
+        }
+      } else {
+        this.epListParams.offset = 1
+        this.epListParams.areaCode = cityArr[cityArr.length-1] || ""
+      }
+      this.getDigitalList()
     },
 
     // 防疫点多选
@@ -187,21 +230,32 @@ export default {
     // 全选
     checkedAllChange(checkedBoolean) {
       this.checkedLifts = checkedBoolean ? this.liftselevCodeOptions : []
-      console.log('全选')
     },
 
     // 当前分页改变
     currentPageChange(current) {
-      console.log('当前分页改变')
-      // this.digitalParams.offset = current
-      // this.getDigitalParkList()
+      this.epListParams.offset = current
+      this.getDigitalList()
     },
 
     // 分页大小改变
     pageSizeChange(size) {
-      console.log('当前分页Size改变')
-      // this.digitalParams.limit = size
-      // this.getDigitalParkList()
+      this.epListParams.limit = size
+      this.getDigitalList()
+    },
+
+    // 搜索
+    searchTask(content) {
+      this.epListParams.title = content
+      this.epListParams.offset = 1
+      this.getDigitalList()
+    },
+
+    // 清空
+    clearTask() {
+      this.epListParams.title = ''
+      this.epListParams.offset = 1
+      this.getDigitalList()
     },
 
     // 防疫点开关
@@ -224,6 +278,29 @@ export default {
       // })
     },
 
+    // 打开删除防疫点弹窗
+    openDialogDeleteCheckPoint() {
+      if (this.checkedLifts.length === 0) return this.$message.error('请选择要删除的防疫点') 
+
+      this.dialogDeleteCheckPoint = true
+    },
+
+    // 删除防疫点
+    deleteCheckPoint() {
+      let that = this
+      api.digital.deleteEpidemic(this.checkedLifts.join(',')).then(res => {
+        console.log(res)
+        if (res.data.code == '200') {
+          this.dialogDeleteCheckPoint = false
+          that.$message.success('删除成功')
+          this.checkedLifts = []
+          this.getDigitalList()
+        } else {
+          that.$message.error('删除失败')
+        }
+      })
+    },
+
     // 跳转到档案
     goDetail(epedId) {
       this.$router.push({
@@ -232,7 +309,16 @@ export default {
           'epedId': epedId
         }
       })
+    },
 
+    // 跳转到诊断
+    goDetection(epedId) {
+      this.$router.push({
+        path: '/detection-panel',
+        query: {
+          'epedId': epedId
+        }
+      })
     },
 
   },
@@ -245,6 +331,19 @@ export default {
 }
 </script>
 
+<style>
+.x-select .el-input__inner{
+  border: none !important;
+}
+.xcc-box-city{
+  width: 140px;
+}
+.xcc-box-city .el-input__inner{
+  border: none !important;
+}
+
+</style>
+
 <style lang="stylus" scoped>
 #DigitalList{
   .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
@@ -253,7 +352,7 @@ export default {
     text-overflow: clip;
   }
   .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
-    width 8%;
+    width 11%;
   }
   .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
     width 8%;
@@ -262,7 +361,7 @@ export default {
     width 14%;
   }
   .llt-thead .llt-th:nth-child(5),.llt-tbody .llt-td:nth-child(5){
-    width 14%;
+    width 17%;
   }
   .llt-thead .llt-th:nth-child(6),.llt-tbody .llt-td:nth-child(6){
     width 14%;
@@ -274,11 +373,22 @@ export default {
     width 12%;
   }
   .llt-thead .llt-th:nth-child(9),.llt-tbody .llt-td:nth-child(9){
-    width 6%;
-  }
-  .llt-thead .llt-th:nth-child(10),.llt-tbody .llt-td:nth-child(10){
     width 14%;
   }
+  // .llt-thead .llt-th:nth-child(10),.llt-tbody .llt-td:nth-child(10){
+  //   width 14%;
+  // }
+}
+
+
+/* 适配 */
+@media screen and (max-width: 1620px) {
+  #DigitalList{
+    .llt-thead .llt-th:nth-child(6),.llt-tbody .llt-td:nth-child(6){
+      width 10%;
+    }
+  }
+
 }
 
 </style>

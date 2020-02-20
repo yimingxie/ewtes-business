@@ -1,5 +1,51 @@
 // xie公用样式
 
+
+// 全局
+.dia-con-p{
+  text-align: center;
+}
+.dia-con-p h4{
+  font-size: 24px;
+  color: #34414C;
+  margin-top 10px;
+}
+.dia-con-p p{
+  font-size: 14px;
+  color: #7E8A95;
+  margin-top 8px;
+}
+.dia-ul{
+  list-style none;
+  overflow: auto;
+  width 430px;
+  margin: 30px auto;
+  max-height: 170px;
+  padding: 0 20px;
+}
+.dia-ul li{
+  float left
+  width 50%;
+  font-size: 14px;
+  color: #7E8A95;
+  line-height: 34px;
+}
+.dia-ul li:nth-child(n){
+  text-align: right;
+  padding: 0 10px 0 0 
+}
+.dia-ul li:nth-child(2n){
+  text-align: left;
+  padding: 0 0 0 10px
+}
+.dia-ul li.single{
+  width 100% !important;
+  text-align: center !important;
+}
+
+
+
+// 局部作用域
 .xym{
   .x-container{
     margin: 0 40px;
@@ -184,6 +230,9 @@
     padding-left 30px;
     line-height 78px;
   }
+  .xtitle-heading.white-color .xtitle-heading-h-p{
+    color: #fff;
+  }
   .xtitle-heading-h-line{
     position: absolute;
     left 0;
@@ -191,6 +240,9 @@
     background: #3F6AFF;
     width 7px;
     height 18px;
+  }
+  .xtitle-heading.white-color .xtitle-heading-h-line{
+    background: #fff;    
   }
   .digital-detail-basic-content{
     padding: 10px 40px 40px;
@@ -484,10 +536,345 @@
     overflow hidden;
     white-space nowrap;
   }
+  .digital-detail-tabTop-a{
+    position: absolute;
+    bottom: 16px;
+    right 0;
+  }
+  .digital-detail-tabTop-anav{
+    float left;
+    font-size: 16px;
+    color: #3572FF;
+    cursor pointer;
+  }
+  .digital-detail-tabTop-anav-span{
+    float left;
+    font-size: 16px;
+    color: #3572FF;
+    padding: 0 24px;
+  }
+
+  .stat-head-box{
+    float left;
+    // width 310px;
+    padding-right: 10px;
+    margin-top 14px;
+    margin-left 130px
+  }
+  .xddetail-list .stat-head-box:first-child{
+    margin-left: 0;
+  }
+  .stat-head-box-icon{
+    float left;
+    width 64px;
+    height 64px;
+    margin-top 6px;
+  }
+  .stat-head-box-icon-hour{
+    background: url('assets/images/xym/stat-hour-people.png') no-repeat center center;
+    background-size: 64px;
+  }
+  .stat-head-box-icon-day{
+    background: url('assets/images/xym/stat-day-people.png') no-repeat center center;
+    background-size: 64px;
+  }
+  .stat-head-box-icon-area{
+    background: url('assets/images/xym/stat-area.png') no-repeat center center;
+    background-size: 64px;
+  }
+  .stat-head-box-info{
+    float left;
+    margin-left 20px;
+    // width 190px;
+    margin-top 5px;
+  }
+  .stat-head-box-info-h{
+    font-size: 14px;
+    color: #3572FF;
+  }
+  .stat-head-box-info-p{
+    font-weight: bold;
+    font-size: 40px;
+    color: #3572FF;
+    line-height 1;
+    margin-top 3px;
+  }
+  .detection-content{
+    margin-top 40px;
+  }
+  .detection-content-bg{
+    position: absolute;
+    top: 0;
+    left 0;
+    width 100%
+    height 100%
+    background: url('assets/images/xym/det-bg.png') no-repeat 540px 300px;
+    background-size: 600px;
+    z-index 1;
+  }
+  .detection-real{
+    position relative;
+    float left
+    width 70%;
+    height 720px;
+    background-image: linear-gradient(137deg, #3572FF 0%, #3596FF 100%);
+    box-shadow: 0 5px 12px 0 rgba(195,195,195,0.40);
+    border-radius: 10px;
+  }
+  .detection-real-content{
+    padding: 0 30px;
+    position relative;
+    z-index 3;
+    overflow: auto;
+    margin-top -20px;
+  }
+  .detreal-box{
+    box-sizing: border-box;
+    float left;
+    width 31%;
+    margin-left: 3.5%;
+    margin-top 20px;
+  }
+  .detection-real-content .detreal-box:nth-child(3n+1){
+    margin-left: 0;
+  }
+  .detreal-box-title{
+    position relative;
+    height 40px;
+    line-height 40px;
+  }
+  .detreal-box-title-icon{
+    position: absolute;
+    left 0;
+    top: 0;
+    width 40px;
+    height 40px;
+    background: url('assets/images/xym/det-area.png') no-repeat left center;
+    background-size: 20px;
+  }
+  .detreal-box-title-p{
+    font-size: 20px;
+    color: #FFFFFF;
+    padding-left 40px;
+  }
+  .detreal-box-data{
+    box-sizing: border-box;
+    padding: 20px;
+    height 190px;
+    background: rgba(241,245,249,0.10);
+    box-shadow: 0 0 5px 2px rgba(41,61,125,0.09);
+    border-radius: 10px;
+    margin-top: 20px;
+    cursor pointer;
+  }
+  .detreal-box-data-people{
+    float left;
+    width 100%;
+  }
+  .drbd-people-flow{
+    float left
+    width 50%;
+    margin-top 10px;
+  }
+  .drbd-people-flow-h{
+    font-size: 14px;
+    color: #FFFFFF;
+  }
+  .drbd-people-flow-p{
+    font-size: 14px;
+    color: #fff;
+    margin-top 6px;
+  }
+  .drbd-people-flow-p span{
+    font-size: 32px;
+    display inline-block;
+    margin-right: 3px;
+  }
+
+  .detection-history{
+    position relative;
+    float right
+    width 27%;
+    height 720px;
+    background: #FFFFFF;
+    box-shadow: 0 5px 12px 0 rgba(196,203,239,0.39);
+    border-radius: 10px;
+  }
+  .detection-history-choose{
+    position: absolute;
+    top: 20px;
+    right 20px;
+  }
+  .x-select-box{
+    float left;
+  }
+  .det-history-table{
+    position relative;
+    padding: 0 30px; 
+    height 630px;
+    overflow auto; 
+  }
+  .det-history-th{
+    box-sizing: border-box
+    float left;
+    font-size: 12px;
+    color: #999999;
+    position relative;
+    line-height: 40px;
+    height 60px;
+    padding 10px 10px;
+    overflow hidden;
+    text-overflow ellipsis;
+    white-space nowrap;
+  }
+  .det-history-td{
+    box-sizing: border-box
+    float left;
+    font-size: 12px;
+    color: #333;
+    position relative;
+    line-height: 40px;
+    height 60px;
+    padding 10px 10px;
+    overflow hidden;
+    text-overflow ellipsis;
+    white-space nowrap;
+  }
+  .det-history-avatar{
+    width 40px
+    height 40px;
+    overflow hidden;
+    border-radius: 100%
+  }
+  .det-history-avatar img{
+    display block;
+    width 40px
+    height 40px;
+    overflow hidden;
+    border-radius: 100%
+  }
+  .detdetail-slider{
+    box-sizing: border-box;
+    position: fixed;
+    top: 0
+    right -600px;
+    width 550px;
+    height 100%;
+    overflow: auto;
+    background: #FFFFFF;
+    box-shadow: -5px 0 9px 4px rgba(129,144,213,0.28);
+    z-index 1000;
+    transition: all 0.8s ease;
+  }
+  .detdetail-slider.on{
+    right 0
+  }
+  .detdetail-slider-close{
+    position: absolute;
+    top: 30px;
+    right 30px;
+    width 28px;
+    height 28px;
+    background: url('assets/images/xym/close.png') no-repeat center center;
+    background-size: 28px;
+    cursor pointer;
+    z-index 2
+  }
+  .detdetail-slider-title{
+    position relative;
+    border-bottom: 1px solid #E8EEF5;
+  }
+  .detdetail-slider-title-line{
+    position: absolute;
+    top: 37px;
+    left 30px;
+    width 7px;
+    height 18px;
+    background: #3572FF;
+  }
+  .detdetail-slider-title-h{
+    line-height 90px;
+    font-size: 24px;
+    color: #3572FF;
+    font-weight: bold;
+    padding-left 64px;
+  }
+  .detdetail-info{
+    padding: 0 30px 20px;
+  }
+  .detdetail-info-title{
+    position relative;
+    margin-top 26px;
+  }
+  .detdetail-info-title-p{
+    font-size: 22px;
+    color: #333333;
+    padding-left 50px;
+    line-height 30px;
+    height 30px;
+    font-weight: bold
+  }
+  .detdetail-info-title-icon{
+    position: absolute;
+    top: 0;
+    left 0;
+    height 30px;
+    width 20px;
+    background: url('assets/images/xym/ddetail-area.png') no-repeat center center;
+    background-size: 20px;
+  }
+  .detdetail-info-data{
+    margin-top: 40px;
+  }
+  .detdetail-info-data-box{
+    float left;
+    width 50%;
+  }
+  .detdetail-info-data-box-h{
+    font-size: 14px;
+    color: #999999;
+  }
+  .detdetail-info-data-box-p{
+    font-size: 14px;
+    color: #3572FF;
+    margin-top 3px;
+  }
+  .detdetail-info-data-box-p span{
+    display inline-block
+    font-size: 34px;
+    margin-right: 3px;
+    font-weight: bold;
+  }
+  .detdetail-block{
+    height 16px;
+    background: #F3F6FF;
+  }
+  .detdetail-warn{
+    padding: 0 30px;
+    margin-top 12px;
+  }
+  .detdetail-warn-title{
+    font-size: 22px;
+    color: #333333;
+  }
+  .detdetail-warn-container{
+    height: calc(100vh - 410px);
+    min-height: 230px;
+    overflow: auto;
+    margin-top 10px;
+  }
+  
+  .det-history-tr.warn .det-history-td{
+    color: #F56B25;
+  }
   
 
 
 }
+
+
+
+
 
 
 

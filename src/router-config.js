@@ -129,6 +129,15 @@ const router = new Router({
       },
       component: (resolve) => require(['./views/digital/ObserveList.vue'], resolve)
     },
+    {
+      path: "/detection-panel",
+      name: "detection-panel",
+      meta: {
+        title: "检测诊断",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/detection/DetectionPanel.vue'], resolve)
+    },
 
     // {
     //   path: "/opbackend",

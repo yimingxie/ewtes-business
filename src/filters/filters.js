@@ -76,3 +76,20 @@ export function secondFormat(value) {
   }
   return result;
 }
+
+
+/**
+ * 判断监测数据，返回中文信息
+ * @param {number} value 
+ */
+export function returnPointDataCN(value) {
+  if (value == 1) {
+    return '身份证+温度'
+  } else if (value == 2) {
+    return '人脸+温度'
+  } else if (value == 3) {
+    return '人脸+温度+身份证'
+  } else {
+    return ''
+  }
+}

@@ -488,7 +488,8 @@ export default {
 
           console.log('param----', param)
           api.digital.addEpidemic(param).then(res => {
-            console.log('请求成功', res)
+            that.$message.success('添加成功')
+            that.$router.push({path: '/digital-list'})
           })
 
         }

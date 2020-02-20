@@ -23,13 +23,16 @@ import digital from './api/digital'
 import person from './api/person'
 
 
+import detection from './api/detection'
+
+
 export default {
   log,
   accountApi,
-
-
-
   digital,
   person,
+
+
+  detection,
 
 }

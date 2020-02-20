@@ -8,14 +8,22 @@
     </div>
 
     <div class="x-container">
-      <!-- <div class="digital-detail-tabTop clearfix">
+      <div class="digital-detail-tabTop clearfix" style="margin-top: 30px;">
         <div class="digital-detail-tab">
           <span class="on" style="z-index: 4">基本档案</span>
           <span style="z-index: 3">异常档案</span>
         </div>
-      </div> -->
 
-      <div class="la-result" style="margin-top: 30px;">
+        <div class="digital-detail-tabTop-a clearfix">
+          <div class="digital-detail-tabTop-anav" @click="goObserveList">观察任务管理</div>
+          <div class="digital-detail-tabTop-anav-span">|</div>
+          <div class="digital-detail-tabTop-anav">监测应用管理</div>
+        </div>
+
+
+      </div>
+
+      <div class="la-result">
         <el-form :model="ruleForm" :rules="rules" ref="laForm">
           <div class="digital-detail-basic">
             <div class="xtitle-heading">
@@ -748,7 +756,7 @@ export default {
 
             console.log('checkPointttttttt', this.checkPoint)
             if (this.checkPoint.length > 0) {
-              this.checkPoint.forEach(item => {
+              this.checkPoint.forEach((item, i) => {
                 if (item.pointId) {
                   // 编辑
                   let param = {
@@ -783,13 +791,17 @@ export default {
             }
 
             // 跳转
-            this.$router.push({
-              path: '/digital-detail',
-              query: {
-                epedId: this.parentCode,
-                submitState: 'get'
-              }
-            })
+            setTimeout(() => {
+              this.$router.push({
+                path: '/digital-detail',
+                query: {
+                  epedId: this.parentCode,
+                  submitState: 'get'
+                }
+              })
+              this.getDigitalDetail()
+            }, 300)
+            
           })
           
         }
@@ -817,6 +829,16 @@ export default {
         }
       })
     },
+
+    // 跳转到观察任务
+    goObserveList() {
+      this.$router.push({
+        path: '/observe-list',
+        query: {
+          'epedId': this.parentCode,
+        }
+      })
+    }
 
   },
   components: {

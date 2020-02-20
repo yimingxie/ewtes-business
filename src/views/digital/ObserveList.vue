@@ -9,7 +9,7 @@
     <div class="x-container">
       <div class="x-digital-detail">
         <div class="xddetail-name">
-          <div class="xddetail-name-p">{{epedNme}}</div>
+          <div class="xddetail-name-p">{{epedName}}</div>
         </div>
         <div class="xddetail-list clearfix">
           <div class="xddetail-list-item clearfix" style="width: 100%">
@@ -44,7 +44,7 @@
         <div class="xlist-operator">
           <div class="xlist-operator-content clearfix">
             <div class="xop-btn-submit" @click="openDialogAddObserve">添加观察任务</div>
-            <div class="xop-btn-delete">删除任务</div>
+            <div class="xop-btn-delete" @click="openDialogDeleteObserve">删除任务</div>
           </div>
         </div>
 
@@ -67,7 +67,7 @@
           <div class="llt-tbody">
             <div class="list-no-data" v-show="observeList.length == 0">暂无数据</div>
 
-            <div class="llt-tr clearfix" :class="item.status == 1 ? '' : 'offline'" v-for="(item, i) in observeList" :key="i">
+            <div class="llt-tr clearfix" v-for="(item, i) in observeList" :key="i">
               <div class="llt-tr-container clearfix">
                 <div class="llt-td">
                   <el-checkbox-group v-model="checkedLifts" @change="checkedLiftsChange">
@@ -76,9 +76,9 @@
                 </div>
                 <div class="llt-td">{{item.observedName}}</div>
                 <div class="llt-td">{{item.pointName}}</div>
-                <div class="llt-td">{{item.pointData}}</div>
+                <div class="llt-td">{{item.pointData | returnPointDataCN}}</div>
                 <div class="llt-td">
-                  <span class="llt-td-a" @click="openDialogEditObserve(item)">编辑</span>
+                  <span class="llt-td-a" @click="openDialogEditObserve(item.observedId)">编辑</span>
                 </div>
               </div>
             </div>
@@ -159,6 +159,23 @@
 
     </el-dialog>
 
+    <!-- 删除观察任务弹窗 -->
+    <el-dialog :visible.sync="dialogDeleteObserve" title="删除观察任务" :show-close="false" width="700px">
+      <div class="dia-content">
+        <div class="dia-con-p">
+          <h4>是否确认删除</h4>
+          <!-- <p>删除后不可复原，请谨慎操作</p> -->
+        </div>
+        <!-- <ul class="dia-ul clearfix">
+          <li :class="checkedLifts.length <= 1 ? 'single' : ''" v-for="(item, i) in checkedLifts" :key="i">{{item}}</li>
+        </ul> -->
+        <div class="dia-btn-con" style="text-align: right;">
+          <div class="dia-btn dia-btn-cancel" @click="dialogDeleteObserve=false">取消</div>
+          <div class="dia-btn dia-btn-submit" @click="deleteObserve">确认</div>
+        </div>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -168,12 +185,19 @@ import RadioGroup from "../../components/RadioGroup";
 import SearchInput from "../../components/SearchInput";
 import Footer from "../../views/common/fotter";
 import CityChoose2 from '../../components/CityChoose2'
+import xymFun from '../../utils/xymFun';
 
 
 export default {
   data() {
     return {
       parentCode: '',
+
+      // --详情--
+      epedName: "",    
+      inNum: "",         
+      localArea: "",         
+      address: "",  
 
       // --列表--
       observeList: [],
@@ -194,7 +218,7 @@ export default {
 
       // --添加观察任务弹窗（编辑可共用？）--
       dialogAddObserveTitle: '添加观察任务',
-      dialogAddObserve: true,
+      dialogAddObserve: false,
       ruleFormAddObserve: {
         "observedName": "",
         "pointId": "",   
@@ -202,14 +226,13 @@ export default {
         "pointData": "" // 1.身份证+温度 2.人脸+温度 3.人脸+温度+身份证
       },
       rulesAddObserve: {},
-      observePointOptions: [
-        {value: 'todo检测区域v1', label: 'todo检测区域1', pointData: ''},
-        {value: 'todo检测区域v2', label: 'todo检测区域2', pointData: ''},
-      ],
+      observePointOptions: [],
       currentObId: '',
-      pointDataRadio: [
-        {value: 1, label: 'todo检测区域1'},
-      ]
+      pointDataRadio: [],
+
+
+      // --删除弹窗--
+      dialogDeleteObserve: false,
 
     }
   },
@@ -233,7 +256,7 @@ export default {
     getObList() {
       api.digital.getObserveList(this.observeParams).then(res => {
         console.log('观察任务列表', res.data)
-        this.observeList = res.data.data || []
+        this.observeList = res.data.data.records
 
         // 用于全选
         this.liftselevCodeOptions = []
@@ -252,19 +275,19 @@ export default {
       api.digital.getDigitalDetail(this.parentCode).then(res => {
         console.log('详情', res.data)
         let detail = res.data.data
-
-
-        
+        this.epedName = detail.epedName   
+        this.inNum = detail.inNum       
+        this.localArea = detail.localArea   
+        this.address = detail.address
       })
     },
 
-    // 获取下拉
+    // 获取检测区域下拉
     getObservePointOptions() {
       api.digital.getEpidemicMonitorList(this.parentCode).then(res => {
         console.log('下拉', res.data)
         let detail = res.data.data
 
-        // 用于检测区域下拉
         this.observePointOptions = []
         detail.forEach(item => {
           this.observePointOptions.push({
@@ -331,34 +354,64 @@ export default {
 
     // 弹窗检测区域改变
     pointIdChange() {
+      console.log('区域id', this.ruleFormAddObserve.pointId)
+
+      // 筛选出符合条件的对象，返回数组
+      let selectPointArr = this.observePointOptions.filter(item => {
+        return item.value == this.ruleFormAddObserve.pointId
+      })
+
+      // 动态渲染单选框
+      this.pointDataRadio = []
+      if (selectPointArr.length > 0) {
+        let selectPointData = selectPointArr[0].pointData
+        selectPointData.split('|').forEach(item => {
+          this.pointDataRadio.push({
+            value: parseInt(item),
+            label: xymFun.returnPointDataCN(item)
+          })
+        })
+      }
 
     },
 
     // 提交添加观察任务
     submitAddObserve() {
       console.log('添加观察任务', this.ruleFormAddObserve)
-      api.digital.addObserve(this.ruleFormAddObserve).then(res => {
+      let param = {
+        "observedName": this.ruleFormAddObserve.observedName,
+        "pointId": this.ruleFormAddObserve.pointId,
+        "epedId": this.parentCode,
+        "pointData": this.ruleFormAddObserve.pointData
+      }
+      api.digital.addObserve(param).then(res => {
         console.log('添加成功？', res.data)
+        this.dialogAddObserve = false
+        this.getObList()
       })
     },
 
     // 打开编辑观察任务弹窗
-    openDialogEditObserve(obInfo) {
-      // 查看观察任务接口有问题，列表和详情缺少pointId
-      console.log('编辑', obInfo)
-      this.currentObId = obInfo.observedId
-      this.dialogAddObserveTitle = '编辑观察任务'
-      this.ruleFormAddObserve = {
-        "observedName": "",
-        "pointId": "",   
-        "epedId": this.parentCode, 
-        "pointData": "" // 1.身份证+温度 2.人脸+温度 3.人脸+温度+身份证
-      },
-      this.dialogAddObserve = true
+    openDialogEditObserve(observedId) {
+      api.digital.getObserveDetail(observedId).then(res => {
+        console.log('res', res.data)
+        let obInfo = res.data.data
+        this.dialogAddObserve = true
+
+        this.currentObId = obInfo.observedId
+        this.dialogAddObserveTitle = '编辑观察任务'
+        this.ruleFormAddObserve = {
+          "observedName": obInfo.observedName,
+          "pointId": obInfo.pointId,   
+          "epedId": this.parentCode, 
+          "pointData": obInfo.pointData
+        }
+        this.pointIdChange()
+      })
     },
 
     // 提交编辑观察任务
-    submitAddObserve() {
+    submitEditObserve() {
       console.log('编辑观察任务', this.ruleFormAddObserve)
       let param = {
         "observedId": this.currentObId,
@@ -367,7 +420,8 @@ export default {
         "pointData": this.ruleFormAddObserve.pointData   
       }
       api.digital.editObserve(param).then(res => {
-        console.log('编辑成功？', res.data)
+        this.dialogAddObserve = false
+        this.getObList()
       })
     },
 
@@ -375,6 +429,25 @@ export default {
     closeDialogObserve() {
       this.dialogAddObserve = false
       this.currentObId = ''
+    },
+
+    // 打开删除任务弹窗
+    openDialogDeleteObserve() {
+      if (this.checkedLifts.length === 0) return this.$message.error('请选择要删除的观察任务') 
+
+      this.dialogDeleteObserve = true
+    },
+
+    // 删除任务
+    deleteObserve() {
+      let param = this.checkedLifts.join(',')
+      api.digital.deleteObserve(param).then(res => {
+        console.log('删除成功', res.data)
+        this.$message.success('删除成功')
+        this.dialogDeleteObserve = false
+        this.checkedLifts = []
+        this.getObList()
+      })
     },
 
 
