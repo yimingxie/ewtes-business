@@ -280,6 +280,44 @@
     </div>
 
 
+    <!-- 异常处理弹窗 -->
+    <el-dialog :visible.sync="dialogDeal" title="异常处理" :show-close="false" width="800px">
+      <div class="dia-content">
+        <div class="det-deal clearfix">
+
+          <div class="det-deal-left">
+            <div class="det-deal-avator">
+              <img src="../../assets/images/xym/avatar.png" alt="">
+            </div>
+            <div class="det-deal-temper">
+              <div class="det-deal-temper-h">体温</div>
+              <div class="det-deal-temper-p">
+                <span>37.8</span>℃
+              </div>
+            </div>
+          </div>
+
+          <div class="det-deal-mid">
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h"></div>
+              <div class="det-deal-mid-box-p"></div>
+            </div>
+
+          </div>
+
+
+
+
+        </div>
+      
+        <div class="dia-btn-con" style="text-align: right;">
+          <div class="dia-btn dia-btn-cancel" @click="dialogDeal=false">取消</div>
+          <div class="dia-btn dia-btn-submit">确认</div>
+        </div>
+      </div>
+    </el-dialog>
+
+
   </div>
 </template>
 
@@ -313,8 +351,12 @@ export default {
         {label: 'label啊2', value: 'value值2'},
       ],
 
-      // --弹窗--
+      // --区域详情侧滑--
       sliderShow: false,
+
+
+      // --告警处理弹窗--
+      dialogDeal: false,
 
     }
   },
