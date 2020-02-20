@@ -2,17 +2,18 @@
 
 <div class="lalala">
 
-
+<!-- :data="treeData" -->
     <el-tree
 
-          :data="treeData"
+        :expand-on-click-node="false"
 
-          :expand-on-click-node="false"
+        node-key="id"
 
-          node-key="id"
+        :load="loadNode1"
 
-          default-expand-all
+        :props= defaultProps
 
+        lazy
 
         ref="tree"
       
@@ -30,7 +31,7 @@
                   <el-dropdown-item>
                     <div class="edit" @click="editNode()">编辑</div>
                   </el-dropdown-item>
-                  <el-dropdown-item><div class="delete" @click="deleteNode()">删除</div></el-dropdown-item>
+                  <el-dropdown-item><div class="delete" @click="deleteDialog = true;alert(1)">删除</div></el-dropdown-item>
                   <el-dropdown-item><div class="add" @click="addChildNode()">添加下级</div></el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -41,7 +42,7 @@
 
             <el-input class="slot-t-input" size="mini" autofocus
 
-              v-model="data.label"
+              v-model="data.name"
 
               :ref="'slotTreeInput'+data.id"
 
@@ -50,6 +51,9 @@
               @keydown.native.enter="NodeBlur(node,data)">
 
             </el-input>
+
+            <span>保存</span>
+            <span>取消</span>
 
           </span>
           
@@ -69,7 +73,25 @@
         <div class="add" @click="addChildNode()">添加下级</div>
 
     </el-card> -->
-
+    <!-- 删除账号 弹窗-->
+    <el-dialog width="500px" :show-close="false" title="删除账号" :visible.sync="deleteDialog">
+      <div class="dialog-delete">
+        <div class="dia-heading">
+          <div class="dia-con-pic">
+            <!-- <img src="../../assets/images/xym/dia-warn.png" alt=""> -->
+          </div>
+          <div class="dia-con-p">
+            <div class="confirDialogText1">删除组织将同时删除组织内账号，是否确认删除？</div>
+          </div>
+        </div>
+      
+      </div>
+      <div slot="footer"  class="dialog-footer tar">
+        <span @click="deleteDialog = false" class="dialogCancel">取 消</span>
+        <el-button type="primary" @click="deleteNode()" class="dialogSure">确 认</el-button>
+      </div>
+    </el-dialog>
+    <!-- 删除电梯 弹窗 end-->
 </div>
 
 </template>
@@ -78,6 +100,8 @@
 // import '../mock/mockfile.js'
 
 import axios from "axios";
+import api from '../api'
+
 
 export default {
   name: "processManagement",
@@ -88,6 +112,8 @@ export default {
   },
   data() {
     return {
+      dialogDelete:false,
+
       eleId: "",
 
       isShow: false,
@@ -106,35 +132,24 @@ export default {
 
       defaultProps: {
         children: "children",
-        label: "label"
-      }
+        label: "name"
+      },
+
+      queryDepartParam:'corp',
+      getAllDepJson:[],
+      createDep:{
+        name: "",
+        parentId: ""
+      },
+      resolve:''
+
     };
   },
 
   methods: {
+    
 
-    // 编辑完成
-    NodeBlur(Node, data) {
-      // debugger
-
-      console.log(Node, data);
-
-      if (data.label.length === 0) {
-        this.$message.error("名称不可为空！");
-
-        return false;
-      } else {
-        if (data.isEdit) {
-          this.$set(data, "isEdit", false);
-
-          console.log(data.isEdit);
-        }
-
-        this.$nextTick(() => {
-          this.$refs["slotTreeInput" + data.id].$refs.input.focus();
-        });
-      }
-    },
+    
 
     // // 查询
     // filterNode(value, data) {
@@ -144,114 +159,185 @@ export default {
     // },
 
 
-    // 鼠标右击事件
+    // 点击更多操作
     rightClick(event,Node,object) {
       // this.menuVisible = true;
-      console.log("object==" + JSON.stringify(object))
+      
       // debugger
 
       this.currentData = object;
 
       this.currentNode = Node;
 
-      // if (Node.level === 1) {
-      //   this.firstLevel = true;
-      // } else {
-      //   this.firstLevel = false;
-      // }
-
-      // 操作栏显示
-      
-
-      // let menu = document.querySelector('#card')
-
-      // /* 菜单定位基于鼠标点击位置 */
-
-      // menu.style.left = event.clientX + 'px'
-
-      // menu.style.top = event.clientY + 'px'
-
-      // document.addEventListener("click", this.foo);
-
-      // this.$refs.card.$el.style.left = event.clientX + 0 + "px";
-
-      // this.$refs.card.$el.style.top = event.clientY + 0 + "px";
+      console.log("currentData==" + JSON.stringify(this.currentData))
+      console.log("currentNode==" + this.currentNode)
     },
 
-    // 鼠标左击事件
-
-    // handleLeftclick(data, node) {
-    //   // $(document).mouseup(function(e){
-    //   //   var _con = $(' 目标区域 ');   // 设置目标区域
-    //   //   if(!_con.is(e.target) && _con.has(e.target).length === 0){ // Mark 1
-    //   //     some code...   // 功能代码
-    //   //   }
-    //   // // });
-    //   // 点击除按钮之外的元素，关闭下拉框
-    //   var _con = document.getElementById('page-container'); // 设置目标区域
-    //   var btn = document.querySelector(".operationBtn"); // 设置目标区域
-		// 	if(!_con.contains(btn)) {
-    //     // $('.tardiv').remove();
-    //     this.foo();
-		// 	}
-
-    //   // this.foo();
-    // },
-
-    //  取消鼠标监听事件 菜单栏
-
-    // foo() {
-     
-    //   this.menuVisible = false;
-    //   //  要及时关掉监听，不关掉的是一个坑，不信你试试，虽然前台显示的时候没有啥毛病，加一个alert你就知道了
-    //   document.removeEventListener("click", this.foo);
-    // },
 
     // 增加同级节点事件
 
-    addSameLevelNode() {
-      let id = Math.ceil(Math.random() * 100);
+    // addSameLevelNode() {
+    //   let id = Math.ceil(Math.random() * 100);
 
-      var data = { id: id, label: "新增节点" };
+    //   var data = { id: id, label: "新增节点" };
 
-      this.$refs.tree.append(data, this.currentNode.parent);
-    },
+    //   this.$refs.tree.append(data, this.currentNode.parent);
+    // },
 
-    // 增加子级节点事件
 
+    // 增加下级
     addChildNode() {
       console.log(this.currentData);
 
       console.log(this.currentNode);
 
-      if (this.currentNode.level >= 3) {
-        this.$message.error("最多只支持三级！");
+      if (this.currentNode.level >= 5) {
+        this.$message.error("最多只支持五级！");
 
         return false;
       }
-
       let id = Math.ceil(Math.random() * 100);
+      this.createDep.name = '新增节点'+id
+      this.createDep.parentId = this.currentData.id
+      api.accountApi.createDepartments(this.createDep).then((res) => {
+        if(res.data.code === 200 && res.data.message === 'success'){
 
-      var data = { id: id, label: "新增节点" };
+          // this.$refs.tree.append(data, this.currentNode);
+          this.currentNode.childNodes = [] // 这里把子节点清空，是因为再次调用 loadNode 的时候会往 childNodes 里 push 节点，所以会有节点重复的情况。
+          // this.loadNode1(this.currentNode, this.resolve)
+          this.refreshNode(this.currentData.id)
 
-      this.$refs.tree.append(data, this.currentNode);
+          // this.loadNode1(this.currentNode, resolve)
+        }
+      })
+      // let id = Math.ceil(Math.random() * 100);
+      
+      // var data = { id: id, name: "新增节点" };
+    },
+    // deleteDialog(){
+    //   this.deleteDialog = true
+    // },
+    // 删除节点
+    deleteNode() {
+      api.accountApi.deleteDepartment({id:this.currentData.id}).then((res) => {
+        if(res.data.code === 200 && res.data.message === 'success'){
+
+          // this.$refs.tree.append(data, this.currentNode);
+          console.log("this.currentNode==" + JSON.stringify(this.currentData))
+          // this.currentNode.childNodes = [] // 这里把子节点清空，是因为再次调用 loadNode 的时候会往 childNodes 里 push 节点，所以会有节点重复的情况。
+          // this.loadNode1(this.currentNode.parent, this.resolve)
+          this.refreshNode(this.currentData.parentId)
+          // this.loadNode1(this.currentNode, resolve)
+        }
+      })
+      // this.$refs.tree.remove(this.currentNode);
     },
 
-    // 删除节点
-
-    deleteNode() {
-      this.$refs.tree.remove(this.currentNode);
+    refreshNode(id){
+      let node = this.$refs.tree.getNode(id);
+      node.loaded = false;
+      node.expand();
     },
 
     // 编辑节点
-
     editNode() {
       // debugger
-
       if (!this.currentData.isEdit) {
         this.$set(this.currentData, "isEdit", true);
+
+        this.$nextTick(() => {
+          this.$refs["slotTreeInput" + this.currentData.id].$refs.input.focus();
+
+        });
       }
-    }
+    },
+
+    // 编辑完成
+    NodeBlur(Node, data) {
+      // debugger
+
+      console.log(Node, data);
+
+      if (data.name.length === 0) {
+        this.$message.error("名称不可为空！");
+
+        return false;
+      } else {
+        if (data.isEdit) {
+          // api.accountApi.editDepartment({id:this.currentData.id}).then((res) => {
+          //   if(res.data.code === 200 && res.data.message === 'success'){
+
+          //   }
+          // })
+          this.$set(data, "isEdit", false);
+
+          console.log(data.isEdit);
+        }
+
+        // this.$nextTick(() => {
+        //   this.$refs["slotTreeInput" + data.id].$refs.input.focus();
+        // });
+      }
+    },
+    // 懒加载
+    loadNode1(node, resolve) {
+      this.resolve = resolve
+//       if (node.level === 0) {
+//         console.log("getAllDepJson111===" + JSON.stringify(this.getAllDepJson))
+//         return resolve([{'corpId': "1229819391223214081",
+// 'createTime': "2020-02-19 01:26:06",
+// 'id': "1",
+// 'name': "AAA商户",
+// 'parentId': "1229819391223214081"}]);
+//       }
+      // if (node.level > 1) return resolve([]);
+      // if(node.level >= 1) { // 二级节点
+        this.getAllDepartmentData(node,resolve)
+      // }
+      // setTimeout(() => {
+        // const data = [{
+        //   id:1,
+        //   name: 'leaf',
+        //   leaf: true,
+        //   isEdit: false,
+        // }, {
+        //   id:2,
+        //   name: 'zone',
+        //   isEdit: false,
+        // }];
+
+        // resolve(data);
+      // }, 500);
+    },
+    // 查询所有部门
+    getAllDepartmentData(node,resolve){
+      // node.forEach(element => {
+        console.log("222===" + node)
+
+      // });
+      api.accountApi.getDepartments(node.level == 0 ? 'corp' : node.data.id).then((res) => {
+        if(res.data.code === 200 && res.data.message === 'success'){
+          this.getAllDepJson = res.data.data || []
+          // this.totalPageSize = res.data.data.total
+          //  this.getAllDepJson[0].isEdit = false
+          // console.log("getAllDepJson===" + JSON.stringify(this.getAllDepJson))
+          // resolve(this.getAllDepJson)
+          // if(this.getAllDepJson.length==0){
+          //   this.$message.error('数据拉取失败，请刷新再试！');
+          //   return;
+          // }
+          resolve(this.getAllDepJson);
+
+        } else {
+          this.getAllDepJson = []
+        }
+        
+        // console.log("res.data.code" + res.data.data.records[0])s
+      }).catch((res) => {
+        
+      })
+      
+    },
 
   },
 
@@ -262,8 +348,11 @@ export default {
   // },
 
   mounted() {
+    this.getAllDepartmentData()
+
     // this.test();
   }
+  
 };
 </script>
 

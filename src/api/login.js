@@ -47,4 +47,8 @@ export default  {
   batchAddLift(params) {
     return http.post(`${http.localURL}/arctic/upload/parks/file`, params, 5 * 60 * 1000)
   },
+  // 批量录入员工
+  batchAddStaff(params) {
+    return http.post(`${http.localURL}/ewtes/upload/file`, params)
+  },
 }

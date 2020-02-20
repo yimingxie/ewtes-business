@@ -202,7 +202,7 @@
                 // 维保
               // if(res.data.data.corpType == "维保"){
                 // window.localStorage.setItem('theme', 'theme1')
-                this.$router.push('/map')
+                this.$router.push('/digital-list')
               // } else {
               //   // 物业
               //   window.localStorage.setItem('theme', 'theme2')
@@ -217,26 +217,9 @@
             this.warningTip = res.data.message
           }
           
-          // this.$route.router.go({path: '/statistic/users'})
         }).catch((res) => {
-          // this.setLoadingStatus(false)
           console.log('logining:::' + this.logining)
-          // this.handleError(res)
-          // console.log('aaa:::' + JSON.stringify(res.data))
-          // if (typeof res.data !== 'undefined' && typeof res.data.error !== 'undefined') {
-          //   switch (res.data.error.code) {
-          //     case 4031003:
-          //       // this.showNotice({
-          //       //   type: 'error',
-          //       //   content: locales[Vue.config.lang].errors[res.data.error.code]
-          //       // })
-          //       this.$router.push('/')
-          //       break
-          //     default:
-          //       this.showWrong = true
-          //       // this.showError(res.data.error)
-          //   }
-          // }
+          
         })
         
       },
@@ -337,17 +320,10 @@
     border: 1px solid rgba(255,255,255,0.15);
     box-shadow: 0 6px 6px 2px rgba(32,33,58,0.03);
     border-radius: 10px;
-    // border-image:-webkit-linear-gradient(left, red 0%, blue 30%, yellow 60%, rgba(0,0,0,0) 90%,  rgba(0,0,0,0) 100%) 5;
-    // background-image: -webkit-linear-gradient(90deg, #C3D4FF 0%, rgba(255,255,255,0.00) 98%);
-    // background-image: linear-gradient(90deg, #C3D4FF 0%, rgba(255,255,255,0.00) 98%);
     .box
       size 100%
-      // background: rgba(255,255,255,0.06);
-      // border: 1px solid rgba(255,255,255,0.15);
-      // box-shadow: 0 6px 6px 2px rgba(32,33,58,0.03);
-      // border-radius: 10px;
+     
   .loginForm
-    // padding 116px 0 0 88px
     size 424px 336px
     position relative
     text-align center
