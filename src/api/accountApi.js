@@ -5,10 +5,19 @@ import http from '../utils/http'
 
 let protocol = process.env.NODE_ENV !== 'production' ? 'http:' : window.location.protocol
 // let url2 = `${protocol}//192.168.100.2/domino`
-let url2 = `${http.localURL}/arctic`
+let url2 = `${http.localURL}/ewtes`
 
 
 export default  {
+  // 获取企业模块
+  getCorModules(){
+    return http.get(
+      `${url2}/corp/function/list`
+    )
+  },
+  // 获取部门
+
+  
   // 角色绑定资源
   bindResoures(params){
     return http.post(
@@ -21,14 +30,14 @@ export default  {
   // 创建维保管理员的账户
   createAccount(params) {
     return http.post(
-      `${url2}/manage/staff`, params
+      `${url2}/user`, params
     )
   },
 
   // 根据账户列表模糊查询 仅限account
   getAccounts(params){
     return http.post(
-      `${url2}/manage/staff/list`, params
+      `${url2}/user/list`, params
     )
   },
   
@@ -39,7 +48,7 @@ export default  {
   // }
   enableAccount(params){
     return http.put(
-      `${url2}/manage/staff/enable`, params
+      `${url2}/user/valid`, params
     )
   },
   // // 修改账号的enable 状态 启用
@@ -64,8 +73,8 @@ export default  {
   // 重置账户密码
   // params:{userId:""}
   resetAccount(params){
-    return http.post(
-      `${url2}/staff/reset-password`,params
+    return http.put(
+      `${url2}/user/reset/password`,params
     )
   },
   // 账户绑定角色
@@ -97,21 +106,27 @@ export default  {
     )
   },
   // 获取部门列表
-  getDepartments(params){
+  getDepartments(id){
+    return http.get(
+      `${url2}/department?id=${id}`
+    )
+  },
+  // 创建下级部门
+  createDepartments(params){
     return http.post(
-      `${url2}/unit/list`, params
+      `${url2}/department`, params
     )
   },
   // 编辑部门
   editDepartment(params){
     return http.put(
-      `${url2}/unit`, params
+      `${url2}/department`, params
     )
   },
   // 删除部门
   deleteDepartment(params){
     return http.delete(
-      `${url2}/unit`, params
+      `${url2}/department`, params
     )
   },
   // 获取公司下的部门
@@ -214,10 +229,16 @@ export default  {
 
 
   // ------------------------角色管理--------------------------------
+  // 创建角色
+  createRole(params){
+    return http.post(
+      `${url2}/role`, params
+    )
+  },
   // 查询角色列表
   getRoles(params){
     return http.post(
-      `${url2}/role-list`, params
+      `${url2}/role/list`, params
     )
   },
   
@@ -230,9 +251,20 @@ export default  {
   // 查询角色下已绑定的模块
   roleGetmodule(id){
     return http.get(
-      `${url2}/${id}/funcs`
+      `${url2}/role/function?id=${id}`
     )
   },
+  
+  deleteRole(params){
+    return http.delete(
+      `${url2}/role`,params
+    )
+  },
+  deleteAccount(params){
+    return http.delete(
+      `${url2}/user`,params
+    )
+  }
 }
 
 

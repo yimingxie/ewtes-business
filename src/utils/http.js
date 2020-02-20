@@ -104,7 +104,7 @@ axios.interceptors.response.use(response => {
   // console.log("response===" + JSON.stringify(response))
 
   // token失效
-  if(response.data.code == 401) {
+  if(response.data.code == 407) {
     
     // if(localStorage.getItem('accessToken')) {
     //   // message.info(res.data.Errors + ',请重新登录', 3);
@@ -221,13 +221,13 @@ if (process.env.NODE_ENV == 'development') {
   devURL = `${protocol}//192.168.100.2`
   xiaohuURL = `${protocol}//192.168.100.89:8080`
   shupingURL = `${protocol}//192.168.100.8:8080`
-  // localURL = `${protocol}//192.168.100.8:8080`
-  // localURL = `${protocol}//127.0.0.1`
+  localURL = `${protocol}//192.168.100.8:8080`
+  // localURL = `${protocol}//192.168.100.17:8080`
   // localURL = `${protocol}//iot.gidomino.com`
   // localURL = `${protocol}//192.168.100.3`
   // localURL = `${protocol}//192.168.100.17:8080`
   // localURL = `${protocol}//192.168.100.8:8080`
-  localURL = `${protocol}//192.168.100.89:8080`
+  // localURL = `${protocol}//192.168.100.89:8080`
 } else if (process.env.NODE_ENV == 'production') {
    localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//192.168.100.3`
   // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//iot.gidomino.com`

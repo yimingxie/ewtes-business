@@ -6,7 +6,7 @@
     <div class="panel topSelect">
       <div class="subSelect">
        
-        <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部单位" class="regionPicker">
+        <!-- <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部单位" class="regionPicker">
           <el-option
             v-for="item in getAllDepJson"
             :key="item.id"
@@ -14,16 +14,56 @@
             :value="item.id">
           </el-option>
         </el-select>
-        <span class="splitLine">|</span>
+        <span class="splitLine">|</span> -->
 
-        <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部部门" class="regionPicker">
+        <!-- <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部部门" class="regionPicker">
           <el-option
             v-for="item in getAllDepJson"
             :key="item.id"
             :label="item.name"
             :value="item.id">
           </el-option>
-        </el-select>
+        </el-select> -->
+        <el-dropdown :hide-on-click="false" trigger="click" class="treeDep" style="width:168px!important">
+          <span class="el-dropdown-link" >
+            <span v-if="queryParam.departmentId !== ''">{{checkDepName1}}</span>
+            <span v-else style="color:#C2C7CC;">请选择所属部门</span>
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown" class="liftDropdown" style="width:168px!important">
+            <el-tree
+
+              :expand-on-click-node="true"
+
+              node-key="id"
+
+              :load="loadNode1"
+
+              :props= defaultProps
+
+              lazy
+
+              :check-on-click-node= "true"
+
+              @node-click="handleLeftclick1"
+
+              ref="tree"
+
+              highlight-current
+
+              >
+
+              <span class="slot-t-node" slot-scope="{ node, data }" >
+
+                <span>
+                  <span >{{node.label}}</span>
+                </span>
+              
+              </span>
+              
+            </el-tree>
+          </el-dropdown-menu>
+        </el-dropdown>
         <!-- <span class="splitLine">|</span>
         <radio-group :items="periods1" :value.sync="period1">
           <span slot="label">防疫点类型：</span>
@@ -54,20 +94,19 @@
             type="selection"
             width="55">
           </el-table-column>
-          <el-table-column prop="username" label="姓名">
+          <el-table-column prop="name" label="姓名">
           </el-table-column>
       
-          <el-table-column prop="name" label="所属单位">
+          <el-table-column prop="corpName" label="所属单位">
           </el-table-column>
           
           <el-table-column  label="部门">
             <template slot-scope="scope">
-              <span v-if="scope.row.roleName" v-html="scope.row.roleName" ></span>
-              <span v-if="scope.row.type == 'administrator'" >超级管理员</span>
+              <span v-html="scope.row.departmentName ? scope.row.departmentName: '--'" ></span>
             </template>
           </el-table-column>
           
-          <el-table-column prop="username" label="手机号">
+          <el-table-column prop="phone" label="手机号">
           </el-table-column>
 
 
@@ -111,13 +150,13 @@
     <el-form :model="addAccountForm" :label-width="formLabelWidth" :rules="addAccountRules" ref="addForm" label-position="top">
       <el-row :gutter="78">
         <el-col :span="12">
-          <el-form-item label="姓名" prop="account">
-            <el-input v-model="addAccountForm.account" placeholder="请输入姓名" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+          <el-form-item label="姓名" prop="name">
+            <el-input v-model="addAccountForm.name" placeholder="请输入姓名" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="性别" prop="gender">
-            <el-radio-group v-model="addAccountForm.gender">
+          <el-form-item label="性别" prop="sex">
+            <el-radio-group v-model="addAccountForm.sex">
               <el-radio :label="1">男</el-radio>
               <el-radio :label="0">女</el-radio>
             </el-radio-group>
@@ -126,21 +165,64 @@
       </el-row>
       <el-row :gutter="78">
         <el-col :span="12">
-          <el-form-item label="手机号" prop="account">
-            <el-input v-model="addAccountForm.account" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+          <el-form-item label="手机号" prop="phone">
+            <el-input v-model="addAccountForm.phone" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
         </el-col>
+
         <el-col :span="12">
-          
+          <el-form-item label="所属部门" prop="departmentId" >
+            <el-dropdown :hide-on-click="false" trigger="click" class="treeDep">
+              <span class="el-dropdown-link" >
+                <span v-if="addAccountForm.departmentId !== ''">{{checkDepName}}</span>
+                <span v-else style="color:#C2C7CC;">请选择所属部门</span>
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown" class="liftDropdown">
+                <el-tree
+
+                  :expand-on-click-node="true"
+
+                  node-key="id"
+
+                  :load="loadNode1"
+
+                  :props= defaultProps
+
+                  lazy
+
+                  :check-on-click-node= "true"
+
+                  @node-click="handleLeftclick"
+
+                  ref="tree"
+
+                  highlight-current
+
+                  >
+
+                  <span class="slot-t-node" slot-scope="{ node, data }" >
+
+                    <span>
+                      <span >{{node.label}}</span>
+                    </span>
+                  
+                  </span>
+                  
+                </el-tree>
+              </el-dropdown-menu>
+            </el-dropdown>
+            
+          </el-form-item>
         </el-col>
       </el-row>
 
       <el-row :gutter="78">
         <el-col :span="12">
-          <el-form-item label="身份证类型" prop="roleId" >
-            <el-select v-model="addAccountForm.roleId" placeholder="请选择身份证类型" size="small">
+          <el-form-item label="身份证类型" prop="idType" >
+            <el-select v-model="addAccountForm.idType" placeholder="请选择身份证类型" size="small">
               <el-option
-                v-for="item in rolesJson"
+                v-for="item in shenfen"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id">
@@ -148,31 +230,30 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="身份证号" prop="roleId" >
-            <el-input v-model="addAccountForm.account" placeholder="请输入身份证号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+        <el-col :span="12" v-if="addAccountForm.idType == 1">
+          <el-form-item label="身份证号" prop="idCard" >
+            <el-input v-model="addAccountForm.idCard" placeholder="请输入身份证号" auto-complete="off" clearable size="small" minlength="18" maxlength="18"></el-input>
           </el-form-item>
+           
         </el-col>
+        <el-col :span="12" v-if="addAccountForm.idType == 2">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="身份证号" prop="idCardPre">
+                  <el-input v-model="addAccountForm.idCardPre" placeholder="前六位" auto-complete="off" clearable size="small" required minlength="6" maxlength="6"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12" style="margin-top:32px">
+                <el-form-item label="" prop="idCardAfter">
+                  <el-input v-model="addAccountForm.idCardAfter" placeholder="后六位" auto-complete="off" clearable size="small" required minlength="6" maxlength="6"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+        </el-col>
+      
       </el-row>
       
-      <el-row :gutter="78">
-        <el-col :span="12">
-          <el-form-item label="所属部门" prop="roleId" >
-            <el-select v-model="addAccountForm.roleId" placeholder="请选择所属部门" size="small">
-              <el-option
-                v-for="item in rolesJson"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          
-        </el-col>
-      </el-row>
-    
+      
       
     </el-form>
     <div slot="footer"  class="dialog-footer tar">
@@ -190,20 +271,20 @@
       
       <el-row :gutter="18">
         <el-col :span="12">
-          <el-form-item label="姓名" prop="account">
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
+          <el-form-item label="姓名" prop="name">
+            <span class="formShowContent">{{EditAccountForm.name}}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="性别" prop="gender">
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
+          <el-form-item label="性别" prop="sex">
+            <span class="formShowContent">{{EditAccountForm.sex}}</span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="18">
         <el-col :span="12">
-          <el-form-item label="手机号" prop="account">
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
+          <el-form-item label="手机号" prop="phone">
+            <span class="formShowContent">{{EditAccountForm.phone}}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -213,21 +294,21 @@
 
       <el-row :gutter="18">
         <el-col :span="12">
-          <el-form-item label="身份证类型" prop="roleId" >
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
+          <el-form-item label="身份证类型" prop="idType" >
+            <span class="formShowContent">{{EditAccountForm.idType}}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="身份证号" prop="roleId" >
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
+          <el-form-item label="身份证号" prop="idCard" >
+            <span class="formShowContent">{{EditAccountForm.idCard}}</span>
           </el-form-item>
         </el-col>
       </el-row>
       
       <el-row :gutter="18">
         <el-col :span="12">
-          <el-form-item label="所属部门" prop="roleId" >
-            <span class="formShowContent">{{EditAccountForm.account}}</span>
+          <el-form-item label="所属部门" prop="departmentName" >
+            <span class="formShowContent">{{EditAccountForm.departmentName}}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -328,6 +409,7 @@
   <div class="dia-loading" v-show="diaLoading">
     <div class="dia-loading-p">导入时间较长，请耐心等待...</div>
   </div>
+
   <el-dialog :visible.sync="dialogBatch" title="批量导入" :show-close="false" width="500px">
     <div>
       <div class="dia-content">
@@ -335,9 +417,9 @@
           <div class="dia-citem clearfix">
             <div class="dia-citem-label">下载模板</div>
             <div class="dia-citem-ib">
-              <a class="dia-download-link" href="https://iot.gidomino.com/elevator/template/batch-import-template-property.xlsx" target="_blank">《完整模板.excel》</a>
+              <a class="dia-download-link" href="http://lorns.gidomino.com/template/batch-import-template-complete.xlsx" target="_blank">《完整模板.excel》</a>
               <span style="color: #D8D8D8;margin:0 10px">|</span>
-              <a class="dia-download-link" href="https://iot.gidomino.com/elevator/template/batch-import-template-property.xlsx" target="_blank">《简要模板.excel》</a>
+              <a class="dia-download-link" href="http://lorns.gidomino.com/template/batch-import-template-brief.xlsx" target="_blank">《简要模板.excel》</a>
             </div>
           </div>
           <div class="dia-citem clearfix" style="margin-top: 24px;">
@@ -381,29 +463,38 @@
   </el-dialog>
 
   <!-- 导入结果 -->
-  <el-dialog :visible.sync="dialogBatchResult" title="提示" :show-close="false" width="690px">
+  <el-dialog :visible.sync="dialogBatchResult" title="导入结果" :show-close="false" width="500px">
     <div>
       <div class="dia-content">
         <div class="batch-result">
           <div class="batch-result-item">
             <div class="batch-result-item-title success">导入成功</div>
             <div class="batch-result-item-p">
-              成功导入<span class="batch-result-p-info">{{batchRes.successCnt}}部</span>电梯！其中，存在<span class="batch-result-p-error">{{batchRes.paramIncompleteCnt}}部</span>电梯需要补充材料；存在<span class="batch-result-p-error">{{batchRes.otherBrandCnt}}部</span>电梯品牌未匹配，暂定电梯品牌为「其他」
+              <span class="batch-result-p-info">{{batchRes.successCnt}}条</span>
+            
             </div>
           </div>
           <div class="batch-result-item" style="margin-top: 36px;">
-            <div class="batch-result-item-title">导入失败</div>
+            <div class="batch-result-item-title">导入失败（可下载错误日志，查看失败原因）</div>
             <div class="batch-result-item-p">
-              导入失败{{batchRes.failCnt}}部电梯，可下载错误日志，查看失败原因。
+              
+              <span class="batch-result-p-error">{{batchRes.failCnt}}条</span>
             </div>
           </div>
         </div>
+        <!-- <div class="dia-citem-ib">
+          <a class="dia-download-link" href="https://iot.gidomino.com/elevator/template/batch-import-template-property.xlsx" target="_blank">《完整模板.excel》</a>
+          <span style="color: #D8D8D8;margin:0 10px">|</span>
+          <a class="dia-download-link" href="https://iot.gidomino.com/elevator/template/batch-import-template-property.xlsx" target="_blank">《简要模板.excel》</a>
+        </div> -->
+        <div class="dia-download-link" @click="downloadError" style="margin-top: 28px;border-top: 1px solid #e9e9e9;padding: 22px 0 0;">下载错误日志</div>
       </div>
 
-      <div class="diaN-btn-con clearfix" style="margin-top: 30px;">
-        <div class="diaN-btn diaN-btn-cancel" @click="dialogBatchResult=false">好的</div>
-        <div class="diaN-btn diaN-btn-red" @click="downloadError">下载错误日志</div>
-      </div>
+      <!-- <div class="diaN-btn-con clearfix " style="margin-top: 30px;"> -->
+      
+    </div>
+    <div slot="footer"  class="dialog-footer tar">
+      <el-button type="primary" @click="dialogBatchResult=false" class="dialogSure">完 成</el-button>
     </div>
   </el-dialog>
 
@@ -418,31 +509,55 @@ import RadioGroup from "../../components/RadioGroup";
 import SearchInput from "../../components/SearchInput";
 import fotter from "../../views/common/fotter";
 import mutiUpload from "../../components/mutiUpload";
+import http from '../../utils/http'
 
 export default {
   data() {
     return {
+      isShow: false,
+
+      currentData: "",
+
+      currentNode: "",
+
+      defaultProps: {
+        children: "children",
+        label: "name"
+      },
+
+      queryDepartParam:'corp',
+      getAllDepJson:[],
+      ///////////
+      shenfen:[
+        {id:1,name:'完整'},
+        {id:2,name:'简单'}
+      ],
       rolesJson:[],
       // roleNameArr:[],
       edit_roleNameArr:[],
       formLabelWidth: '86px',
       add_dialogFormVisible:false,
       addAccountForm: {
-        account: '',
-        password: '666666',
-        corpId: window.localStorage.getItem('corpId'),
+        phone: '',
         name:'',
-        // accountType: "1",
-        // userType: 1, //维保创建自己的账号 类型为0；通用创建维保管理员 类型为1；通用创建通用为2
-        roleId:'',
-        gender:1
+        departmentId:'',
+        sex:1,
+        idType: 1,
+        idCard: "",
+        idCardPre:'',
+        idCardAfter:''
+     
       },
+      // idCardPre:'',
+      // idCardAfter:'',
       edit_dialogFormVisible: false,
       EditAccountForm: {
-        uid: "",
-        name: "",
-        // account: "",
-        roleId : "222",
+        phone: '',
+        name:'',
+        departmentName:'',
+        sex:1,
+        idType: 1,
+        idCard: "",
       },
       query:'',
       searchKey:'',
@@ -459,14 +574,8 @@ export default {
       queryParam:{
         offset:1,
         limit:10,
-        // column: "create_time",
-        // order: false,
-        queryStr: "",
-        // corpId:window.localStorage.getItem('corpId'),
-        // phone:'',
-        // name:'',
-        status:'',
-        roleId:''
+        departmentId: "",
+        search: ""
       },
       getAllAccountJson: [],
       roleQueryParam:{
@@ -475,7 +584,7 @@ export default {
         column: "create_time",
         order: true,
         corpId:window.localStorage.getItem('corpId'),
-        queryStr: ""
+        search: ""
       },
       periods: [
         { label: '全部', value: "" },
@@ -493,8 +602,8 @@ export default {
       },
       adType:'',
       addAccountRules: {
-        account: [
-          {required: true, message: '请输入登录账号', trigger: 'blur' },
+        phone: [
+          // {required: true, message: '请输入登录账号', trigger: 'blur' },
           { min: 11, max: 11, message: '登录账号错误，请输入11位手机号', trigger: 'blur' },
           {
             required: true,
@@ -507,11 +616,19 @@ export default {
           { required: true, message: '请输入真实姓名', trigger: 'blur' },
           { max: 20, message: '真实姓名字符长度过长，请控制在20位字符以内', trigger: 'blur' },
         ],
-        roleId: [
-          { required: true, message: '请选择角色', trigger: 'change' }
+        idType: [
+          {required: true, message: '请选择身份证类型', trigger: 'change' }
         ],
-        gender: [
-          {required: true, message: '请选择角色', trigger: 'change' }
+        idCard:[
+          { required: true, message: '请输入身份证号', trigger: 'blur' },
+        ],
+        idCardPre:[
+          { required: true, message: '请输入身份证号前六位', trigger: 'blur' },
+          { min: 6, message: '请输入身份证号前六位', trigger: 'blur' },
+        ],
+        idCardAfter:[
+          { required: true, message: '请输入身份证号后六位', trigger: 'blur' },
+          { min: 6, message: '请输入身份证号后六位', trigger: 'blur' },
         ],
       
       },
@@ -553,6 +670,8 @@ export default {
       batchRes: {},
       // 录入结果
       dialogBatchResult: false,
+      checkDepName:'',
+      checkDepName1:''
     }
   },
   components: {
@@ -572,11 +691,81 @@ export default {
   },
   mounted() {
     // this.queryParam.corpId = window.localStorage.getItem('corpId')
-    this.getAllRoleData()
+    // this.getAllRoleData()
     this.getAllAccountData()
     this.getAllDepartmentData()
   },
   methods: {
+    // 懒加载
+    loadNode1(node, resolve) {
+      this.resolve = resolve
+      //       if (node.level === 0) {
+      // //         console.log("getAllDepJson111===" + JSON.stringify(this.getAllDepJson))
+      //         return resolve([{'corpId': "1229819391223214081",
+      // 'createTime': "2020-02-19 01:26:06",
+      // 'id': "1",
+      // 'name': "AAA商户",
+      // 'parentId': "1229819391223214081"}]);
+      //       }
+      // if (node.level > 1) return resolve([]);.el
+      // if(node.level >= 1) { // 二级节点
+        this.getAllDepartmentData(node,resolve)
+      // }
+      // setTimeout(() => {
+        // const data = [{
+        //   id:1,
+        //   name: 'leaf',
+        //   leaf: true,
+        //   isEdit: false,
+        // }, {
+        //   id:2,
+        //   name: 'zone',
+        //   isEdit: false,
+        // }];
+
+        // resolve(data);
+      // }, 500);
+    },
+    // 查询所有部门
+    getAllDepartmentData(node,resolve){
+      // node.forEach(element => {
+        console.log("222===" + node)
+
+      // });
+      api.accountApi.getDepartments(node.level && node.level !== 0 ?  node.data.id :'corp').then((res) => {
+        if(res.data.code === 200 && res.data.message === 'success'){
+          this.getAllDepJson = res.data.data || []
+          // this.totalPageSize = res.data.data.total
+          //  this.getAllDepJson[0].isEdit = false
+          // console.log("getAllDepJson===" + JSON.stringify(this.getAllDepJson))
+          // resolve(this.getAllDepJson)
+          // if(this.getAllDepJson.length==0){
+          //   this.$message.error('数据拉取失败，请刷新再试！');
+          //   return;
+          // }
+          resolve(this.getAllDepJson);
+
+        } else {
+          this.getAllDepJson = []
+        }
+        
+        // console.log("res.data.code" + res.data.data.records[0])s
+      }).catch((res) => {
+        
+      })
+      
+    },
+    handleLeftclick1(data, node) {
+      console.log("data" + JSON.stringify(data))
+      this.checkDepName1 = data.name
+      this.queryParam.departmentId = data.id
+      this.getAllAccountData()
+    },
+    handleLeftclick(data, node) {
+      console.log("data" + JSON.stringify(data))
+      this.checkDepName = data.name
+      this.addAccountForm.departmentId = data.id
+    },
     // 打开批量录入弹窗
     openSubmitFile() {
       // reset TODO
@@ -629,14 +818,21 @@ export default {
 
       // 请求
       this.diaLoading = true
-      api.log.batchAddLift(formData).then(res => {
-        console.log('录入', res)
-        this.diaLoading = false
-        this.batchRes = res.data.data
+      api.log.batchAddStaff(formData).then(res => {
+        if(res.data.code == 200){
+          console.log('录入', res)
+          this.diaLoading = false
+          this.batchRes = res.data.data
 
-        // 展示出结果框
-        this.dialogBatch = false
-        this.dialogBatchResult = true
+          // 展示出结果框
+          this.dialogBatch = false
+          this.dialogBatchResult = true
+          this.getAllAccountData()
+        } else {
+          this.$message.error(res.data.message)
+          this.diaLoading = false
+        }
+        
 
       }).catch(error => {
         // 超时
@@ -648,7 +844,7 @@ export default {
     // 下载错误日志
     downloadError() {
       if (this.batchRes.failCnt !== 0) {
-        let url = `${http.localURL}/arctic/download/file?fileName=` + this.batchRes.fileName
+        let url = `${http.localURL}/ewtes/download/file?filename=` + this.batchRes.fileName
         window.open(url);
       } else {
         return this.$message.info('无错误日志')
@@ -662,13 +858,6 @@ export default {
         return this.$message.error('请勾选需要删除的员工。员工删除后无法复原，请谨慎操作');
       } else {
          console.log("multipleSelection-===" + JSON.stringify(this.multipleSelection))
-        // this.checkedStaffsName = []
-        // this.multipleSelection.forEach(item =>{
-        //   var obj = this.getAllAccountJson.filter(function(value) {
-        //     return value.id == item;
-        //   })
-        //   // this.checkedStaffsName.push(obj[0].name)
-        // })
       }
       this.dialogDelete = true
     },
@@ -709,22 +898,22 @@ export default {
       // console.log("this.selectData===" + JSON.stringify(this.selectData))
     },
     // 查询所有部门
-    getAllDepartmentData(){
-      api.accountApi.getDepartments(this.queryDepartParam).then((res) => {
-        if(res.data.code === 200 && res.data.message === 'success'){
-          this.getAllDepJson = res.data.data.records
-          // this.totalPageSize = res.data.data.total
+    // getAllDepartmentData(){
+    //   api.accountApi.getDepartments(this.queryDepartParam).then((res) => {
+    //     if(res.data.code === 200 && res.data.message === 'success'){
+    //       this.getAllDepJson = res.data.data.records
+    //       // this.totalPageSize = res.data.data.total
 
-        } else {
-          this.getAllDepJson = []
-        }
+    //     } else {
+    //       this.getAllDepJson = []
+    //     }
         
-        // console.log("res.data.code" + res.data.data.records[0])s
-      }).catch((res) => {
+    //     // console.log("res.data.code" + res.data.data.records[0])s
+    //   }).catch((res) => {
         
-      })
+    //   })
       
-    },
+    // },
     // 根据部门筛选
     depSelectChange() {
       if(this.queryParam.depId !== '') {
@@ -737,7 +926,7 @@ export default {
     },
     // 查询所有账户
     getAllAccountData(){
-      api.accountApi.getAccounts(this.queryParam).then((res) => {
+      api.accountApi.getStaffs(this.queryParam).then((res) => {
         if(res.data.code === 200 && res.data.message === 'success'){
           this.getAllAccountJson = res.data.data.records
           this.totalPageSize = res.data.data.total
@@ -843,15 +1032,22 @@ export default {
     },
     // 编辑账号
     editAccount(index, row) {
-      this.EditAccountForm.uid = row.id
-      this.EditAccountForm.account = row.username
+      //  phone: '',
+      //   name:'',
+      //   departmentName:'',
+      //   sex:1,
+      //   idType: 1,
+      //   idCard: "",
+
+      this.EditAccountForm.id = row.id
+      this.EditAccountForm.phone = row.phone
       this.EditAccountForm.name = row.name
-  
-      this.EditAccountForm.roleId = "-1"
-      if(row.roleId) {
-        this.EditAccountForm.roleId = row.roleId
-      }
-      this.adType = row.type
+      this.EditAccountForm.departmentName = row.departmentName || '暂无'
+      this.EditAccountForm.sex = row.sex  == 1 ? '男':"女"
+      this.EditAccountForm.idType = row.idType == 1 ? '完整': '简单'
+      this.EditAccountForm.idCard = row.idCard
+
+      
       // this.EditAccountForm.phoneNumber = row.phoneNumber
       // this.edit_roleNameArr = row.roleName.split(',')
       this.edit_dialogFormVisible = true
@@ -1010,7 +1206,9 @@ export default {
     // 打开添加账号弹窗
     addAccountDialog(){
       this.add_dialogFormVisible = true
-
+      this.addAccountForm.idCard = ""
+      this.addAccountForm.idCardPre = ''
+      this.addAccountForm.idCardAfter = ''
       // 重置
       this.$nextTick(()=>{
         this.$refs['addForm'].resetFields();
@@ -1022,9 +1220,11 @@ export default {
       
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
-          console.log('submit!');
-          api.accountApi.createAccount(this.addAccountForm).then((res) => {
-            this.adding = false
+          if(this.addAccountForm.idType == 2){
+            this.addAccountForm.idCard = this.addAccountForm.idCardPre + '******' + this.addAccountForm.idCardAfter
+          }
+          api.accountApi.createStaff(this.addAccountForm).then((res) => {
+            // this.adding = false
             
             if (res.data.code === 200) {
               // 修改角色
@@ -1054,7 +1254,7 @@ export default {
     // 搜索真实姓名/手机号
     searchAccount(){
       this.queryParam.offset = 1
-      this.queryParam.queryStr = this.searchKey
+      this.queryParam.search = this.searchKey
       this.getAllAccountData()
     }
 
@@ -1072,5 +1272,29 @@ export default {
     text-align: center;
     line-height 42px
     padding 0 0 30px 0
-  
+  .treeDep
+    width 100%!important
+    border-radius: 4px!important;
+    border: 1px solid #dcdfe6!important;
+    height: 32px !important;
+    line-height: 32px !important;
+    position relative!important
+    padding: 0 10px!important;
+    overflow: hidden!important;
+    white-space: nowrap!important;
+    text-overflow: ellipsis!important;
+    .el-dropdown-link,.el-dropdown-menu
+      width: 100%!important;
+    .el-dropdown-link
+      display: inline-block!important;
+    .el-icon-arrow-down
+      float: right!important;
+      color: #c0c4cc!important;
+      height: 32px!important;
+      line-height: 29px!important;
+.liftDropdown
+  width 280px
+  .search1 .search_input
+    width: 415px;
+    padding: 0 10px;
 </style>
