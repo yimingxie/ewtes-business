@@ -5,43 +5,39 @@
 
     <div class="panel topSelect">
       <div class="subSelect">
-        <!-- <el-cascader 
-          filterable
-          change-on-select
-          class="regionPicker" 
-          :options="regionOptions" 
-          v-model="form.selectedOptions"
-          @change="handleChange" 
-          :show-all-levels="false">
-        </el-cascader> -->
-        <!-- 省市联动筛选 -->
-        <!-- <div class="llct-area">
-          <city-choose @childVal="selectCity" :selectCity="selectArea"></city-choose>
-        </div> -->
-        <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部单位" class="regionPicker">
+     
+        <el-select @change="corpSelectChange()" clearable v-model="queryParam.depId" placeholder="全部单位" class="regionPicker">
           <el-option
-            v-for="item in getAllDepJson"
+            v-for="item in corpLists"
             :key="item.id"
             :label="item.name"
             :value="item.id">
           </el-option>
         </el-select>
+
         <span class="splitLine">|</span>
-        <!-- <el-select clearable v-model="selectedDpt" placeholder="请选择部门" class="regionPicker">
-          <el-option
-            v-for="item in departments"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-            >
-          </el-option>
-        </el-select> -->
-        <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部部门" class="regionPicker">
+  
+        <!-- <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部部门" class="regionPicker">
           <el-option
             v-for="item in getAllDepJson"
             :key="item.id"
             :label="item.name"
             :value="item.id">
+          </el-option>
+        </el-select> -->
+        <el-cascader
+          :options="options2"
+          @active-item-change="handleItemChange"
+          :props="props"
+        ></el-cascader>
+        <span class="splitLine">|</span>
+
+        <el-select @change="dotSelectChange()" clearable v-model="queryParam.epedId" placeholder="请选择防疫点" class="regionPicker">
+          <el-option
+            v-for="item in getAllDotJson"
+            :key="item.epedId"
+            :label="item.epedName"
+            :value="item.epedId">
           </el-option>
         </el-select>
         <!-- <radio-group :items="periods" :value.sync="period">
@@ -87,8 +83,8 @@
     <div class="panel" style="padding: 0 20px 20px;border-top-left-radius: 0;border-top-right-radius: 0;margin-top: 0;">
       <!-- 列表 Start -->
       <el-row>
-        <el-col  :lg="8" :xl="6" class="" v-for="(account, index) in getAllAccountJson" :key="index">
-          <div class="staff-grid-content bg-purple highlightDiv staff_highlight">
+        <el-col :lg="8" :xl="6" :xs='8' :sm='8' :md='8' class="" v-for="(account, index) in getAllAccountJson" :key="index">
+          <div class="staff-grid-content bg-purple " :class="{'highlightDiv staff_highlight' : account.warnStatus == 1}">
               <!-- <div class="grid_checkbox">
                 <el-checkbox-group v-model="checkedStaffs" @change="handleCheckedStaffsChange">
                   <el-checkbox :label="account.id" :key="index" class="checkbox16">{{nonetext}}</el-checkbox>
@@ -97,24 +93,29 @@
               <div class="grid_content">
                 <div class="stf_content">
                   <span class="stf_pic">
-                    <img :src="account.url" alt="" width="88" height="88"/>
+                    <img v-if="account.url" :src="account.url" alt="" width="88" height="88"/>
+                    <img v-else src="../../assets/images/hs/header.png"  alt="" width="88" height="88"/>
                   </span>
                   <span class="stf_info">
                     <span class="stf_name">
-                      <router-link :to="{ name: 'personnelDetails', params: { staffId: account.id }}"><span>{{account.name}}</span></router-link>
+                      <!-- <router-link :to="{ name: 'personnelDetails', params: { staffId: account.id }}"><span>{{account.name}}</span></router-link> -->
+                      <router-link :to="{path:'/person-detail',query:{idCard: account.idCard, epedId:account.lastEpedId}}"><span>{{account.name}}</span></router-link>
                       <!-- <router-link :to="{ name: 'parkDetails', params: { staffId: account.id }}"><span>{{account.name}}</span></router-link> -->
-                      <span v-if="account.gender == 0"><img src="../../assets/images/hs/female.png"  alt="" /></span>
+                      <span v-if="account.sex == 0"><img src="../../assets/images/hs/female.png"  alt="" /></span>
                       <span v-else><img src="../../assets/images/hs/male.png"  alt="" /></span>
                     </span>
                     
-                    <div class="stf_department">{{account.username}}</div>
-                    <div class="stf_wendu"><span style="margin-right:20px">36.7℃</span><span>1号餐厅</span></div>
+                    <div class="stf_department">{{account.phone}}</div>
+                    <div class="stf_wendu">
+                      <span style="margin-right:20px">{{account.lastTemperature ? account.lastTemperature : '--'}}℃</span>
+                      <!-- <span>{{account.lastEpedId}}</span> -->
+                    </div>
                     <!-- <div class="stf_p stf_phone">{{account.username}}</div> -->
-                    <div class="stf_p stf_area">{{account.area}}</div>
-                    <div class="stf_p stf_liftnum">{{account.mngTotal}} </div>
+                    <div class="stf_p stf_area">{{account.corpName}}</div>
+                    <div class="stf_p stf_liftnum">{{account.departmentName ? account.departmentName : '--'}} </div>
                   </span>
-                  <span class="stf_active" :class="{'activeFree' : !account.status}">
-                    <i></i><span v-text="account.status ? '作业中' : '空闲'"></span>
+                  <span class="stf_active" :class="{'activeFree' : 1 == account.warnStatus}">
+                    <i></i><span v-text="account.warnStatus == 0 ? '正常' : '异常'"></span>
                   </span>
                 </div>
                 
@@ -287,6 +288,7 @@ import CityChoose from '../../components/CityChoose2'
 import moment from 'moment';
 import newArea from "../../utils/newArea";
 
+
 export default {
   data() {
     return {
@@ -389,7 +391,19 @@ export default {
       selectArea:[],
       dialogDelete: false,
       dialogReset: false,
-      corpLists:[]
+      corpLists:[],
+      getAllDotJson:[],
+      options2: [{
+        label: '江苏',
+        cities: []
+      }, {
+        label: '浙江',
+        cities: []
+      }],
+      props: {
+        value: 'label',
+        children: 'cities'
+      }
     }
   },
   components: {
@@ -399,45 +413,77 @@ export default {
     'city-choose': CityChoose,
   },
   watch:{
-    // 作业状态筛选
-    period(val) {
-      if(val != ''){
-        this.searchKey = this.queryParam.staffName = this.queryParam.phone = '' // 筛选时清空搜索
-      }
-      // 筛选时默认跳到第一页
-      this.queryParam.offset = 0
-      this.queryParam.workStatus = val
-      this.getAllAccountData()
-    },
-    // 账号状态筛选
+    // 人员状态筛选
     period1(val) {
       if(val != ''){
-        this.searchKey = this.queryParam.staffName = this.queryParam.phone = '' // 筛选时清空搜索
+        this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
       }
       // 筛选时默认跳到第一页
       this.queryParam.offset = 0
-      this.queryParam.accountStatus = val
+      this.queryParam.warnStatus = val
       this.getAllAccountData()
     }
   },
   mounted() {
-    // console.log("111111111111111::" + moment("20121031", "YYYYMMDD").fromNow())
     // this.getAllRoleData()
     this.getCorps()
     // 所有员工列表
     this.getAllAccountData()
     // 所有部门列表
-    this.getAllDepartmentData()
+    // this.getAllDepartmentData()
     // 加载省市下拉选项
-    this.regionOptions = newArea.newAreaOption()
+    // this.regionOptions = newArea.newAreaOption()
+    // 防疫区域列表
+    this.getDots()
   },
   methods: {
-    moment,
+    loadNode1(node, resolve) {
+      this.getAllDepartmentData(node,resolve)
+    },
+    // 级联懒加载
+    handleItemChange(val) {
+      console.log('active item:', val);
+      if (val.indexOf('江苏') > -1 && !this.options2[0].cities.length) {
+        this.options2[0].cities = [{
+          label: '南京'
+        }];
+      } else if (val.indexOf('浙江') > -1 && !this.options2[1].cities.length) {
+        this.options2[1].cities = [{
+          label: '杭州'
+        }];
+      }
+    },
+
+    // 查询所有部门
+    getAllDepartmentData(node,resolve) {
+
+      api.accountApi.getDepartments(node.level && node.level !== 0 ?  node.data.id :'corp').then((res) => {
+        if(res.data.code === 200 && res.data.message === 'success'){
+          this.getAllDepJson = res.data.data || []
+          resolve(this.getAllDepJson);
+        } else {
+          this.getAllDepJson = []
+          resolve([])
+        }
+        
+      }).catch((res) => {
+        
+      })
+      
+    },
+
+    getDots(){
+      api.person.getEpidemicArea().then((res) => {
+        if(res.data.code == 200) {
+          this.getAllDotJson = res.data.data || []
+        }
+      })
+    },
     // 获取公司
     getCorps(){
       api.person.getCorps().then((res) => {
-        if(res.data.code == 200){
-          // this.Corp
+        if(res.data.code == 200) {
+          this.corpLists = res.data.data || []
         }
       })
     },
@@ -447,67 +493,55 @@ export default {
 
       })
     },
-    // 根据部门筛选
-    depSelectChange() {
-      if(this.queryParam.depId !== '') {
-        this.searchKey = this.queryParam.staffName = this.queryParam.phone = '' // 筛选时清空搜索
+    // 筛选单位（公司）
+    corpSelectChange(){
+
+    },
+    // 筛选防疫点
+    dotSelectChange(){
+      if(this.queryParam.epedId !== '') {
+        this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
       }
       // 筛选时默认跳到第一页
       this.queryParam.offset = 0
 
       this.getAllAccountData()
     },
-    // 查询所有部门
-    getAllDepartmentData(){
-      api.accountApi.getDepartments(this.queryDepartParam).then((res) => {
-        if(res.data.code === 200 && res.data.message === 'success'){
-          this.getAllDepJson = res.data.data.records
-          // this.totalPageSize = res.data.data.total
-
-        } else {
-          this.getAllDepJson = []
-        }
-        
-        // console.log("res.data.code" + res.data.data.records[0])s
-      }).catch((res) => {
-        
-      })
-      
-    },
-    // 区域筛选
-    selectCity(cityArr, cnName) {
-      // this.queryParam.accountStatus = "1"
-      // this.queryParam.worksStatus = "1"
-      // this.searchKey = this.queryParam.staffName = this.queryParam.phone = '' // 筛选时清空搜索
-      this.queryParam.areaCode = cityArr[cityArr.length-1]
-      console.log(cnName)
+    // 根据部门筛选
+    depSelectChange() {
+      if(this.queryParam.depId !== '') {
+        this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
+      }
       // 筛选时默认跳到第一页
       this.queryParam.offset = 0
+
       this.getAllAccountData()
     },
-    // 切换地区选择器
-    // handleChange(value){
-    //   console.log("11111:::"+ value)
+ 
+    // 区域筛选
+    // selectCity(cityArr, cnName) {
      
-    //   if (!this.form.area) {
-    //     this.form.area = "深圳市";
-    //   }
-
+    //   this.queryParam.areaCode = cityArr[cityArr.length-1]
+    //   console.log(cnName)
+    //   // 筛选时默认跳到第一页
+    //   this.queryParam.offset = 0
+    //   this.getAllAccountData()
     // },
+   
     // 全选，非全选
-    handleCheckAllChange(val) {
-      this.checkedStaffs = val ? this.checkedAllStaff : [];
-      this.isIndeterminate = false;
-      // console.log("check:" + this.checkedStaffs)
-    },
-    // 点击多选框
-    handleCheckedStaffsChange(value) {
-      // console.log("check:" + value)
-      // console.log("Allcheckop:==" + this.checkedAllStaff)
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.getAllAccountJson.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.getAllAccountJson.length;
-    },
+    // handleCheckAllChange(val) {
+    //   this.checkedStaffs = val ? this.checkedAllStaff : [];
+    //   this.isIndeterminate = false;
+    //   // console.log("check:" + this.checkedStaffs)
+    // },
+    // // 点击多选框
+    // handleCheckedStaffsChange(value) {
+    //   // console.log("check:" + value)
+    //   // console.log("Allcheckop:==" + this.checkedAllStaff)
+    //   let checkedCount = value.length;
+    //   this.checkAll = checkedCount === this.getAllAccountJson.length;
+    //   this.isIndeterminate = checkedCount > 0 && checkedCount < this.getAllAccountJson.length;
+    // },
     // 查询所有员工账户
     getAllAccountData(){
       api.person.getEpidemicList(this.queryParam).then((res) => {
@@ -551,28 +585,23 @@ export default {
       })
      
     },
-     // 重置密码对话框
-    resetPasswordDialog () {
-      if (this.checkedStaffs.length === 0) {
-        return this.$message.error('请勾选需要重置密码的员工');
-      } else {
-        this.checkedStaffsName = []
-        this.checkedStaffs.forEach(item =>{
-          var obj = this.getAllAccountJson.filter(function(value) {
-            return value.id == item;
-          })
-          this.checkedStaffsName.push(obj[0].name)
-        })
-      }
-      this.dialogReset = true
-    },
+    //  // 重置密码对话框
+    // resetPasswordDialog () {
+    //   if (this.checkedStaffs.length === 0) {
+    //     return this.$message.error('请勾选需要重置密码的员工');
+    //   } else {
+    //     this.checkedStaffsName = []
+    //     this.checkedStaffs.forEach(item =>{
+    //       var obj = this.getAllAccountJson.filter(function(value) {
+    //         return value.id == item;
+    //       })
+    //       this.checkedStaffsName.push(obj[0].name)
+    //     })
+    //   }
+    //   this.dialogReset = true
+    // },
     // 重置密码
     resetPassword(index, row){
-      // this.$confirm('是否重置密码?（重置后的密码为666666）', '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   type: 'error'
-      // }).then(() => {
         var checkIds = this.checkedStaffs
         console.log("checkIds===" + checkIds)
         api.accountApi.resetPsd({"ids":checkIds}).then((res) => {
@@ -585,9 +614,6 @@ export default {
           this.$message.error(res.data.message);
         })
 
-      // }).catch(() => {
-      //   this.$message.info("取消重置密码");            
-      // });
     },
    
     // 编辑账号
@@ -874,11 +900,11 @@ export default {
     text-align: center
     margin 13px 0 0 0
   .stf_active
-    color: #4BCC8F;
+    color: #3572FF;
     font-size: 14px;
     absolute top 1px right 0
     i 
-      border: 1px solid rgba(75,204,143,0.30);
+      border: 1px solid rgba(53,114,255,0.43);
       border-radius: 50%;
       size 10px
       display: inline-block
@@ -887,7 +913,7 @@ export default {
       box-sizing:border-box
       &:before
         content: ''
-        background: #4BCC8F;
+        background: #3572FF;
         border-radius: 50%;
         size 6px
         display:inline-block

@@ -35,7 +35,7 @@ const router = new Router({
       component: (resolve) => require(['./views/record/Personnel.vue'], resolve)
     },
     {
-      path: "/personnel/:staffId",
+      path: "/person-detail",
       name: "personnelDetails",
       meta: {
         title: "人员详情",

@@ -700,32 +700,7 @@ export default {
     // 懒加载
     loadNode1(node, resolve) {
       this.resolve = resolve
-      //       if (node.level === 0) {
-      // //         console.log("getAllDepJson111===" + JSON.stringify(this.getAllDepJson))
-      //         return resolve([{'corpId': "1229819391223214081",
-      // 'createTime': "2020-02-19 01:26:06",
-      // 'id': "1",
-      // 'name': "AAA商户",
-      // 'parentId': "1229819391223214081"}]);
-      //       }
-      // if (node.level > 1) return resolve([]);.el
-      // if(node.level >= 1) { // 二级节点
-        this.getAllDepartmentData(node,resolve)
-      // }
-      // setTimeout(() => {
-        // const data = [{
-        //   id:1,
-        //   name: 'leaf',
-        //   leaf: true,
-        //   isEdit: false,
-        // }, {
-        //   id:2,
-        //   name: 'zone',
-        //   isEdit: false,
-        // }];
-
-        // resolve(data);
-      // }, 500);
+      this.getAllDepartmentData(node,resolve)
     },
     // 查询所有部门
     getAllDepartmentData(node,resolve){

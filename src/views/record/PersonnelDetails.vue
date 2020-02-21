@@ -15,40 +15,40 @@
         </router-link>
        / 人员详情</div>
       <div class="row" >
-        <div class="panel topPanel highlightDiv hightLight">
+        <div class="panel topPanel " :class="{'highlightDiv hightLight' : 1 == getStaffInfo.warnStatus}">
           <!-- <el-avatar shape="square" :size="210" :fit="fits" :src="url" class="s_pic" style=""></el-avatar> -->
           <div class="s_pic" style="">
             <img :src="url"  alt="" width="190" height="190"/>
           </div>
           <div class="s_contain">
             <!-- <router-link :to="{ name: 'editStaff', params: { staffId: this.$route.params.staffId }}"><span class="s_de_edit" ></span></router-link> -->
-            <div class="releaseBtn" @click="dialogRelease = true">解除异常状态</div>
+            <div v-if="getStaffInfo.warnStatus == 1" class="releaseBtn" @click="dialogRelease = true">解除异常状态</div>
             <p class="s_de_name">{{getStaffInfo.name}}
-              <img v-if="getStaffInfo.gender == '0'" src="../../assets/images/hs/female.png"  alt="" />
+              <img v-if="getStaffInfo.sex == '0'" src="../../assets/images/hs/female.png"  alt="" />
               <img v-else src="../../assets/images/hs/male.png"  alt="" />
             </p>
             <!-- <p class="s_de_department">{{getStaffInfo.depName}}</p> -->
             <div class="s_de_details">
               <table>
                 <tr>
-                  <td><span class="tie" style="font-size: 38px;color: #3572FF;">36.8<span style="font-size: 16px;color: color: #173000;">℃</span></span></td>
-                  <td><span class="tie">手机号码：</span><span >{{getStaffInfo.username}}</span></td>
+                  <!-- <td><span class="tie" style="font-size: 38px;color: #3572FF;">36.8<span style="font-size: 16px;color: color: #173000;">℃</span></span></td> -->
+                  <td><span class="tie">手机号码：</span><span >{{getStaffInfo.phone}}</span></td>
                   <td><span class="tie">出生日期：</span>
                     <span v-if="getStaffInfo.birthday">{{ getStaffInfo.birthday | dateformat(dateFormat)}} &nbsp;{{ birthdayFrom}}</span>
                     <span v-else>--</span>
                   </td>
-                  <td><span class="tie">身份证号：</span><span style="color: #4272FF;">从业资格证.jpg</span></td>
+                  <td><span class="tie">身份证号：</span><span style="color: #4272FF;">{{getStaffInfo.idCard}}</span></td>
                   
                 </tr>
                 <tr>
-                  <td>
+                  <!-- <td>
                     <div class="tie" style="font-size: 14px;">深林上城</div>
                     <div class="tie" style="font-size: 14px;">2020-02-10 16:29</div>
                    
-                  </td>
-                  <td><span class="tie">所属单位：</span><span>{{ getStaffInfo.elevatorTotal }}部</span></td>
+                  </td> -->
+                  <td><span class="tie">所属单位：</span><span>{{ getStaffInfo.corpName }}</span></td>
                   <td><span class="tie">所属部门：</span>
-                    <span v-if="getStaffInfo.areaName">{{ getStaffInfo.areaName }}</span>
+                    <span v-if="getStaffInfo.departmentName">{{ getStaffInfo.departmentName }}部</span>
                     <span v-else>--</span>
                   </td>
                 </tr>
@@ -75,33 +75,37 @@
           <!-- 表格 Start -->
           <div style="position:relative;display:flex;">
             &nbsp;
-            <el-table :data="elevatorList" style="margin-top:0!important;" >
-              <el-table-column prop="elevCode" label="时间">
+            <el-table :data="getStaffInfo.data" style="margin-top:0!important;" >
+              <el-table-column prop="time" label="时间">
               </el-table-column>
           
-              <el-table-column prop="areaName" label="防疫点">
+              <el-table-column prop="epedName" label="防疫点">
               </el-table-column>
               
               <el-table-column  label="检测区域">
                 <template slot-scope="scope">
-                  <span v-html="scope.row.address"></span>
+                  <span v-html="scope.row.pointName"></span>
                 </template>
               </el-table-column>
 
               <el-table-column prop="elevCode" label="所属单位">
               </el-table-column>
           
-              <el-table-column prop="areaName" label="体温">
+              <el-table-column prop="value" label="体温">
               </el-table-column>
               
               <el-table-column prop="elevCode" label="检测状态">
+                <template slot-scope="scope">
+                  <span v-html="scope.row.valid ? '正常' :'异常'"></span>
+                </template>
+                
               </el-table-column>
           
               <el-table-column prop="areaName" label="处理结果">
               </el-table-column>
 
-              <el-table-column prop="areaName" label="接触人数">
-              </el-table-column>
+              <!-- <el-table-column prop="areaName" label="接触人数">
+              </el-table-column> -->
              
               <el-table-column prop="areaName" label="是否为高危地点">
               </el-table-column>
@@ -121,7 +125,7 @@
           <!-- 表格 End -->
           
           <!-- 分页 Start -->
-          <div class="pagination_block">
+          <!-- <div class="pagination_block">
             <el-pagination
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
@@ -131,7 +135,7 @@
               layout="prev, pager, next, sizes, jumper"
               :total="totalPageSize">
             </el-pagination>
-          </div>
+          </div> -->
           <!-- 分页 End -->
 
         </div>
@@ -224,7 +228,7 @@
         <!-- 表格 End -->
 
         <div slot="footer" class="dialog-footer tar">
-          <el-button type="primary" @click="confirmRelease" class="dialogSure">确 定</el-button>
+          <el-button type="primary" @click="checkDetailsDialog = false" class="dialogSure">确 定</el-button>
 
         </div>
       </el-dialog>
@@ -307,12 +311,14 @@ export default {
     'fotter': fotter,
   },
   mounted() {
+    console.log("params==" + this.$route.query.idCard)
+    //人员详情
     this.getAllAccountData()
     // 获取员工管辖电梯
-    this.getStaffManageLift()
+    // this.getStaffManageLift()
     // 获取员工作业记录
-    this.getStaffTaskList()
-    console.log("params==" + this.$route.params.staffId)
+    // this.getStaffTaskList()
+    
     // console.log("111111111111111::" + moment("20121031", "YYYYMMDD").fromNow())
   },
   methods: {
@@ -323,10 +329,20 @@ export default {
       this.detailsList = row
       this.checkDetailsDialog = true
     },
+
     // 确认解除异常状态
     confirmRelease(){
-      this.dialogRelease = false
+      api.person.relievingAnomalies({id: this.getStaffInfo.id}).then((res) => {
+        if(res.data.code === 200 && res.data.message === 'success') {
+          this.$message.success("解除异常状态成功")
+          this.dialogRelease = false
+        } else {
+          this.$message.console.error(res.data.message);
+        }
+      })
+      
     },
+
     getTypeColor(type){
       var colorClass =  ''
       if(type == '故障处理'){
@@ -349,10 +365,10 @@ export default {
   
     // 查询账户详情
     getAllAccountData(){
-      api.accountApi.getStaffDetails(this.$route.params.staffId).then((res) => {
-        if(res.data.code === 200 && res.data.message === 'success'){
+      api.person.getPersonDetail({idCard: this.$route.query.idCard, epedId: this.$route.query.epedId}).then((res) => {
+        if(res.data.code === 200 && res.data.message === 'success') {
           this.getStaffInfo = res.data.data
-
+          // this.elevatorList = res.data.data.elevatorList
           // 头像
           this.url = api.accountApi.viewPic(this.getStaffInfo.avatar)
 
@@ -367,8 +383,8 @@ export default {
           this.empTimeFrom = moment(moment(this.getStaffInfo.empTime).format('YYYYMMDD'),'YYYYMMDD').fromNow().replace("前","").replace("内","")
           console.log("this.birthdayFrom---" + this.birthdayFrom)
 
-          // this.elevatorList = res.data.data.elevatorList
-          this.totalPageSize = res.data.data.elevatorTotal
+          
+          // this.totalPageSize = res.data.data.elevatorTotal
           // this.url = "http://192.168.100.7:8080/domino/view/image?filename=" + this.getStaffInfo.avatarUrl
           
           
@@ -532,7 +548,7 @@ export default {
     td
       // float left
       font-size: 14px;
-      padding: 2px 35px 2px 37px;
+      padding: 23px 42px 0px 37px;
       min-width: 201px;
       max-width: 301px;
       overflow: hidden;
