@@ -26,7 +26,7 @@
           </div>
           <div class="xddetail-list-item clearfix">
             <div class="xddetail-list-item-title">所需上级</div>
-            <div class="xddetail-list-item-p" style="padding-right: 0;">??</div>
+            <div class="xddetail-list-item-p" style="padding-right: 0;"></div>
           </div>
         </div>
 
@@ -68,7 +68,7 @@
           <div class="llt-tbody">
             <div class="list-no-data" v-show="diagnList.length == 0">暂无数据</div>
 
-            <div class="llt-tr clearfix" :class="item.enable ? '' : 'offline'" v-for="(item, i) in diagnList" :key="i">
+            <div class="llt-tr clearfix" :class="item.enable ? '' : 'offline'" v-for="(item, i) in diagnList" :key="item.id">
               <div class="llt-tr-container clearfix">
                 <div class="llt-td">
                   <el-checkbox-group v-model="checkedLifts" @change="checkedLiftsChange">
@@ -76,10 +76,10 @@
                   </el-checkbox-group>
                 </div>
                 <div class="llt-td">{{item.name}}</div>
-                <div class="llt-td">已关联观察任务(id)</div>
-                <div class="llt-td">阈值判断类型</div>
-                <div class="llt-td">阈值</div>
-                <div class="llt-td">容错范围</div>
+                <div class="llt-td">{{item.taskName}}({{item.observeTaskId}})</div>
+                <div class="llt-td">{{item.operator | returnOperatorCN}}</div>
+                <div class="llt-td">{{item.value}}</div>
+                <div class="llt-td">{{item.errValue}}</div>
                 <div class="llt-td">
                   <div class="ll-table-switch">
                     <el-switch v-model="item.enable" @change="switchChange($event, item.id)" active-color="#E2E6E8" inactive-color="#E3E7E9" :active-value="1" :inactive-value="0" :width=28></el-switch>
@@ -220,11 +220,11 @@ export default {
       checkedLifts: [],
       checkedAll: false,
       diagnParams: {
-        "epedId": "",   //必填 
+        "epId": "",   //必填 
         "limit": 10, 
         "offset": 1,
-        "name": "",
-        "enable": "-1"  // 是否启用 -1全部 0停用 1启用    
+        "search": "",
+        "status": "-1"  // 是否启用 -1全部 0停用 1启用    
       },
       statusItem: [
         {label: '全部', value: -1},
@@ -242,7 +242,7 @@ export default {
       dialogAddDiagn: false,
       ruleFormAddDiagn: {
         "name": "名称",  //必填
-        "epedId": "防疫点Id",
+        "epId": "防疫点Id",
         "observTaskId": "检测任务ID",   //必填
         "operator": 3, // 阀值判断类型: 0 - == 等于, 1 - > 大于, 2 - < 小于, 3 - >= 大于等于, 4 - <= 小于等于, 5 - != 不等于
         "value": 38.0, // 阀值
@@ -268,7 +268,7 @@ export default {
   },
   created() {
     this.parentCode = this.$route.query.epedId
-    this.diagnParams.epedId = this.$route.query.epedId
+    this.diagnParams.epId = this.$route.query.epedId
   },
   mounted() {
     // 获取监测应用列表
@@ -276,6 +276,8 @@ export default {
 
     // 获取详情
     this.getDigitalDetail()
+
+    this.getObservTaskOptions()
 
   },
   methods: {
@@ -294,6 +296,21 @@ export default {
         // 分页
         this.currentPage = res.data.data.current
         this.totalPage = res.data.data.total
+      })
+    },
+
+    // 获取下拉
+    getObservTaskOptions() {
+      api.digital.getUnusedTask(this.parentCode).then(res => {
+        console.log('观察任务下拉', res.data)
+        let detail = res.data.data
+        this.observTaskOptions = []
+        detail.forEach(item => {
+          this.observTaskOptions.push({
+            label: item.name,
+            value: item.id
+          })
+        })
       })
     },
 
@@ -337,15 +354,15 @@ export default {
 
     // 搜索
     searchTask(content) {
-      // this.observeParams.observedName = content
-      // this.observeParams.offset = 1
+      this.diagnParams.search = content
+      this.diagnParams.offset = 1
       this.getDiagnList()
     },
 
     // 清空
     clearTask() {
-      // this.observeParams.observedName = ''
-      // this.observeParams.offset = 1
+      this.diagnParams.search = ''
+      this.diagnParams.offset = 1
       this.getDiagnList()
     },
 
@@ -368,10 +385,10 @@ export default {
       let param = {
         "name": this.ruleFormAddDiagn.name,
         "epedId": this.parentCode, 
-        "observTaskId": this.ruleFormAddDiagn.observTaskId,
+        "observeTaskId": this.ruleFormAddDiagn.observTaskId,
         "operator": this.ruleFormAddDiagn.operator,
         "value": this.ruleFormAddDiagn.value,
-        "error": this.ruleFormAddDiagn.error
+        "errValue": this.ruleFormAddDiagn.error
       }
       api.digital.addDiagnosis(param).then(res => {
         console.log('添加成功', res.data)
@@ -392,31 +409,32 @@ export default {
         this.dialogAddDiagnTitle = '编辑监测应用'
         this.ruleFormAddDiagn = {
           "name": diagnInfo.name,
-          "epedId": this.parentCode, 
-          "observTaskId": diagnInfo.observTaskId,
-          "operator": diagnInfo.operator,
+          "epId": this.parentCode, 
+          "observTaskId": diagnInfo.observeTaskId,
+          "operator": parseInt(diagnInfo.operator),
           "value": diagnInfo.value,
-          "error": diagnInfo.error
+          "error": diagnInfo.errValue
         }
       })
     },
 
-    // 提交添加监测应用
+    // 提交编辑监测应用
     submitEditDiagn() {
       console.log('添加监测应用', this.ruleFormAddDiagn)
       let param = {
         "id": this.currentDiagnId,
         "name": this.ruleFormAddDiagn.name,
-        "epedId": this.parentCode, 
-        "observTaskId": this.ruleFormAddDiagn.observTaskId,
+        // "epId": this.parentCode, 
+        "observeTaskId": this.ruleFormAddDiagn.observTaskId,
         "operator": this.ruleFormAddDiagn.operator,
         "value": this.ruleFormAddDiagn.value,
-        "error": this.ruleFormAddDiagn.error
+        "errValue": this.ruleFormAddDiagn.error
       }
       api.digital.editDiagnosis(param).then(res => {
         console.log('添加成功', res.data)
-        this.$message.success('添加成功')
+        this.$message.success('编辑成功')
         this.dialogAddDiagn = false
+        this.currentDiagnId = ''
         this.getDiagnList()
       })
     },
@@ -436,7 +454,9 @@ export default {
 
     // 删除任务
     deleteDiagn() {
-      let param = this.checkedLifts.join(',')
+      let param = {
+        ids: this.checkedLifts
+      }
       api.digital.deleteDiagnosis(param).then(res => {
         console.log('删除成功', res.data)
         this.$message.success('删除成功')
@@ -453,6 +473,7 @@ export default {
         "id": id,
         "enable": enabledVal
       }
+
       api.digital.switchDiagnosis(param).then(res => {
         console.log('开关', res.data)
         this.$message.success('成功')
@@ -474,6 +495,14 @@ export default {
       // })
     },
 
+  },
+  watch: {
+    // 状态筛选
+    statusValue(val, oldVal) {
+      this.diagnParams.status = val
+      this.diagnParams.offset = 1
+      this.getDiagnList()
+    },
   },
   components: {
     'city-choose2': CityChoose2,

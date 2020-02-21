@@ -14,10 +14,10 @@
             <p class="perName">{{getAccountJson.name}}</p>
             <!-- <span  v-html="scope.row.roleName" ></span> -->
             <!-- <span v-if="scope.row.type == 'administrator'" >超级管理员</span> -->
-            <p v-if="getAccountJson.roleName" class="perPosition">{{getAccountJson.roleName.join(",")}}</p>
-            <p v-if="getAccountJson.type == 'administrator'" class="perPosition">超级管理员</p>
-            <div class="pCon"><span >{{getAccountJson.account}}</span></div>
-            <div class="pCon"><span>通用互联科技有限公司/产品部</span></div>
+            <p v-if="getAccountJson.roleName" class="perPosition">{{getAccountJson.roleName}}</p>
+            <!-- <p v-if="getAccountJson.type == 'administrator'" class="perPosition">超级管理员</p> -->
+            <div class="pCon"><span >{{getAccountJson.username}}</span></div>
+            <div class="pCon"><span>{{getAccountJson.corpId}}/{{getAccountJson.departmentId}}</span></div>
             <!-- <button class="btn blueBtn editPsd" @click="editPsd('EditAccountForm')" >修改登录密码</button> -->
           </div>
           <!-- <div class="shadow"></div> -->

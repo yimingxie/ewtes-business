@@ -26,7 +26,7 @@
           </div>
           <div class="xddetail-list-item clearfix">
             <div class="xddetail-list-item-title">所需上级</div>
-            <div class="xddetail-list-item-p" style="padding-right: 0;">??</div>
+            <div class="xddetail-list-item-p" style="padding-right: 0;"></div>
           </div>
         </div>
 

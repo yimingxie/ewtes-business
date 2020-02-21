@@ -327,15 +327,10 @@ export default {
       queryParam:{
         offset:0,
         limit:9,
-        column: "create_time",
-        order: false,
-        corpId:window.localStorage.getItem('corpId'),
-        accountStatus:"",// 账号状态
-        workStatus: "", // 作业状态
-        phone: "",
-        staffName: "",
-        areaCode: "",
-        depId: "", // 部门ID
+        departmentId : "",        // 部门ID 
+        epedId : "",   //防疫点ID
+        search : "",   //名字或手机号
+        warnStatus:""      //状态
       },
       getAllAccountJson: [],
       roleQueryParam:{
@@ -354,8 +349,8 @@ export default {
       period: "",
       periods1: [
         { label: '全部', value: "" },
-        { label: '正常', value: "1" },
-        { label: '异常', value: "0" },
+        { label: '正常', value: "0" },
+        { label: '异常', value: "1" },
       ],
       period1: "",
       bindRoleForm:{
@@ -394,7 +389,7 @@ export default {
       selectArea:[],
       dialogDelete: false,
       dialogReset: false,
-  
+      corpLists:[]
     }
   },
   components: {
@@ -428,7 +423,7 @@ export default {
   mounted() {
     // console.log("111111111111111::" + moment("20121031", "YYYYMMDD").fromNow())
     // this.getAllRoleData()
-
+    this.getCorps()
     // 所有员工列表
     this.getAllAccountData()
     // 所有部门列表
@@ -438,6 +433,20 @@ export default {
   },
   methods: {
     moment,
+    // 获取公司
+    getCorps(){
+      api.person.getCorps().then((res) => {
+        if(res.data.code == 200){
+          // this.Corp
+        }
+      })
+    },
+    // 查询防疫区域
+    getEpidemicArea(){
+      api.person.getEpidemicList().then((res) => {
+
+      })
+    },
     // 根据部门筛选
     depSelectChange() {
       if(this.queryParam.depId !== '') {
@@ -501,7 +510,7 @@ export default {
     },
     // 查询所有员工账户
     getAllAccountData(){
-      api.accountApi.getStaffs(this.queryParam).then((res) => {
+      api.person.getEpidemicList(this.queryParam).then((res) => {
         if(res.data.code === 200 && res.data.message === 'success'){
           this.getAllAccountJson = res.data.data.records
           this.getAllAccountJson.forEach(item =>{

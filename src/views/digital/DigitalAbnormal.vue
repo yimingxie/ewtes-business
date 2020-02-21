@@ -45,15 +45,14 @@
                 <div class="llt-td">{{item.pointName}}</div>
                 <div class="llt-td">{{item.abnormalCount}}</div>
                 <div class="llt-td">
-                  <span class="llt-td-a" @click="goDetail(item.pointId)">详情</span>
+                  <span class="llt-td-a" @click="getDetDetail(item)">详情</span>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- 分页 -->
-          <div class="list-page">
-            <!-- <div class="list-page-record">共{{totalPage}}条记录</div> -->
+          <!-- <div class="list-page">
             <el-pagination
               @size-change="pageSizeChange"
               @current-change="currentPageChange"
@@ -63,7 +62,7 @@
               layout="prev, pager, next, sizes, jumper"
               :total="totalPage">
             </el-pagination>
-          </div>
+          </div> -->
 
 
         </div>
@@ -85,19 +84,31 @@
       <div class="detdetail-info">
         <div class="detdetail-info-title">
           <div class="detdetail-info-title-icon"></div>
-          <div class="detdetail-info-title-p">1楼扶梯</div>
+          <div class="detdetail-info-title-p">{{detDetailInfo.pointName}}</div>
         </div>
         <div class="detdetail-info-data clearfix">
-          <div class="detdetail-info-data-box">
-            <div class="detdetail-info-data-box-h">本日异常人数</div>
+          <div class="detdetail-info-data-box" style="width: 25%">
+            <div class="detdetail-info-data-box-h">异常总数</div>
             <div class="detdetail-info-data-box-p" style="color: #F56B25;">
-              <span>28</span>人
+              <span>{{abnormalCount}}</span>人
             </div>
           </div>
-          <div class="detdetail-info-data-box">
-            <div class="detdetail-info-data-box-h">本日人流量</div>
+          <div class="detdetail-info-data-box" style="width: 25%">
+            <div class="detdetail-info-data-box-h">未处理</div>
+            <div class="detdetail-info-data-box-p" style="color: #F56B25;">
+              <span>{{unProcessCount}}</span>人
+            </div>
+          </div>
+          <div class="detdetail-info-data-box" style="width: 25%">
+            <div class="detdetail-info-data-box-h">已处理</div>
             <div class="detdetail-info-data-box-p">
-              <span>28</span>人
+              <span>{{processCount}}</span>人
+            </div>
+          </div>
+          <div class="detdetail-info-data-box" style="width: 25%">
+            <div class="detdetail-info-data-box-h">解除告警</div>
+            <div class="detdetail-info-data-box-p">
+              <span>{{closedCount}}</span>人
             </div>
           </div>
         </div>
@@ -145,6 +156,78 @@
 
     </div>
 
+    <!-- 异常处理弹窗 -->
+    <el-dialog :visible.sync="dialogDeal" title="异常处理" :show-close="false" width="800px">
+      <div class="dia-content">
+        <div class="det-deal clearfix">
+
+          <div class="det-deal-left">
+            <div class="det-deal-avator">
+              <img :src="diaDealInfo.url" alt="">
+            </div>
+            <div class="det-deal-temper">
+              <div class="det-deal-temper-h">体温</div>
+              <div class="det-deal-temper-p">
+                <span>{{diaDealInfo.celsius}}</span>℃
+              </div>
+            </div>
+          </div>
+
+          <div class="det-deal-mid">
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">姓名</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.userName}}</div>
+            </div>
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">所属部门</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.depaName}}</div>
+            </div>
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">位置</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.pointName}}</div>
+            </div>
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">时间</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.time}}</div>
+            </div>
+          </div>
+
+          <div class="det-deal-right">
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">处理结果</div>
+              <div class="ddeal-radio" v-if="diaDealState == 'put'">
+                <!-- <el-radio-group v-model="dealRadioValue"> -->
+                  <!-- <el-radio v-for="item in pointDataRadio" :key="item.value" :label="item.value">{{item.label}}</el-radio> -->
+                  <el-radio v-model="dealRadioValue" :label="2">已处理</el-radio>
+                  <el-radio v-model="dealRadioValue" :label="3">解除告警</el-radio>
+                <!-- </el-radio-group> -->
+              </div>
+              <div class="det-deal-mid-box-p" v-else>{{diaDealInfo.result | returnWarnResult}}</div>
+            </div>
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">处理描述</div>
+              <div class="ddeal-desc" v-if="diaDealState == 'put'">
+                <textarea class="ddeal-desc-textarea" v-model="dealDesc"></textarea>
+              </div>
+              <div class="det-deal-mid-box-p" style="line-height: 24px;" v-else>{{diaDealInfo.description}}</div>
+            </div>
+
+          </div>
+
+        </div>
+      
+        <div class="dia-btn-con" style="text-align: right;" v-if="diaDealState == 'put'">
+          <div class="dia-btn dia-btn-cancel" @click="closeDialogDeal">取消</div>
+          <div class="dia-btn dia-btn-submit" @click="submitDialogDeal">完成</div>
+        </div>
+        <div class="dia-btn-con" style="text-align: right;" v-else>
+          <!-- <div class="dia-btn dia-btn-cancel" @click="dialogDeal=false">取消</div> -->
+          <div class="dia-btn dia-btn-submit" @click="closeDialogDeal">关闭</div>
+        </div>
+
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -164,8 +247,8 @@ export default {
       abnormalParams: {
         "epedId": "",
         "date": "",
-        "limit": 10,
-        "offset": 1
+        // "limit": 10,
+        // "offset": 1
       },
 
       currentPage: 1,
@@ -179,6 +262,30 @@ export default {
       unProcessCount: 0,
       closedCount: 0,
       detailWarnList: [],
+      // 详情靠传值
+      detDetailInfo: {
+        pointName: '',
+        today: '',
+        abnormalCount: ''
+      },
+
+
+      // --告警处理弹窗--
+      dialogDeal: false,
+      diaDealState: '', // 默认为只读，编辑则为'put'
+      dealRadioValue: 2,
+      currentWarnId: '', // 记录正在处理的告警工单id
+      diaDealInfo: {
+        "taskId": "",
+        "url": "",
+        "userName": "",  
+        "depaName": "",    
+        "time": "",
+        "celsius": "",         
+        "result": "" 
+      },
+      dealDesc: '',
+
 
     }
   },
@@ -197,10 +304,11 @@ export default {
     // 获取异常档案列表
     getAbnormalList() {
       api.digital.getAbnormalList(this.abnormalParams).then(res => {
-        this.abnormalList = res.data.data.records
+        console.log('异常档案', res.data)
+        this.abnormalList = res.data.data
         // 分页
-        this.currentPage = res.data.data.current
-        this.totalPage = res.data.data.total
+        // this.currentPage = res.data.data.current
+        // this.totalPage = res.data.data.total
       })
     },
 
@@ -216,32 +324,7 @@ export default {
       this.getAbnormalList()
     },
 
-    // 获取检测区域详情
-    getDetDetail(pointId) {
-      this.sliderShow = true
-      let param = {
-        "pointId": pointId,
-        "limit": 10000,
-        "offset": 1
-      }
-      api.detection.getAbnormalDetail(param).then(res => {
-        console.log('检测区域详情', res.data)
-        let abInfo = res.data.data
-        this.abnormalCount = abInfo.abnormalCount
-        this.processCount = abInfo.processCount
-        this.unProcessCount = abInfo.unProcessCount
-        this.closedCount = abInfo.closedCount
-
-        this.detailWarnList = abInfo.records
-      })
-    },
-
-    // 打开异常处理弹窗
-    openDialogDeal() {
-      this.dialogDeal = true
-      
-
-    },
+    
 
     // 跳转到观察任务
     goObserveList() {
@@ -283,6 +366,71 @@ export default {
       })
     },
 
+    // 获取检测区域详情
+    getDetDetail(item) {
+      let info = item
+      this.sliderShow = true
+      let param = {
+        "pointId": info.pointId,
+        "limit": 10000,
+        "offset": 1
+      }
+      this.detDetailInfo.pointName = info.pointName
+      this.detDetailInfo.today = info.tody
+      this.detDetailInfo.abnormalCount = info.abnormalCount
+
+      api.detection.getAbnormalDetail(param).then(res => {
+        console.log('检测区域详情', res.data)
+        let abInfo = res.data.data
+        this.abnormalCount = abInfo.abnormalCount
+        this.processCount = abInfo.processCount
+        this.unProcessCount = abInfo.unProcessCount
+        this.closedCount = abInfo.closedCount
+
+        this.detailWarnList = abInfo.data.records
+      })
+    },
+
+    // 打开异常处理弹窗
+    openDialogDeal(taskId) {
+      api.detection.getWarnDetail(taskId).then(res => {
+        console.log('告警信息详情', res.data)
+        this.dialogDeal = true
+        this.diaDealInfo = res.data.data
+        // 未处理
+        if (this.diaDealInfo.result == 1) {
+          this.diaDealState = 'put'
+        } else {
+          this.diaDealState = ''
+        }
+      })
+      
+
+    },
+
+    // 关闭异常处理弹窗
+    closeDialogDeal() {
+      this.currentWarnId = ''
+      this.dialogDeal = false
+    },
+
+    // 提交处理异常
+    submitDialogDeal() {
+      let param = {
+        "taskId": this.diaDealInfo.taskId,
+        "result": this.dealRadioValue,
+        "description": this.dealDesc
+      }
+      api.detection.dealWarn(param).then(res => {
+        console.log('处理异常', res.data)
+        this.$message.success('提交成功')
+        this.dialogDeal = false
+        this.sliderShow = false
+
+      })
+
+    },
+
   },
   components: {
 
@@ -300,6 +448,34 @@ export default {
   }
   .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
     width 14%;
+  }
+
+
+  .detdetail-warn{
+
+    .det-history-table{
+      padding: 0
+      height: auto;
+    }
+    .det-history-tr{
+      cursor pointer;
+    }
+    .det-history-td{
+      font-size 14px;
+    }
+    .det-history-thead .det-history-th:nth-child(1),.det-history-tbody .det-history-td:nth-child(1){
+      width 22%;
+    }
+    .det-history-thead .det-history-th:nth-child(2),.det-history-tbody .det-history-td:nth-child(2){
+      width 23%;
+    }
+    .det-history-thead .det-history-th:nth-child(3),.det-history-tbody .det-history-td:nth-child(3){
+      width 25%;
+    }
+    .det-history-thead .det-history-th:nth-child(4),.det-history-tbody .det-history-td:nth-child(4){
+      width 30%;
+    }
+
   }
 
 

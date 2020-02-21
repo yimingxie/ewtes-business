@@ -83,7 +83,7 @@
                 <div class="detreal-box-title-icon"></div>
                 <div class="detreal-box-title-p">{{item.pointName}}</div>
               </div>
-              <div class="detreal-box-data clearfix" :class="item.abnormalCount > 0 ? 'warn' : ''" @click="getDetDetail(item.pointId)">
+              <div class="detreal-box-data clearfix" :class="item.abnormalCount > 0 ? 'warn' : ''" @click="getDetDetail(item)">
                 <div class="detreal-box-data-people clearfix">
                   <div class="drbd-people-flow">
                     <div class="drbd-people-flow-h">异常人数</div>
@@ -115,12 +115,12 @@
 
             <div class="detection-history-choose">
               <div class="x-select-box" style="width: 102px;">
-                <el-select class="x-select" v-model="historyParams.status" @change="historyStatusChange" placeholder="全部状态" clearable>
+                <el-select class="x-select" v-model="historyParams.valid" @change="historyStatusChange" placeholder="全部状态" clearable>
                   <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
               </div>
               <div class="x-select-box" style="width: 130px;">
-                <el-select class="x-select" v-model="historyParams.monitor" @change="historyMoniChange" placeholder="全部检测区域" clearable>
+                <el-select class="x-select" v-model="historyParams.pointId" @change="historyMoniChange" placeholder="全部检测区域" clearable>
                   <el-option v-for="item in monitorOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
               </div>
@@ -160,7 +160,7 @@
                     <img :src="item.url" alt="">
                   </div>
                 </div>
-                <div class="det-history-td">{{item.name}}</div>
+                <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.value}}℃</div>
                 <div class="det-history-td">{{item.pointName}}</div>
                 <div class="det-history-td">{{item.time}}</div>
@@ -187,19 +187,19 @@
       <div class="detdetail-info">
         <div class="detdetail-info-title">
           <div class="detdetail-info-title-icon"></div>
-          <div class="detdetail-info-title-p">1楼扶梯</div>
+          <div class="detdetail-info-title-p">{{detDetailInfo.pointName}}</div>
         </div>
         <div class="detdetail-info-data clearfix">
           <div class="detdetail-info-data-box">
             <div class="detdetail-info-data-box-h">本日异常人数</div>
             <div class="detdetail-info-data-box-p" style="color: #F56B25;">
-              <span>28</span>人
+              <span>{{detDetailInfo.abnormalCount}}</span>人
             </div>
           </div>
           <div class="detdetail-info-data-box">
             <div class="detdetail-info-data-box-h">本日人流量</div>
             <div class="detdetail-info-data-box-p">
-              <span>28</span>人
+              <span>{{detDetailInfo.today}}</span>人
             </div>
           </div>
         </div>
@@ -255,12 +255,12 @@
 
           <div class="det-deal-left">
             <div class="det-deal-avator">
-              <img src="../../assets/images/xym/avatar.png" alt="">
+              <img :src="diaDealInfo.url" alt="">
             </div>
             <div class="det-deal-temper">
               <div class="det-deal-temper-h">体温</div>
               <div class="det-deal-temper-p">
-                <span>37.8</span>℃
+                <span>{{diaDealInfo.celsius}}</span>℃
               </div>
             </div>
           </div>
@@ -268,19 +268,19 @@
           <div class="det-deal-mid">
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">姓名</div>
-              <div class="det-deal-mid-box-p">刘洋</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.userName}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">所属部门</div>
-              <div class="det-deal-mid-box-p">产品部</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.depaName}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">位置</div>
-              <div class="det-deal-mid-box-p">电梯扶手</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.pointName}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">时间</div>
-              <div class="det-deal-mid-box-p">18:00:23</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.time}}</div>
             </div>
           </div>
 
@@ -294,14 +294,14 @@
                   <el-radio v-model="dealRadioValue" :label="3">解除告警</el-radio>
                 <!-- </el-radio-group> -->
               </div>
-              <div class="det-deal-mid-box-p" v-else>1-未处理 2-已处理 3-解除警告</div>
+              <div class="det-deal-mid-box-p" v-else>{{diaDealInfo.result | returnWarnResult}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">处理描述</div>
               <div class="ddeal-desc" v-if="diaDealState == 'put'">
-                <textarea class="ddeal-desc-textarea"></textarea>
+                <textarea class="ddeal-desc-textarea" v-model="dealDesc"></textarea>
               </div>
-              <div class="det-deal-mid-box-p" style="line-height: 24px;" v-else>处理描述 <br>处理描述</div>
+              <div class="det-deal-mid-box-p" style="line-height: 24px;" v-else>{{diaDealInfo.description}}</div>
             </div>
 
           </div>
@@ -349,8 +349,8 @@ export default {
       historyList: [],
       historyParams: {
         epedId: "",
-        status: -1, // -1 -全部 0 -正常 1 -异常
-        monitor: ""
+        valid: -1, // -1 -全部 0 -正常 1 -异常
+        pointId: ""
       },
       statusOptions: [
         {label: '全部', value: -1},
@@ -366,13 +366,31 @@ export default {
       unProcessCount: 0,
       closedCount: 0,
       detailWarnList: [],
+      // 详情靠传值
+      detDetailInfo: {
+        pointName: '',
+        today: '',
+        abnormalCount: ''
+      },
 
 
       // --告警处理弹窗--
       dialogDeal: false,
       diaDealState: '', // 默认为只读，编辑则为'put'
       dealRadioValue: 2,
-      currentWarnId: '' // 记录正在处理的告警工单id
+      currentWarnId: '', // 记录正在处理的告警工单id
+      diaDealInfo: {
+        "taskId": "",
+        "url": "",
+        "userName": "",  
+        "depaName": "",    
+        "time": "",
+        "celsius": "",         
+        "result": "" 
+      },
+      dealDesc: '',
+
+         
 
 
     }
@@ -392,6 +410,9 @@ export default {
 
     // 历史记录
     this.getHistoryList()
+
+    // 统计
+    this.getDetStat()
 
   },
   beforeDestroy() {
@@ -470,6 +491,7 @@ export default {
     // 统计
     getDetStat() {
       api.detection.getStatistics(this.parentCode).then(res => {
+        console.log('统计', res.data)
         let detail = res.data.data
         this.epedName = detail.epedName
         this.oneHouse = detail.oneHouse
@@ -484,7 +506,7 @@ export default {
       this.historyParams.epedId = this.parentCode
       api.detection.getHistoryList(this.historyParams).then(res => {
         console.log('历史记录', res.data)
-        this.historyList = res.data.data
+        this.historyList = res.data.data || []
       })
     },
 
@@ -499,13 +521,18 @@ export default {
     },
 
     // 获取检测区域详情
-    getDetDetail(pointId) {
+    getDetDetail(item) {
+      let info = item
       this.sliderShow = true
       let param = {
-        "pointId": pointId,
+        "pointId": info.pointId,
         "limit": 10000,
         "offset": 1
       }
+      this.detDetailInfo.pointName = info.pointName
+      this.detDetailInfo.today = info.today
+      this.detDetailInfo.abnormalCount = info.abnormalCount
+
       api.detection.getAbnormalDetail(param).then(res => {
         console.log('检测区域详情', res.data)
         let abInfo = res.data.data
@@ -514,13 +541,23 @@ export default {
         this.unProcessCount = abInfo.unProcessCount
         this.closedCount = abInfo.closedCount
 
-        this.detailWarnList = abInfo.records
+        this.detailWarnList = abInfo.data.records
       })
     },
 
     // 打开异常处理弹窗
-    openDialogDeal() {
-      this.dialogDeal = true
+    openDialogDeal(taskId) {
+      api.detection.getWarnDetail(taskId).then(res => {
+        console.log('告警信息详情', res.data)
+        this.dialogDeal = true
+        this.diaDealInfo = res.data.data
+        // 未处理
+        if (this.diaDealInfo.result == 1) {
+          this.diaDealState = 'put'
+        } else {
+          this.diaDealState = ''
+        }
+      })
       
 
     },
@@ -533,6 +570,18 @@ export default {
 
     // 提交处理异常
     submitDialogDeal() {
+      let param = {
+        "taskId": this.diaDealInfo.taskId,
+        "result": this.dealRadioValue,
+        "description": this.dealDesc
+      }
+      api.detection.dealWarn(param).then(res => {
+        console.log('处理异常', res.data)
+        this.$message.success('提交成功')
+        this.dialogDeal = false
+        this.sliderShow = false
+
+      })
 
     },
 

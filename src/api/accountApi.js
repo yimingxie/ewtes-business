@@ -5,7 +5,7 @@ import http from '../utils/http'
 
 let protocol = process.env.NODE_ENV !== 'production' ? 'http:' : window.location.protocol
 // let url2 = `${protocol}//192.168.100.2/domino`
-let url2 = `${http.localURL}/ewtes`
+let url2 = `${http.localURL}/ewtes/business`
 
 
 export default  {
@@ -87,7 +87,7 @@ export default  {
   // 获取账户详情
   getAccountDetail(){
     return http.get(
-      `${url2}/user/center`
+      `${url2}/user/space`
     )
   },
   // 用戶中心修改密码
@@ -213,12 +213,12 @@ export default  {
   // 上传图片
   uploadPic(params){
     return http.post(
-      `${http.localURL}/arctic/upload/image`, params
+      `${http.localURL}/ewtes/business/upload/image`, params
     )
   },
   // 查看图片
   viewPic(picName){
-    return `${http.localURL}/arctic/view/image?filename=${picName}`
+    return `${http.localURL}/ewtes/business/view/image?filename=${picName}`
   },
   // 员工作业记录
   staffTaskList(params){
