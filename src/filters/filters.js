@@ -133,3 +133,14 @@ export function returnOperatorCN(value) {
     return ''
   }
 }
+
+
+/**
+ * 分割时间
+ * @param {string} "2019-04-16 15:50:30"
+ * @return {string} "15:50:30"
+ */
+export function splitFormatDate(time) {
+  let str = time + ''
+  return str.substring(11, 19)
+}

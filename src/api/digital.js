@@ -132,6 +132,11 @@ export default {
     return http.get(`${url1}/ewtes/business/epidemic/abnormal`, params)
   },
 
+  // 编辑防疫点所属上级列表
+  getCorpList() {
+    return http.get(`${url1}/ewtes/business/epidemic/corp/list`)
+  },
+
   
 
 

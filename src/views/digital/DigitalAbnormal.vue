@@ -1,7 +1,7 @@
 <template>
   <div id="DigitalAbnormal" class="xym">
     <div class="bread-nav">
-      <span>数字防疫点</span>
+      <span @click="$router.push('/digital-list')">数字防疫点</span>
       <em>/ 档案</em>
     </div>
 
@@ -123,7 +123,9 @@
       <div class="detdetail-warn">
         <div class="detdetail-warn-title">今日告警</div>
         <div class="detdetail-warn-container">
-          <div class="det-history-table">
+          <div class="x-no-data" style="margin-top: 100px;" v-if="detailWarnList.length === 0">今日暂无告警</div>
+
+          <div class="det-history-table" v-else>
             <div class="det-history-thead">
               <div class="det-history-tr clearfix">
                 <div class="det-history-th">姓名</div>
@@ -140,9 +142,9 @@
                 <div class="det-history-td">去处理</div>
               </div> -->
               <div class="det-history-tr clearfix" v-for="(item, i) in detailWarnList" :key="i" @click="openDialogDeal(item.id)">
-                <div class="det-history-td">{{item.name}}</div>
+                <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.celsius}}℃</div>
-                <div class="det-history-td">{{item.time}}</div>
+                <div class="det-history-td">{{item.time | splitFormatDate}}</div>
                 <div class="det-history-td">{{item.result | returnWarnResult}}</div>
               </div>
         

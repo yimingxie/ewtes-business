@@ -1,8 +1,8 @@
 <template>
   <div id="DiagnosisList" class="xym">
     <div class="bread-nav">
-      <span>数字防疫点</span>
-      <span>/ 档案</span>
+      <span @click="$router.push('/digital-list')">数字防疫点</span>
+      <span @click="$router.go(-1)">/ 档案</span>
       <em>/ 监测应用管理</em>
     </div>
 
@@ -25,7 +25,7 @@
             <div class="xddetail-list-item-p">{{address}}</div>
           </div>
           <div class="xddetail-list-item clearfix">
-            <div class="xddetail-list-item-title">所需上级</div>
+            <div class="xddetail-list-item-title">所属上级</div>
             <div class="xddetail-list-item-p" style="padding-right: 0;"></div>
           </div>
         </div>
