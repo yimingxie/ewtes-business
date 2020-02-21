@@ -9,10 +9,22 @@ let url2 = `${http.localURL}/ewtes/business`
 
 
 export default  {
-  // 查询单位
-  getCorps(params){
+  // 人员详情
+  relievingAnomalies(params){
     return http.post(
-      `${url2}/corp/queryList`,params
+      `${url2}/epidemic/updateUserStatus/userinfo`,params
+    )
+  },
+  // 人员详情
+  getPersonDetail(params){
+    return http.post(
+      `${url2}/epidemic/userinfo`,params
+    )
+  },
+  // 查询单位
+  getCorps(){
+    return http.get(
+      `${url2}/corp/queryList`
     )
   },
   // 人员防疫记录列表
@@ -24,7 +36,7 @@ export default  {
   // 查询防疫区域
   getEpidemicArea(){
     return http.get(
-      `${url2}/epidemic/list`
+      `${url2}/epidemic/queryList`
     )
   },
   // 人员详情

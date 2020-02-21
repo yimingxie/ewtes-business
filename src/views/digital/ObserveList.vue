@@ -445,6 +445,7 @@ export default {
         this.$message.success('删除成功')
         this.dialogDeleteObserve = false
         this.checkedLifts = []
+        this.checkedAll = false
         this.getObList()
       })
     },
