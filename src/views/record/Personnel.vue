@@ -25,12 +25,12 @@
             :value="item.id">
           </el-option>
         </el-select> -->
-        <el-cascader
+        <!-- <el-cascader
           :options="options2"
           @active-item-change="handleItemChange"
           :props="props"
         ></el-cascader>
-        <span class="splitLine">|</span>
+        <span class="splitLine">|</span> -->
 
         <el-select @change="dotSelectChange()" clearable v-model="queryParam.epedId" placeholder="请选择防疫点" class="regionPicker">
           <el-option

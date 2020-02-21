@@ -9,10 +9,17 @@ let url2 = `${http.localURL}/ewtes/business`
 
 
 export default  {
+  
+  // 接触记录
+  contactRecord(params){
+    return http.post(
+      `${url2}/epidemic/contactRecord`,params
+    )
+  },
   // 人员详情
   relievingAnomalies(params){
     return http.post(
-      `${url2}/epidemic/updateUserStatus/userinfo`,params
+      `${url2}/epidemic/updateUserStatus`,params
     )
   },
   // 人员详情

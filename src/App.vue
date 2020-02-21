@@ -7,7 +7,7 @@
     <div class="page-container-lay">
       
     </div>
-    <div id="page-container-layout" class="ant-layout ant-layout-has-sider" :key="appKey">
+    <div id="page-container-layout" class=" ant-layout-has-sider" :key="appKey">
 
       <!-- Start: 菜单栏 -->
       
@@ -55,7 +55,7 @@
       
       
 
-      <div class="ant-layout">
+      <div class="ant-layout" :style="{'padding-left': layout === 'admin'? '120px':0}">
         <!-- Start: 头部 -->
         <keep-alive>
           <!-- <transition name="header" mode="out-in"> -->
@@ -340,15 +340,17 @@
 
   .ant-layout {
     box-sizing: border-box;
-    display: flex;
-    flex: auto;
-    flex-direction: column;
-    min-height: 0;
+    // display: flex;
+    // flex: auto;
+    // flex-direction: column;
     background: #F5F7FD;
     // bg_color_submain("")
-    min-height: calc(100vh);
+    height: calc(100vh);
     position: relative;
     width 100%
+    padding-left 120px
+    
+    
   }
   .ant-layout.ant-layout-has-sider {
     flex-direction: row;

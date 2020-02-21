@@ -29,6 +29,7 @@
             </p>
             <!-- <p class="s_de_department">{{getStaffInfo.depName}}</p> -->
             <div class="s_de_details">
+              
               <table>
                 <tr>
                   <!-- <td><span class="tie" style="font-size: 38px;color: #3572FF;">36.8<span style="font-size: 16px;color: color: #173000;">℃</span></span></td> -->
@@ -37,7 +38,7 @@
                     <span v-if="getStaffInfo.birthday">{{ getStaffInfo.birthday | dateformat(dateFormat)}} &nbsp;{{ birthdayFrom}}</span>
                     <span v-else>--</span>
                   </td>
-                  <td><span class="tie">身份证号：</span><span style="color: #4272FF;">{{getStaffInfo.idCard}}</span></td>
+                  <td><span class="tie">身份证号：</span><span>{{getStaffInfo.idCard}}</span></td>
                   
                 </tr>
                 <tr>
@@ -53,6 +54,7 @@
                   </td>
                 </tr>
               </table>
+          
             </div>
           </div>
         </div>
@@ -66,16 +68,13 @@
           
         <div class="panel" :class="open ? '':'closePanel'">
           <div class="title" style="border-bottom:none">
-            <!-- <div class="label1">管辖电梯<span class="open" @click="open = !open" v-text="open ? '收起' : '展开'"></span></div> -->
-            <!-- <div class="label1">管辖电梯 -->
-              <!-- <span class="open">展开</span> -->
-            <!-- </div> -->
+         
           </div>
         
           <!-- 表格 Start -->
-          <div style="position:relative;display:flex;">
+          <div style="position:relative;;display:flex;">
             &nbsp;
-            <el-table :data="getStaffInfo.data" style="margin-top:0!important;" >
+            <el-table :data="getStaffInfo.data" style="margin-top:0!important;" max-height="600">
               <el-table-column prop="time" label="时间">
               </el-table-column>
           
@@ -88,10 +87,13 @@
                 </template>
               </el-table-column>
 
-              <el-table-column prop="elevCode" label="所属单位">
+              <el-table-column prop="corpName" label="所属单位">
               </el-table-column>
           
-              <el-table-column prop="value" label="体温">
+              <el-table-column label="体温">
+                 <template slot-scope="scope">
+                  <span>{{scope.row.value}}℃</span>
+                </template>
               </el-table-column>
               
               <el-table-column prop="elevCode" label="检测状态">
@@ -101,13 +103,21 @@
                 
               </el-table-column>
           
-              <el-table-column prop="areaName" label="处理结果">
+              <el-table-column label="处理结果">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.result !== ''">{{result[scope.row.result]}}</span>
+                  <span v-else>--</span>
+                </template>
               </el-table-column>
 
               <!-- <el-table-column prop="areaName" label="接触人数">
               </el-table-column> -->
              
               <el-table-column prop="areaName" label="是否为高危地点">
+                
+                <template slot-scope="scope">
+                  <span v-html="scope.row.dangerousFlag == 1 ? '是' :'否'"></span>
+                </template>
               </el-table-column>
 
               <el-table-column label="操作" width="100">
@@ -169,59 +179,75 @@
           
           <div class="detailsDiv">
             <span class="detailsSpan clearfix">
-              <el-form-item label="位置" prop="account">
-                <span class="formShowContent">{{detailsList.elevCode}}</span>
+              <el-form-item label="防疫点" prop="account">
+                <span class="formShowContent">{{detailsList.epedName}}</span>
               </el-form-item>
             
               <el-form-item label="时间" prop="gender">
-                <span class="formShowContent">{{detailsList.elevCode}}</span>
+                <span class="formShowContent">{{detailsList.time}}</span>
               </el-form-item>
             
             </span>
             <span class="detailsSpan">
               <el-form-item label="所属单位" prop="account">
-                <span class="formShowContent">{{detailsList.elevCode}}</span>
+                <span class="formShowContent">{{detailsList.corpName}}</span>
               </el-form-item>
             
               <el-form-item label="是否为高危地点" prop="gender">
-                <span class="formShowContent">{{detailsList.elevCode}}</span>
+                <span class="formShowContent">{{detailsList.dangerousFlag == 1 ? '是' :'否'}}</span>
               </el-form-item>
-            
+
             </span>
-            <span class="detailsSpan" style="padding: 21px 0 0 70px;">
+            <!-- <span class="detailsSpan" style="padding: 21px 0 0 70px;">
               <el-form-item label="接触人数" prop="account">
                 <span class="formShowContent" style="font-size:30px">{{detailsList.elevCode}}</span><span>人</span>
               </el-form-item>
-            
-            </span>
+            </span> -->
           </div>
         </el-form>
 
         <!-- 表格 Start -->
         <div style="position:relative;display:flex;">
           &nbsp;
-          <el-table :data="elevatorList" style="margin-top:0!important;margin-bottom: 32px;" height="450">
-            <el-table-column prop="elevCode" label="姓名">
+          <el-table :data="elevatorList" style="margin-top:0!important;margin-bottom: 32px;" max-height="440">
+
+            <el-table-column
+              label="序号"
+              type="index"
+              width="80">
             </el-table-column>
-        
-            <el-table-column prop="areaName" label="检测时间">
-            </el-table-column>
-            
-            <el-table-column prop="elevCode" label="测温结果">
-            </el-table-column>
-        
-            <el-table-column prop="areaName" label="检测状态">
-            </el-table-column>
-        
-            <el-table-column label="操作" width="100">
+
+            <el-table-column label="姓名">
               <template slot-scope="scope">
-                <!-- 1.在封装好的组件上使用，所以要加上.native才能click
-                2.prevent就相当于..event.preventDefault() -->
-                <el-button @click.native.prevent="openCheckDetails(scope.row)" type="text">查看详情
-                </el-button>
-                
+                <span @click.native.prevent="personDetails(scope.row)" style="color: #3572FF;">
+                  {{scope.row.name}}
+                </span>
               </template>
             </el-table-column>
+        
+            <el-table-column prop="time" label="检测时间">
+            </el-table-column>
+            
+            <el-table-column prop="value" label="测温结果">
+            </el-table-column>
+
+            <el-table-column prop="valid" label="是否有异常">
+              <template slot-scope="scope">
+               <span v-if="scope.row.valid" style="color: #FF652C;">有</span>
+               <span v-else>无</span>
+
+              </template>
+            </el-table-column>
+            <!-- <el-table-column prop="areaName" label="检测状态">
+            </el-table-column> -->
+        
+            <!-- <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <el-button @click.native.prevent="openCheckDetails(scope.row)" type="text">查看详情
+                </el-button>
+              </template>
+            </el-table-column> -->
+
           </el-table>
           &nbsp;
         </div>
@@ -298,13 +324,14 @@ export default {
         4000:'事故救援',
       },
       staffMLiftParam:{
-        userId:this.$route.params.staffId,
-        limit:10,
-        offset:1
+        epedId: '',
+        pointId: '',
+        date: ''
       },
       dialogRelease: false,
       checkDetailsDialog: false,
-      detailsList:[]
+      detailsList:[],
+      result:['','未处理','已处理','解除警告']
     }
   },
   components: {
@@ -326,8 +353,14 @@ export default {
     moment,
     // 打开查看详情弹窗
     openCheckDetails(row){
+      // 上面详情
       this.detailsList = row
+      this.staffMLiftParam.epedId = row.epedId
+      this.staffMLiftParam.pointId = row.epedId
+      this.staffMLiftParam.date = row.time
+      this.getStaffManageLift()
       this.checkDetailsDialog = true
+
     },
 
     // 确认解除异常状态
@@ -336,6 +369,7 @@ export default {
         if(res.data.code === 200 && res.data.message === 'success') {
           this.$message.success("解除异常状态成功")
           this.dialogRelease = false
+          this.getAllAccountData()
         } else {
           this.$message.console.error(res.data.message);
         }
@@ -368,20 +402,19 @@ export default {
       api.person.getPersonDetail({idCard: this.$route.query.idCard, epedId: this.$route.query.epedId}).then((res) => {
         if(res.data.code === 200 && res.data.message === 'success') {
           this.getStaffInfo = res.data.data
-          // this.elevatorList = res.data.data.elevatorList
           // 头像
-          this.url = api.accountApi.viewPic(this.getStaffInfo.avatar)
+          // this.url = api.accountApi.viewPic(this.getStaffInfo.avatar)
 
-          var areaName1 = newArea.getAreaName(this.getStaffInfo.areaCode.join(",")).join('  ')
-          Vue.set(this.getStaffInfo, 'areaName', areaName1)
-          console.log("areaName1===" + areaName1)
+          // var areaName1 = newArea.getAreaName(this.getStaffInfo.areaCode.join(",")).join('  ')
+          // Vue.set(this.getStaffInfo, 'areaName', areaName1)
+          // console.log("areaName1===" + areaName1)
 
-          this.departmentName = res.data.data.depName
-          this.elevatorTotal = res.data.data.elevatorTotal
-          this.birthdayFrom = moment(moment(this.getStaffInfo.birthday).format('YYYYMMDD'),'YYYYMMDD').fromNow().replace("前","").replace("内","")
-          this.entryTimeFrom = moment(moment(this.getStaffInfo.entryTime).format('YYYYMMDD'),'YYYYMMDD').fromNow().replace("前","").replace("内","")
-          this.empTimeFrom = moment(moment(this.getStaffInfo.empTime).format('YYYYMMDD'),'YYYYMMDD').fromNow().replace("前","").replace("内","")
-          console.log("this.birthdayFrom---" + this.birthdayFrom)
+          // this.departmentName = res.data.data.depName
+          // this.elevatorTotal = res.data.data.elevatorTotal
+          // this.birthdayFrom = moment(moment(this.getStaffInfo.birthday).format('YYYYMMDD'),'YYYYMMDD').fromNow().replace("前","").replace("内","")
+          // this.entryTimeFrom = moment(moment(this.getStaffInfo.entryTime).format('YYYYMMDD'),'YYYYMMDD').fromNow().replace("前","").replace("内","")
+          // this.empTimeFrom = moment(moment(this.getStaffInfo.empTime).format('YYYYMMDD'),'YYYYMMDD').fromNow().replace("前","").replace("内","")
+          // console.log("this.birthdayFrom---" + this.birthdayFrom)
 
           
           // this.totalPageSize = res.data.data.elevatorTotal
@@ -412,15 +445,12 @@ export default {
     },
     // 获取员工管辖电梯
     getStaffManageLift(){
-      console.log("this.staffMLiftParam==" + JSON.stringify(this.staffMLiftParam))
-      api.accountApi.getStaffManageLift(this.staffMLiftParam).then((res) => {
+      // console.log("this.staffMLiftParam==" + JSON.stringify(this.staffMLiftParam))
+      // api.person.contactRecord({"epedId":"1229744423043407874","pointId":"1230094763475337217","date":"2020-02-22 00:15:06"}).then((res) => {
+      api.person.contactRecord(this.staffMLiftParam).then((res) => {
         if(res.data.code === 200 && res.data.message === 'success'){
-          this.elevatorList = res.data.data.records
-          // this.totalPageSize = res.data.data.count
-          this.elevatorList.forEach(item =>{
-            var areaName = newArea.getAreaName(item.areaCode).join('')
-            Vue.set(item, 'areaName', areaName)
-          })
+          this.elevatorList = res.data.data || []
+         
         } else {
           this.elevatorList = []
         }
