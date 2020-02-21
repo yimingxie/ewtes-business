@@ -19,6 +19,21 @@ export default {
     return http.get(`${url1}/ewtes/epidemic/diagnosis/statistics?epedId=${epedId}`)
   },
 
+  // 实时监测
+  getRealData(epedId) {
+    return http.get(`${url1}/ewtes/epidemic/diagnosis/function?epedId=${epedId}`)
+  },
+
+  // 历史记录（今日）
+  getHistoryList(params) {
+    return http.post(`${url1}/ewtes/epidemic/diagnosis/history`, params)
+  },
+
+  // 异常详情
+  getAbnormalDetail(params) {
+    return http.post(`${url1}/ewtes/epidemic/abnormal/info`, params)
+  },
+
 
   
 }

@@ -34,9 +34,7 @@
 
       <div class="x-list">
         <div class="xlist-choose clearfix">
-   
           <div class="xlist-choose-si">
-            <!-- <search-input ref="searchInputRef" placeholderValue="搜索园区名称/创建人" @search="searchTask" @cancel="clearTask"></search-input> -->
             <search-input ref="searchInputRef" placeholderValue="搜索观察任务名称" @search="searchTask" @cancel="clearTask"></search-input>
           </div>
         </div>
@@ -49,7 +47,6 @@
         </div>
 
         <div class="x-list-block"></div>
-
 
         <div class="ll-table">
           <div class="llt-thead">
@@ -300,7 +297,7 @@ export default {
 
     },
 
-    // 防疫点多选
+    // 任务多选
     checkedLiftsChange(val) {
       let count = this.observeList.length
       // 总数达到就全选
@@ -386,6 +383,7 @@ export default {
       }
       api.digital.addObserve(param).then(res => {
         console.log('添加成功？', res.data)
+        this.$message.success('添加成功')
         this.dialogAddObserve = false
         this.getObList()
       })
@@ -420,6 +418,7 @@ export default {
         "pointData": this.ruleFormAddObserve.pointData   
       }
       api.digital.editObserve(param).then(res => {
+        this.$message.success('编辑成功')
         this.dialogAddObserve = false
         this.getObList()
       })

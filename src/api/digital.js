@@ -34,6 +34,11 @@ export default {
     return http.delete(`${url1}/ewtes/epidemic?epedId=${epedIds}`)
   },
 
+  // 防疫点搜索框
+  searchEpidemic(title) {
+    return http.get(`${url1}/ewtes/epidemic/search?title=${title}`)
+  },
+
   // 查询防疫点档案详情
   getDigitalDetail(epedId) {
     return http.get(`${url1}/ewtes/epidemic?epedId=${epedId}`)
@@ -83,6 +88,43 @@ export default {
   // 删除任务
   deleteObserve(observedIds) {
     return http.delete(`${url1}/ewtes/epidemic/observed?observedId=${observedIds}`)
+  },
+
+
+  // 查看监测应用列表
+  getDiagnosisList(params) {
+    return http.post(`${url1}/ewtes/diagnosis/fetch/list`, params)
+  },
+
+  // 查询监测应用
+  getDiagnosis(id) {
+    return http.get(`${url1}/ewtes/diagnosis/fetch?id=${id}`)
+  },
+
+  // 添加监测应用
+  addDiagnosis(params) {
+    return http.post(`${url1}/ewtes/diagnosis/create`, params)
+  },
+
+  // 编辑监测应用
+  editDiagnosis(params) {
+    return http.put(`${url1}/ewtes/diagnosis/modify`, params)
+  },
+
+  // 删除监测应用
+  deleteDiagnosis(id) {
+    return http.delete(`${url1}/ewtes/diagnosis/delete?id=${id}`)
+  },
+
+  // 停启用监测应用
+  switchDiagnosis(params) {
+    return http.put(`${url1}/ewtes/diagnosis/fetch/enable`, params)
+  },
+
+
+  // 异常档案列表
+  getAbnormalList(params) {
+    return http.get(`${url1}/ewtes/epidemic/abnormal`, params)
   },
 
 

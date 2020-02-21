@@ -6,7 +6,11 @@
     <div class="x-container">
       <div class="x-digital-detail">
         <div class="xddetail-name">
-          <div class="xddetail-name-p">{{epedName}}</div>
+          <div class="xddetail-name-p">
+            <el-select class="x-select det-head-select" v-model="epedIdValue" @change="epedIdValueChange" placeholder="请选择防疫点">
+              <el-option v-for="item in epedIdOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </div>
         </div>
 
         <div class="xddetail-list clearfix">
@@ -14,21 +18,21 @@
             <div class="stat-head-box-icon stat-head-box-icon-hour"></div>
             <div class="stat-head-box-info">
               <div class="stat-head-box-info-h">近一小时人流量</div>
-              <div class="stat-head-box-info-p">64</div>
+              <div class="stat-head-box-info-p">{{oneHouse}}</div>
             </div>
           </div>
           <div class="stat-head-box clearfix">
             <div class="stat-head-box-icon stat-head-box-icon-day"></div>
             <div class="stat-head-box-info">
               <div class="stat-head-box-info-h">本日人流量</div>
-              <div class="stat-head-box-info-p">7083</div>
+              <div class="stat-head-box-info-p">{{today}}</div>
             </div>
           </div>
           <div class="stat-head-box clearfix">
             <div class="stat-head-box-icon stat-head-box-icon-area"></div>
             <div class="stat-head-box-info">
               <div class="stat-head-box-info-h">检测区域</div>
-              <div class="stat-head-box-info-p">8</div>
+              <div class="stat-head-box-info-p">{{monitorCount}}</div>
             </div>
           </div>
         
@@ -48,7 +52,7 @@
           </div>
 
           <div class="detection-real-content clearfix">
-            <div class="detreal-box">
+            <!-- <div class="detreal-box">
               <div class="detreal-box-title">
                 <div class="detreal-box-title-icon"></div>
                 <div class="detreal-box-title-p">入口</div>
@@ -70,81 +74,35 @@
                 </div>
 
               </div>
-            </div>
-            <div class="detreal-box">
+            </div> -->
+
+
+
+            <div class="detreal-box" v-for="(item, i) in realList" :key="i">
               <div class="detreal-box-title">
                 <div class="detreal-box-title-icon"></div>
-                <div class="detreal-box-title-p">入口</div>
+                <div class="detreal-box-title-p">{{item.pointName}}</div>
               </div>
-              <div class="detreal-box-data clearfix" @click="getDetDetail">
+              <div class="detreal-box-data clearfix" :class="item.abnormalCount > 0 ? 'warn' : ''" @click="getDetDetail(item.pointId)">
                 <div class="detreal-box-data-people clearfix">
                   <div class="drbd-people-flow">
                     <div class="drbd-people-flow-h">异常人数</div>
                     <div class="drbd-people-flow-p">
-                      <span>0</span>人
+                      <span>{{item.abnormalCount}}</span>人
                     </div>
                   </div>
                   <div class="drbd-people-flow">
                     <div class="drbd-people-flow-h">本日人流量</div>
                     <div class="drbd-people-flow-p">
-                      <span>1234</span>人
+                      <span>{{item.today}}</span>人
                     </div>
                   </div>
                 </div>
 
               </div>
             </div>
-            <div class="detreal-box">
-              <div class="detreal-box-title">
-                <div class="detreal-box-title-icon"></div>
-                <div class="detreal-box-title-p">入口</div>
-              </div>
-              <div class="detreal-box-data clearfix" @click="getDetDetail">
-                <div class="detreal-box-data-people clearfix">
-                  <div class="drbd-people-flow">
-                    <div class="drbd-people-flow-h">异常人数</div>
-                    <div class="drbd-people-flow-p">
-                      <span>0</span>人
-                    </div>
-                  </div>
-                  <div class="drbd-people-flow">
-                    <div class="drbd-people-flow-h">本日人流量</div>
-                    <div class="drbd-people-flow-p">
-                      <span>1234</span>人
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-            <div class="detreal-box">
-              <div class="detreal-box-title">
-                <div class="detreal-box-title-icon"></div>
-                <div class="detreal-box-title-p">入口</div>
-              </div>
-              <div class="detreal-box-data clearfix" @click="getDetDetail">
-                <div class="detreal-box-data-people clearfix">
-                  <div class="drbd-people-flow">
-                    <div class="drbd-people-flow-h">异常人数</div>
-                    <div class="drbd-people-flow-p">
-                      <span>0</span>人
-                    </div>
-                  </div>
-                  <div class="drbd-people-flow">
-                    <div class="drbd-people-flow-h">本日人流量</div>
-                    <div class="drbd-people-flow-p">
-                      <span>1234</span>人
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
+   
           </div>
-
-
-
 
         </div>
 
@@ -152,17 +110,17 @@
           <div class="xtitle-heading">
             <div class="xtitle-heading-h">
               <div class="xtitle-heading-h-line"></div>
-              <div class="xtitle-heading-h-p">历史记录</div>
+              <div class="xtitle-heading-h-p">今日记录</div>
             </div>
 
             <div class="detection-history-choose">
               <div class="x-select-box" style="width: 102px;">
-                <el-select class="x-select" v-model="historyParams.status" placeholder="全部状态" clearable>
+                <el-select class="x-select" v-model="historyParams.status" @change="historyStatusChange" placeholder="全部状态" clearable>
                   <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
               </div>
               <div class="x-select-box" style="width: 130px;">
-                <el-select class="x-select" v-model="historyParams.monitor" placeholder="全部检测区域" clearable>
+                <el-select class="x-select" v-model="historyParams.monitor" @change="historyMoniChange" placeholder="全部检测区域" clearable>
                   <el-option v-for="item in monitorOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
               </div>
@@ -170,7 +128,9 @@
 
           </div>
 
-          <div class="det-history-table">
+          <div class="x-no-data" style="margin-top: 100px;" v-if="historyList.length === 0">暂无数据</div>
+
+          <div class="det-history-table" v-else>
             <div class="det-history-thead">
               <div class="det-history-tr clearfix">
                 <div class="det-history-th"></div>
@@ -180,8 +140,9 @@
                 <div class="det-history-th">时间</div>
               </div>
             </div>
+
             <div class="det-history-tbody">
-              <div class="det-history-tr clearfix">
+              <!-- <div class="det-history-tr clearfix">
                 <div class="det-history-td">
                   <div class="det-history-avatar">
                     <img src="../../assets/images/xym/avatar.png" alt="">
@@ -191,6 +152,18 @@
                 <div class="det-history-td">36.6℃</div>
                 <div class="det-history-td">洗手间</div>
                 <div class="det-history-td">10分钟前</div>
+              </div> -->
+
+              <div class="det-history-tr clearfix" v-for="(item, i) in historyList" :key="i">
+                <div class="det-history-td">
+                  <div class="det-history-avatar">
+                    <img :src="item.url" alt="">
+                  </div>
+                </div>
+                <div class="det-history-td">{{item.name}}</div>
+                <div class="det-history-td">{{item.value}}℃</div>
+                <div class="det-history-td">{{item.pointName}}</div>
+                <div class="det-history-td">{{item.time}}</div>
               </div>
             </div>
           </div>
@@ -251,24 +224,19 @@
               </div>
             </div>
             <div class="det-history-tbody">
-              <div class="det-history-tr clearfix">
+              <!-- <div class="det-history-tr warn clearfix" @click="openDialogDeal">
                 <div class="det-history-td">张晶晶</div>
                 <div class="det-history-td">36.6℃</div>
                 <div class="det-history-td">15:20</div>
                 <div class="det-history-td">去处理</div>
+              </div> -->
+              <div class="det-history-tr clearfix" v-for="(item, i) in detailWarnList" :key="i" @click="openDialogDeal(item.id)">
+                <div class="det-history-td">{{item.name}}</div>
+                <div class="det-history-td">{{item.celsius}}℃</div>
+                <div class="det-history-td">{{item.time}}</div>
+                <div class="det-history-td">{{item.result | returnWarnResult}}</div>
               </div>
-              <div class="det-history-tr warn clearfix">
-                <div class="det-history-td">张晶晶</div>
-                <div class="det-history-td">36.6℃</div>
-                <div class="det-history-td">15:20</div>
-                <div class="det-history-td">去处理</div>
-              </div>
-              <div class="det-history-tr clearfix">
-                <div class="det-history-td">张晶晶</div>
-                <div class="det-history-td">36.6℃</div>
-                <div class="det-history-td">15:20</div>
-                <div class="det-history-td">去处理</div>
-              </div>
+        
             </div>
           </div>
         </div>
@@ -299,21 +267,56 @@
 
           <div class="det-deal-mid">
             <div class="det-deal-mid-box">
-              <div class="det-deal-mid-box-h"></div>
-              <div class="det-deal-mid-box-p"></div>
+              <div class="det-deal-mid-box-h">姓名</div>
+              <div class="det-deal-mid-box-p">刘洋</div>
+            </div>
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">所属部门</div>
+              <div class="det-deal-mid-box-p">产品部</div>
+            </div>
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">位置</div>
+              <div class="det-deal-mid-box-p">电梯扶手</div>
+            </div>
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">时间</div>
+              <div class="det-deal-mid-box-p">18:00:23</div>
+            </div>
+          </div>
+
+          <div class="det-deal-right">
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">处理结果</div>
+              <div class="ddeal-radio" v-if="diaDealState == 'put'">
+                <!-- <el-radio-group v-model="dealRadioValue"> -->
+                  <!-- <el-radio v-for="item in pointDataRadio" :key="item.value" :label="item.value">{{item.label}}</el-radio> -->
+                  <el-radio v-model="dealRadioValue" :label="2">已处理</el-radio>
+                  <el-radio v-model="dealRadioValue" :label="3">解除告警</el-radio>
+                <!-- </el-radio-group> -->
+              </div>
+              <div class="det-deal-mid-box-p" v-else>1-未处理 2-已处理 3-解除警告</div>
+            </div>
+            <div class="det-deal-mid-box">
+              <div class="det-deal-mid-box-h">处理描述</div>
+              <div class="ddeal-desc" v-if="diaDealState == 'put'">
+                <textarea class="ddeal-desc-textarea"></textarea>
+              </div>
+              <div class="det-deal-mid-box-p" style="line-height: 24px;" v-else>处理描述 <br>处理描述</div>
             </div>
 
           </div>
 
-
-
-
         </div>
       
-        <div class="dia-btn-con" style="text-align: right;">
-          <div class="dia-btn dia-btn-cancel" @click="dialogDeal=false">取消</div>
-          <div class="dia-btn dia-btn-submit">确认</div>
+        <div class="dia-btn-con" style="text-align: right;" v-if="diaDealState == 'put'">
+          <div class="dia-btn dia-btn-cancel" @click="closeDialogDeal">取消</div>
+          <div class="dia-btn dia-btn-submit" @click="submitDialogDeal">完成</div>
         </div>
+        <div class="dia-btn-con" style="text-align: right;" v-else>
+          <!-- <div class="dia-btn dia-btn-cancel" @click="dialogDeal=false">取消</div> -->
+          <div class="dia-btn dia-btn-submit" @click="closeDialogDeal">关闭</div>
+        </div>
+
       </div>
     </el-dialog>
 
@@ -328,45 +331,142 @@ export default {
   data() {
     return {
       parentCode: '',
+      timer: '',
 
       // --统计--
+      epedIdOptions: [],
+      epedIdValue: '',
       epedName: '',
-      oneHouse: '',
-      today: '',
-      monitorCount: '',
-      abnormalCount: '',
+      oneHouse: 0,
+      today: 0,
+      monitorCount: 0,
+      abnormalCount: 0,
+
+      // --实时状态--
+      realList: [],
 
       // --历史记录--
+      historyList: [],
       historyParams: {
         epedId: "",
-        status: "", // -1 -全部 0 -正常 1 -异常
+        status: -1, // -1 -全部 0 -正常 1 -异常
         monitor: ""
       },
       statusOptions: [
-        {label: 'label啊', value: 'value值'},
-        {label: 'label啊2', value: 'value值2'},
+        {label: '全部', value: -1},
+        {label: '异常', value: 0},
+        {label: '正常', value: 1},
       ],
-      monitorOptions: [
-        {label: 'label啊', value: 'value值'},
-        {label: 'label啊2', value: 'value值2'},
-      ],
+      monitorOptions: [],
 
-      // --区域详情侧滑--
+      // --检测区域详情侧滑--
       sliderShow: false,
+      abnormalCount: 0,
+      processCount: 0,
+      unProcessCount: 0,
+      closedCount: 0,
+      detailWarnList: [],
 
 
       // --告警处理弹窗--
       dialogDeal: false,
+      diaDealState: '', // 默认为只读，编辑则为'put'
+      dealRadioValue: 2,
+      currentWarnId: '' // 记录正在处理的告警工单id
+
 
     }
   },
   created() {
     this.parentCode = this.$route.query.epedId
+    this.epedIdValue = this.$route.query.epedId
   },
+  
   mounted() {
+    this.getEpedIdOptions()
+
+    this.getMoniList()
+
+    // 获取实时状态
+    this.getRealList()
+
+    // 历史记录
+    this.getHistoryList()
 
   },
+  beforeDestroy() {
+    // 页面关闭清除定时器
+    clearInterval(this.timer)
+    this.timer = null
+  },
   methods: {
+    // 开启定时器
+    setTimer() {
+      // return false // 关闭定时器
+      const that = this
+      if (that.timer) clearInterval(that.timer)
+      this.timer = setInterval(() => {
+        that.getRealList()
+      }, 3000) // 10秒TODO
+    },
+
+    // 获取实时状态
+    getRealList() {
+      api.detection.getRealData(this.parentCode).then(res => {
+        console.log('实时状态', res.data)
+        this.realList = res.data.data
+      })
+    },
+
+    // 获取防疫点下拉
+    getEpedIdOptions() {
+      let param = {
+        "epedId": "",
+        "areaCode": "",
+        "useDepartment": "",
+        "limit": 10000,
+        "offset": 1 
+      }
+      this.epedIdOptions = []
+      api.digital.getEpidemicList(param).then(res => {
+        console.log('表头下拉', res.data)
+        let detail = res.data.data.records
+        detail.forEach(item => {
+          this.epedIdOptions.push({
+            label: item.epedName,
+            value: item.epedId
+          })
+        })
+      })
+    },
+
+    // 获取监测区域下拉
+    getMoniList() {
+      api.digital.getEpidemicMonitorList(this.parentCode).then(res => {
+        console.log('监测区域下拉', res.data)
+        let detail = res.data.data
+        this.monitorOptions = []
+        detail.forEach(item => {
+          this.monitorOptions.push({
+            label: item.pointName,
+            value: item.pointId
+          })
+        })
+      })
+    },
+
+    // 切换防疫点
+    epedIdValueChange() {
+      // TODO reset...
+
+      this.$router.push({
+        path: '/detection-panel',
+        query: {
+          epedId: this.epedIdValue
+        }
+      })
+    },
+
     // 统计
     getDetStat() {
       api.detection.getStatistics(this.parentCode).then(res => {
@@ -379,9 +479,61 @@ export default {
       })
     },
 
+    // 历史记录（今日）
+    getHistoryList() {
+      this.historyParams.epedId = this.parentCode
+      api.detection.getHistoryList(this.historyParams).then(res => {
+        console.log('历史记录', res.data)
+        this.historyList = res.data.data
+      })
+    },
+
+    // 筛选历史记录状态
+    historyStatusChange() {
+      this.getHistoryList()
+    },
+
+    // 筛选历史记录检测区域
+    historyMoniChange() {
+      this.getHistoryList()
+    },
+
     // 获取检测区域详情
-    getDetDetail() {
+    getDetDetail(pointId) {
       this.sliderShow = true
+      let param = {
+        "pointId": pointId,
+        "limit": 10000,
+        "offset": 1
+      }
+      api.detection.getAbnormalDetail(param).then(res => {
+        console.log('检测区域详情', res.data)
+        let abInfo = res.data.data
+        this.abnormalCount = abInfo.abnormalCount
+        this.processCount = abInfo.processCount
+        this.unProcessCount = abInfo.unProcessCount
+        this.closedCount = abInfo.closedCount
+
+        this.detailWarnList = abInfo.records
+      })
+    },
+
+    // 打开异常处理弹窗
+    openDialogDeal() {
+      this.dialogDeal = true
+      
+
+    },
+
+    // 关闭异常处理弹窗
+    closeDialogDeal() {
+      this.currentWarnId = ''
+      this.dialogDeal = false
+    },
+
+    // 提交处理异常
+    submitDialogDeal() {
+
     },
 
   },
@@ -392,8 +544,24 @@ export default {
 </script>
 
 <style>
+
 .x-select .el-input__inner{
   border: none !important;
+  height: 32px !important;
+  line-height: 32px !important;
+}
+.det-head-select .el-input__inner{
+  font-size: 30px !important;
+  color: #3572FF !important;
+  font-weight: bold !important;
+}
+.el-select.x-select .el-input .el-select__caret{
+  font-size: 14px !important;
+}
+.el-select.det-head-select .el-input .el-select__caret{
+  color: #3572FF !important;
+  font-weight: bold !important;
+  font-size: 22px !important;
 }
 
 </style>
@@ -401,6 +569,13 @@ export default {
 <style lang="stylus" scoped>
 #DetectionPanel{
   padding-bottom: 30px;
+
+  .xddetail-name{
+    width: 232px;
+  }
+  .xddetail-list{
+    padding-left: 252px;
+  }
 
 
   .detection-history{

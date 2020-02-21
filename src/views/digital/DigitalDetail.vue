@@ -10,14 +10,14 @@
     <div class="x-container">
       <div class="digital-detail-tabTop clearfix" style="margin-top: 30px;">
         <div class="digital-detail-tab">
-          <span class="on" style="z-index: 4">基本档案</span>
-          <span style="z-index: 3">异常档案</span>
+          <span class="on" style="z-index: 4" @click="goDigitalDetail">基本档案</span>
+          <span style="z-index: 3" @click="goAbnormalDetail">异常档案</span>
         </div>
 
         <div class="digital-detail-tabTop-a clearfix">
           <div class="digital-detail-tabTop-anav" @click="goObserveList">观察任务管理</div>
           <div class="digital-detail-tabTop-anav-span">|</div>
-          <div class="digital-detail-tabTop-anav">监测应用管理</div>
+          <div class="digital-detail-tabTop-anav" @click="goDiagnList">监测应用管理</div>
         </div>
 
 
@@ -838,7 +838,37 @@ export default {
           'epedId': this.parentCode,
         }
       })
-    }
+    },
+
+    // 跳转到监测应用
+    goDiagnList() {
+      this.$router.push({
+        path: '/diagnosis-list',
+        query: {
+          'epedId': this.parentCode,
+        }
+      })
+    },
+
+    // 跳转到基本档案
+    goDigitalDetail() {
+      this.$router.push({
+        path: '/digital-detail',
+        query: {
+          'epedId': this.parentCode,
+        }
+      })
+    },
+
+    // 跳转到异常档案
+    goAbnormalDetail() {
+      this.$router.push({
+        path: '/digital-abnormal',
+        query: {
+          'epedId': this.parentCode,
+        }
+      })
+    },
 
   },
   components: {

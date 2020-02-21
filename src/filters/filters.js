@@ -93,3 +93,20 @@ export function returnPointDataCN(value) {
     return ''
   }
 }
+
+
+/**
+ * 判断监测数据，返回中文信息
+ * @param {number} value 
+ */
+export function returnWarnResult(value) {
+  if (value == 1) {
+    return '未处理'
+  } else if (value == 2) {
+    return '已处理'
+  } else if (value == 3) {
+    return '解除警告'
+  } else {
+    return ''
+  }
+}

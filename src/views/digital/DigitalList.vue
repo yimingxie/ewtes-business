@@ -80,7 +80,7 @@
                 <div class="llt-td">
                   <span class="llt-td-a" @click="goDetail(item.epedId)">档案</span>
                   <em class="llt-td-line">|</em>
-                  <span class="llt-td-a">设置监测</span>
+                  <span class="llt-td-a" @click="goDiagn(item.epedId)">设置监测</span>
                   <em class="llt-td-line">|</em>
                   <span class="llt-td-a" @click="goDetection(item.epedId)">诊断</span>
                 </div>
@@ -315,6 +315,16 @@ export default {
     goDetection(epedId) {
       this.$router.push({
         path: '/detection-panel',
+        query: {
+          'epedId': epedId
+        }
+      })
+    },
+
+    // 跳转到监测
+    goDiagn(epedId) {
+      this.$router.push({
+        path: '/diagnosis-list',
         query: {
           'epedId': epedId
         }
