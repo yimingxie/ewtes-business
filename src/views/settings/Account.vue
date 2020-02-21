@@ -4,37 +4,10 @@
   <div class="pageTitle">账号管理</div>
   <div class="wrapper" style="">
     <div class=" " style="position: absolute;">
-      <div class="panel panelLeft" style=" ">
+      <div class="panel panelLeft" :style="{'height':tabPeriod == 1 ? '756px':''}">
         <tab-radio :items="tabPeriods" :value.sync="tabPeriod" style="padding: 33px 0 32px 32px;border-bottom:1px solid #d8dddf;width: 100%;">
         </tab-radio>
-        <!-- 角色列表 -->
-        <!-- <ul class="roleList" v-if="tabPeriod == 1">
-          <li v-for="(role,index) in rolesJson" :key="index" @click="activeRole = index" :class="{active: index == activeRole}">
-            {{role.name}}
-          </li>
-        </ul> -->
-        <ul class="roleList" v-if="tabPeriod == 1">
-          <li v-for="(role) in rolesJson" :key="role.id" @click="clickRole(role)" :class="{active: role.id == activeM}">
-            {{role.name}}
-          </li>
-         
-        </ul>
-         <!-- 分页 -->
-        <div class="pagination_block" v-if="totalPage > 0 && tabPeriod == 1">
-          <el-pagination
-            @size-change="pageSizeChange"
-            @current-change="currentPageChange"
-            :current-page="roleQueryParam.offset"
-            :page-sizes="[10, 20, 30]"
-            :page-size="roleQueryParam.limit"
-            layout="prev, pager, next"
-            :total="totalPage">
-          </el-pagination>
-        </div>
-        <!-- 分页 end-->
-        <button class="btn blueBtn" @click="addRoleDialog" v-if="tabPeriod == 1" style="margin: 10px 0 0 81px;">添加角色</button>
         
-
         <!-- 组织列表 -->
         <!-- <Tree v-if="tabPeriod == 0" :treeData="treeData"></Tree> -->
         <el-tree
@@ -128,7 +101,8 @@
       </div>
       <div class="row" >
 
-        <div class="panel scdPanel" style="height:594px">
+        <!-- <div class="panel scdPanel" :style="{height:tabPeriod == 0?'594px':'804px'}"> -->
+        <div class="panel scdPanel" style="height:791px">
           
           <!-- 表格 Start -->
           <div style="position:relative;;display:flex;">
@@ -169,10 +143,17 @@
                 </template>
               </el-table-column>
 
-               <el-table-column prop="name" label="创建人">
+               <el-table-column label="创建人">
+                 <template slot-scope="scope" >
+                  {{scope.row.createUser ? scope.row.createUser : '--'}}
+                </template>
               </el-table-column>
 
-               <el-table-column prop="name" label="创建时间">
+              <el-table-column label="创建时间">
+                <template slot-scope="scope" >
+                  {{scope.row.createTime ? scope.row.createTime.substring(0,10) : '--'}}
+                </template>
+
               </el-table-column>
 
               <el-table-column  label="状态" align="center">
@@ -227,44 +208,6 @@
     </div>
     <!-- 账号列表end -->
 
-    <!-- 角色详情 -->
-    <div class="panelRight rolePnael" v-if="tabPeriod == 1">
-      <div class="row" >
-
-        <div class="panel ">
-          <div class="bigTitle">基本信息
-            <span class="iconSpan deleteIcon" @click="dialogRoleDelete = true"></span>
-            <!-- <span class="iconSpan editIcon" @click="openEditRoleDialog"></span> -->
-          </div>
-          <div class="role_content">
-              <div class="role_p">
-                <div class="role_title">角色名称</div>
-                <div>{{checkRole.name}}</div>
-              </div>
-              <div class="role_p">
-                <div class="role_title">角色描述</div>
-                <div>{{checkRole.description}}</div>
-              </div>
-          </div>
-        </div>
-      </div>
-      <div class="row" >
-
-        <div class="panel ">
-          <div class="bigTitle">功能权限</div>
-          <div class="role_content">
-              <el-row :gutter="78" v-if="getRoleModuleList.length > 0">
-                
-                  <el-col :span="6" v-for="(moudel,index) in getRoleModuleList" :key="index">
-                    <span class="checkMoudel">{{moudel.name}}</span>
-                  </el-col>
-              </el-row>
-              <div v-else style="padding-bottom: 40px;font-size: 16px;color: #999;">暂未绑定功能模块</div>
-          </div>
-        </div>
-      </div>
-    </div>
-     <!-- 角色详情 end -->
   </div>
   <!-- 添加账号  弹窗  Start -->
   <el-dialog width="500px" title="添加账号" :visible.sync="add_dialogFormVisible">
@@ -416,90 +359,6 @@
 
   <fotter></fotter>
 
-  <!-- 删除角色 弹窗-->
-  <el-dialog width="500px" :show-close="false" title="删除角色" :visible.sync="dialogRoleDelete">
-    <div class="dialog-delete">
-      <div class="dia-heading">
-        <div class="dia-con-pic">
-          <!-- <img src="../../assets/images/xym/dia-warn.png" alt=""> -->
-        </div>
-        <div class="dia-con-p">
-          <div class="confirDialogText1">是否确认删除所选角色，删除后不可复原，请谨慎操作</div>
-        </div>
-      </div>
-    
-    </div>
-    <div slot="footer"  class="dialog-footer tar">
-      <span @click="dialogRoleDelete = false" class="dialogCancel">取 消</span>
-      <el-button type="primary" @click="deleteRole()" class="dialogSure">确 认</el-button>
-    </div>
-  </el-dialog>
-
-  <!-- 删除角色 弹窗 end-->
-
-  <!-- 添加角色  弹窗  Start -->
-  <el-dialog width="500px" title="添加角色" :visible.sync="addRole_dialog">
-    <el-form :model="addRoleForm" :label-width="formLabelWidth" :rules="addRoleFormRule" ref="addRoleForm" label-position="top">
-      
-          <el-form-item label="角色名称" prop="name">
-            <el-input v-model="addRoleForm.name" placeholder="请输入角色名称" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
-          </el-form-item>
-        
-          <el-form-item label="角色描述" prop="description">
-            <el-input v-model="addRoleForm.description" placeholder="请填写角色描述" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
-          </el-form-item>
-
-          <el-form-item label="功能权限" prop="ids">
-            <el-checkbox-group v-model="addRoleForm.ids">
-              <el-col :span="6" v-for="(moudel,index) in getCorModuleList" :key="index">
-                
-                <el-checkbox  :label="moudel.id" >{{moudel.name}}</el-checkbox>
-                
-              </el-col>
-            </el-checkbox-group>
-          </el-form-item>
-        
-      
-    </el-form>
-    <div slot="footer"  class="dialog-footer tar">
-      <span @click="addRole_dialog = false" class="dialogCancel">取 消</span>
-      <el-button type="primary" @click="confirmAddRole()" class="dialogSure">确 认</el-button>
-
-    </div>
-  </el-dialog>
-  <!--添加角色  弹窗 End -->
-
-  <!-- 编辑角色  弹窗  Start -->
-  <el-dialog width="500px" title="编辑角色" :visible.sync="editRole_dialog">
-    <el-form :model="editRoleForm" :label-width="formLabelWidth" :rules="editRoleFormRule" ref="editRoleFormRule" label-position="top">
-      
-          <el-form-item label="角色名称" prop="name">
-            <el-input v-model="editRoleForm.name" placeholder="请输入角色名称" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
-          </el-form-item>
-        
-          <el-form-item label="角色描述" prop="description">
-            <el-input v-model="editRoleForm.description" placeholder="请填写角色描述" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
-          </el-form-item>
-
-          <el-form-item label="功能权限" prop="ids">
-            <el-checkbox-group v-model="editRoleForm.ids">
-              <el-col :span="6" v-for="(moudel,index) in getCorModuleList" :key="index">
-                
-                <el-checkbox  :label="moudel.id" >{{moudel.name}}</el-checkbox>
-                
-              </el-col>
-            </el-checkbox-group>
-          </el-form-item>
-        
-      
-    </el-form>
-    <div slot="footer"  class="dialog-footer tar">
-      <span @click="editRole_dialog = false" class="dialogCancel">取 消</span>
-      <el-button type="primary" @click="confirmEditRole()" class="dialogSure">确 认</el-button>
-
-    </div>
-  </el-dialog>
-  <!--编辑角色  弹窗 End -->
 </div>
 </template>
 
@@ -616,11 +475,7 @@ export default {
       totalPageSize:0, // 总页数
       totalPage:0,
       queryParam:{
-        // offset:1,
-        // limit:10,
-        // queryStr: "",
-        // status:'',
-        // roleId:''
+       
         departmentId: "",
         limit: 10,
         offset: 0,
@@ -795,7 +650,7 @@ export default {
     this.getAllAccountData()
     this.getCorpMo()
     // this.getAllDepartmentData()
-    this.getAllDepartmentData()
+    // this.getAllDepartmentData()
 
     
   },
@@ -867,7 +722,7 @@ export default {
       this.getCorModuleList = []
       api.accountApi.getCorModules().then((res) => {
         if (res.data.code === 200) {
-          this.getCorModuleList = res.data.data
+          this.getCorModuleList = res.data.data || []
         }
       }).catch((res) => {
         
@@ -916,10 +771,11 @@ export default {
       })
       
     },
-    handleLeftclick(data, node) {
+    handleLeftclick(data, Node) {
       console.log("data" + JSON.stringify(data))
-      this.queryParam.departmentId = data.id
-      this.addAccountForm.departmentId = data.id
+      this.queryParam.departmentId = Node.level == 1 ? '': data.id
+      // this.queryParam.departmentId = Node.level == 1 ? '': data.id
+      this.addAccountForm.departmentId = Node.level == 1 ? '': data.id
       this.clickName = data.name
       this.getAllAccountData()
     },
@@ -1044,7 +900,7 @@ export default {
       }
     },
     // 懒加载
-    loadNode1(node, resolve) {
+    loadNode1(Node, resolve) {
       this.resolve = resolve
       //       if (node.level === 0) {
       // //         console.log("getAllDepJson111===" + JSON.stringify(this.getAllDepJson))
@@ -1056,7 +912,9 @@ export default {
       //       }
       // if (node.level > 1) return resolve([]);.el
       // if(node.level >= 1) { // 二级节点
-        this.getAllDepartmentData(node,resolve)
+      console.log("Node" + Node.level)
+        this.getAllDepartmentData(Node,resolve)
+
       // }
       // setTimeout(() => {
         // const data = [{
@@ -1074,12 +932,12 @@ export default {
       // }, 500);
     },
     // 查询所有部门
-    getAllDepartmentData(node,resolve){
+    getAllDepartmentData(Node,resolve){
       // node.forEach(element => {
-        console.log("222===" + node)
+        console.log("222===" + Node)
 
       // });
-      api.accountApi.getDepartments(node.level && node.level !== 0 ?  node.data.id :'corp').then((res) => {
+      api.accountApi.getDepartments(Node.level && Node.level !== 0 ?  Node.data.id :'corp').then((res) => {
         if(res.data.code === 200 && res.data.message === 'success'){
           this.getAllDepJson = res.data.data || []
           // this.totalPageSize = res.data.data.total
@@ -1103,7 +961,7 @@ export default {
       
     },
     tableRowClassName({row, rowIndex}) {
-      if (row.valid === 0) {
+      if (row.isValid === 0) {
         return 'gray-row';
       }
       return '';
@@ -1194,6 +1052,7 @@ export default {
         if(res.data.code === 200 && res.data.message === 'success'){
           this.getAllAccountJson = res.data.data.records
           this.totalPageSize = res.data.data.total
+          console.log("dsgfdsgdfh==" + JSON.stringify(this.getAllAccountJson))
           // for(var i = 0; i < this.getAllAccountJson.length; i++){
             
           //   // console.log("aaaaaaaaaaaaa===" + this.rolesJson.length)
@@ -1524,10 +1383,10 @@ export default {
   .wrapper
     overflow: hidden;
     position relative
-    height: 786px;
+    height: 987px;
   .panelLeft
     width: 290px;
-    height: 756px; 
+    height: 987px; 
     
     box-shadow: 8px 0 14px 2px rgba(196,203,239,0.39)
     border-radius: 8px 0px 0px 8px;

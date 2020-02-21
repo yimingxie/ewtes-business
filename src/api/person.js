@@ -5,11 +5,34 @@ import http from '../utils/http'
 
 let protocol = process.env.NODE_ENV !== 'production' ? 'http:' : window.location.protocol
 // let url2 = `${protocol}//192.168.100.2/domino`
-let url2 = `${http.localURL}/arctic`
+let url2 = `${http.localURL}/ewtes/business`
 
 
 export default  {
- 
+  // 查询单位
+  getCorps(params){
+    return http.post(
+      `${url2}/corp/queryList`,params
+    )
+  },
+  // 人员防疫记录列表
+  getEpidemicList(params){
+    return http.post(
+      `${url2}/epidemic/userInfoList`,params
+    )
+  },
+  // 查询防疫区域
+  getEpidemicArea(){
+    return http.get(
+      `${url2}/epidemic/list`
+    )
+  },
+  // 人员详情
+  getPersonDetail(params){
+    return http.post(
+      `${url2}/epidemic/userinfo`, params
+    )
+  },
     // 修改用户账号
   editAccount(params){
     return http.put(

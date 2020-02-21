@@ -221,18 +221,18 @@ if (process.env.NODE_ENV == 'development') {
   devURL = `${protocol}//192.168.100.2`
   xiaohuURL = `${protocol}//192.168.100.89:8080`
   shupingURL = `${protocol}//192.168.100.8:8080`
-  localURL = `${protocol}//192.168.100.8:8080`
-  // localURL = `${protocol}//192.168.100.17:8080`
+  // localURL = `${protocol}//192.168.100.8:8080`
+  localURL = `${protocol}//192.168.100.17:8080`
   // localURL = `${protocol}//iot.gidomino.com`
   // localURL = `${protocol}//192.168.100.3`
   // localURL = `${protocol}//192.168.100.17:8080`
   // localURL = `${protocol}//192.168.100.8:8080`
   // localURL = `${protocol}//192.168.100.89:8080`
 } else if (process.env.NODE_ENV == 'production') {
-   localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//192.168.100.3`
+  //  localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//192.168.100.3`
   // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//iot.gidomino.com`
   // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//lorns.gidomino.com:23680`
-  // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//lorns.gidomino.com`
+  localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//lorns.gidomino.com`
 }
 
 // let AUTH_TOKEN=(function(){

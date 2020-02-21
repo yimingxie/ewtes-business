@@ -16,7 +16,7 @@ let url1 = `${http.localURL}`
 export default {
   // 检测诊断统计
   getStatistics(epedId) {
-    return http.get(`${url1}/ewtes/epidemic/diagnosis/statistics?epedId=${epedId}`)
+    return http.get(`${url1}/ewtes/business/epidemic/diagnosis/statistics?epedId=${epedId}`)
   },
 
 

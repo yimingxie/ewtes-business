@@ -4,18 +4,37 @@
   <div class="pageTitle">账号管理</div>
   <div class="wrapper" style="">
     <div class=" " style="position: absolute;">
-      <div class="panel panelLeft" style=" ">
+      <div class="panel panelLeft" :style="{'height':tabPeriod == 1 ? '756px':''}">
         <tab-radio :items="tabPeriods" :value.sync="tabPeriod" style="padding: 33px 0 32px 32px;border-bottom:1px solid #d8dddf;width: 100%;">
         </tab-radio>
-        <span></span>
         <!-- 角色列表 -->
-        <ul class="roleList" v-if="tabPeriod == 1">
-          <!-- <li v-for="(role,index) in rolesJson" :key="index" @click="activeRole = index" :class="{active: index == activeRole}">
+        <!-- <ul class="roleList" v-if="tabPeriod == 1">
+          <li v-for="(role,index) in rolesJson" :key="index" @click="activeRole = index" :class="{active: index == activeRole}">
             {{role.name}}
-          </li> -->
-          <button class="btn blueBtn" @click="addRoleDialog">添加角色</button>
-
+          </li>
+        </ul> -->
+        <ul class="roleList" v-if="tabPeriod == 1">
+          <li v-for="(role) in rolesJson" :key="role.id" @click="clickRole(role)" :class="{active: role.id == activeM}">
+            {{role.name}}
+          </li>
+         
         </ul>
+         <!-- 分页 -->
+        <div class="pagination_block" v-if="totalPage > 0 && tabPeriod == 1">
+          <el-pagination
+            @size-change="pageSizeChange"
+            @current-change="currentPageChange"
+            :current-page="roleQueryParam.offset"
+            :page-sizes="[10, 20, 30]"
+            :page-size="roleQueryParam.limit"
+            layout="prev, pager, next"
+            :total="totalPage">
+          </el-pagination>
+        </div>
+        <!-- 分页 end-->
+        <button class="btn blueBtn" @click="addRoleDialog" v-if="tabPeriod == 1" style="margin: 10px 0 0 81px;">添加角色</button>
+        
+
         <!-- 组织列表 -->
         <!-- <Tree v-if="tabPeriod == 0" :treeData="treeData"></Tree> -->
         <el-tree
@@ -32,25 +51,29 @@
             lazy
 
             :check-on-click-node= "true"
+
             @node-click="handleLeftclick"
+
             ref="tree"
-          
+
+            highlight-current
+
           >
 
-            <span class="slot-t-node" slot-scope="{ node, data }">
+            <span class="slot-t-node" slot-scope="{ node, data }" :class="[data.id == queryParam.departmentId ? 'slot-t-node--label' : '']">
 
               <span v-show="!data.isEdit">
 
-                <span :class="[data.id>= 99 ? 'slot-t-node--label' : '']">{{node.label}}</span>
+                <span >{{node.label}}</span>
                 <span class="operatioDropdownSpan">
                   <el-dropdown  trigger="click" >
                     <span class="operationBtn" @click="rightClick($event,node, data)">...</span>
                     <el-dropdown-menu slot="dropdown" class="operatioDropdown">
-                      <el-dropdown-item>
+                      <el-dropdown-item v-if="node.level > 1">
                         <div class="edit" @click="editNode()">编辑</div>
                       </el-dropdown-item>
-                      <el-dropdown-item><div class="delete" @click="deleteDepDialog = true;alert(1)">删除</div></el-dropdown-item>
-                      <el-dropdown-item><div class="add" @click="addChildNode()">添加下级</div></el-dropdown-item>
+                      <el-dropdown-item v-if="node.level > 1"><div class="delete" @click="deleteDepDialog = true;alert(1)">删除</div></el-dropdown-item>
+                      <el-dropdown-item ><div class="add" @click="addChildNode()">添加下级</div></el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
                 </span>
@@ -58,13 +81,13 @@
               <!-- // 编辑 -->
               <span v-show="data.isEdit">
 
-                <el-input class="slot-t-input" size="mini" autofocus
+                <el-input class="slot-t-input" size="mini" autofocus maxlength="15"
 
                   v-model="data.name"
 
                   :ref="'slotTreeInput'+data.id"
 
-                  @blur.stop="NodeBlur(node,data)"
+                  @blur.stop="NodeBlur(node, data)"
 
                   @keydown.native.enter="NodeBlur(node,data)">
 
@@ -89,12 +112,10 @@
           <div class="subSelect">
  
 
-          <radio-group :items="periods1" :value.sync="period1">
+          <!-- <radio-group :items="periods1" :value.sync="period1">
             <span slot="label">人员状态：</span>
-            <!-- <template slot="item" scope="props">
-              <li>{{ props.text }}</li>
-            </template> -->
-          </radio-group>
+          </radio-group> -->
+          
           <search-input v-model.trim="searchKey" placeholderValue="搜索账号/姓名" @search="searchAccount()" @cancel="searchAccount()"></search-input>
           </div>
           <div class="subBtns">
@@ -107,7 +128,8 @@
       </div>
       <div class="row" >
 
-        <div class="panel scdPanel" style="height:594px">
+        <!-- <div class="panel scdPanel" :style="{height:tabPeriod == 0?'594px':'804px'}"> -->
+        <div class="panel scdPanel" style="height:791px">
           
           <!-- 表格 Start -->
           <div style="position:relative;;display:flex;">
@@ -128,13 +150,13 @@
               <el-table-column  label="角色">
                 <template slot-scope="scope">
                   <span v-if="scope.row.roleName" v-html="scope.row.roleName" ></span>
-                  <span v-if="scope.row.type == 'administrator'" >超级管理员</span>
+                  <!-- <span v-if="scope.row.type == 'administrator'" >超级管理员</span> -->
                 </template>
               </el-table-column>
               
               <el-table-column  label="账号状态" align="center">
                 <template slot-scope="scope" >
-                  <span v-text="scope.row.valid== 1? '启用':'停用'"></span>
+                  <span v-text="scope.row.isValid== 1? '启用':'停用'"></span>
                   <!-- <el-switch
                     v-model="scope.row.valid"
                     active-color="#E2E6E8"
@@ -148,16 +170,23 @@
                 </template>
               </el-table-column>
 
-               <el-table-column prop="name" label="创建人">
+               <el-table-column label="创建人">
+                 <template slot-scope="scope" >
+                  {{scope.row.createUser ? scope.row.createUser : '--'}}
+                </template>
               </el-table-column>
 
-               <el-table-column prop="name" label="创建时间">
+              <el-table-column label="创建时间">
+                <template slot-scope="scope" >
+                  {{scope.row.createTime ? scope.row.createTime.substring(0,10) : '--'}}
+                </template>
+
               </el-table-column>
 
               <el-table-column  label="状态" align="center">
                 <template slot-scope="scope" >
                   <el-switch
-                    v-model="scope.row.valid"
+                    v-model="scope.row.isValid"
                     active-color="#E2E6E8"
                     inactive-color="#E3E7E9"
                     :active-value="1"
@@ -211,15 +240,18 @@
       <div class="row" >
 
         <div class="panel ">
-          <div class="bigTitle">基本信息</div>
+          <div class="bigTitle">基本信息
+            <span class="iconSpan deleteIcon" @click="dialogRoleDelete = true"></span>
+            <!-- <span class="iconSpan editIcon" @click="openEditRoleDialog"></span> -->
+          </div>
           <div class="role_content">
               <div class="role_p">
                 <div class="role_title">角色名称</div>
-                <!-- <div>{{rolesJson[activeRole].name}}</div> -->
+                <div>{{checkRole.name}}</div>
               </div>
               <div class="role_p">
                 <div class="role_title">角色描述</div>
-                <!-- <div>{{rolesJson[activeRole].info}}</div> -->
+                <div>{{checkRole.description}}</div>
               </div>
           </div>
         </div>
@@ -229,14 +261,13 @@
         <div class="panel ">
           <div class="bigTitle">功能权限</div>
           <div class="role_content">
-              <div class="role_p">
-                <div class="role_title">角色名称</div>
-                <!-- <div>{{rolesJson[activeRole].name}}</div> -->
-              </div>
-              <div class="role_p">
-                <div class="role_title">角色描述</div>
-                <!-- <div>{{rolesJson[activeRole].info}}</div> -->
-              </div>
+              <el-row :gutter="78" v-if="getRoleModuleList.length > 0">
+                
+                  <el-col :span="6" v-for="(moudel,index) in getRoleModuleList" :key="index">
+                    <span class="checkMoudel">{{moudel.name}}</span>
+                  </el-col>
+              </el-row>
+              <div v-else style="padding-bottom: 40px;font-size: 16px;color: #999;">暂未绑定功能模块</div>
           </div>
         </div>
       </div>
@@ -251,8 +282,8 @@
             <el-input v-model="addAccountForm.name" placeholder="请输入名称" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
         
-          <el-form-item label="登录账号" prop="account">
-            <el-input v-model="addAccountForm.account" placeholder="请输入11位手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+          <el-form-item label="登录账号" prop="username">
+            <el-input v-model="addAccountForm.username" placeholder="请输入11位手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
 
           <el-form-item label="初始密码" prop="password" >
@@ -288,24 +319,13 @@
         <el-input v-model="EditAccountForm.name" placeholder="请输入名称" auto-complete="off" clearable size="small"></el-input>
       </el-form-item>
 
-      <el-form-item label="登录账号：" prop="account">
-        <el-input v-model="EditAccountForm.account" placeholder="请输入登录账号，即手机号" auto-complete="off" disabled clearable size="small"></el-input>
+      <el-form-item label="登录账号：" prop="username">
+        <el-input v-model="EditAccountForm.username" placeholder="请输入登录账号，即手机号" auto-complete="off" disabled clearable size="small"></el-input>
       </el-form-item>
       
-      
-      <!-- <el-form-item label="手机号：" prop="phoneNumber">
-        <el-input v-model="EditAccountForm.phoneNumber" auto-complete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="所属单位id：" prop="ownerUnitId" >
-        <el-select v-model="EditAccountForm.ownerUnitId" placeholder="请选择角色所属单位id">
-          <el-option v-for="enterprise in allEnterprise_Json" :key="enterprise.unitName" :label="enterprise.unitName" :value="enterprise.id"></el-option>
-        </el-select>
-      </el-form-item> -->
+     
       <el-form-item label="账号角色" prop="roleId" v-if="adType !='administrator'">
-        <!-- <el-input v-model="addRoleForm.ownerUnitId" auto-complete="off"></el-input> -->
-        <!-- <el-select v-model="edit_roleNameArr" multiple placeholder="请选择账户角色"  @change="changeSelect">
-          <el-option v-for="role in rolesJson" :key="role.name" :label="role.name" :value="role.name"></el-option>
-        </el-select> -->
+      
         <el-select v-model="EditAccountForm.roleId" placeholder="请选择角色" size="small">
           <el-option
             v-for="item in rolesJson"
@@ -330,7 +350,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer ">
       <span class="tal">
-        <span @click="edit_dialogFormVisible = false; resetPasswordDialogVisoble = true" class="dialogCancel" style="position:absolute;left:32px;bottom:40px;">重置密码</span>
+        <span @click="openResetPasswordDialog(EditAccountForm)" class="dialogCancel" style="position:absolute;left:32px;bottom:40px;">重置密码</span>
       </span>
       <span  class="tar">
          <span @click="edit_dialogFormVisible = false" class="dialogCancel ">取 消</span>
@@ -357,7 +377,7 @@
     </div>
     <div slot="footer"  class="dialog-footer tar">
       <span @click="cancelResetPassword()" class="dialogCancel">取 消</span>
-      <el-button type="primary" @click="resetPassword(confirmReset)" class="dialogSure">确 认</el-button>
+      <el-button type="primary" @click="resetPassword()" class="dialogSure">确 认</el-button>
     </div>
   </el-dialog>
 
@@ -376,8 +396,8 @@
     
     </div>
     <div slot="footer"  class="dialog-footer tar">
-      <span @click="cancelResetPassword()" class="dialogCancel">取 消</span>
-      <el-button type="primary" @click="resetPassword(confirmReset)" class="dialogSure">确 认</el-button>
+      <span @click="dialogDelete = false" class="dialogCancel">取 消</span>
+      <el-button type="primary" @click="deleteStaff()" class="dialogSure">确 认</el-button>
     </div>
   </el-dialog>
   <!-- 删除电梯 弹窗 end-->
@@ -404,6 +424,27 @@
 
   <fotter></fotter>
 
+  <!-- 删除角色 弹窗-->
+  <el-dialog width="500px" :show-close="false" title="删除角色" :visible.sync="dialogRoleDelete">
+    <div class="dialog-delete">
+      <div class="dia-heading">
+        <div class="dia-con-pic">
+          <!-- <img src="../../assets/images/xym/dia-warn.png" alt=""> -->
+        </div>
+        <div class="dia-con-p">
+          <div class="confirDialogText1">是否确认删除所选角色，删除后不可复原，请谨慎操作</div>
+        </div>
+      </div>
+    
+    </div>
+    <div slot="footer"  class="dialog-footer tar">
+      <span @click="dialogRoleDelete = false" class="dialogCancel">取 消</span>
+      <el-button type="primary" @click="deleteRole()" class="dialogSure">确 认</el-button>
+    </div>
+  </el-dialog>
+
+  <!-- 删除角色 弹窗 end-->
+
   <!-- 添加角色  弹窗  Start -->
   <el-dialog width="500px" title="添加角色" :visible.sync="addRole_dialog">
     <el-form :model="addRoleForm" :label-width="formLabelWidth" :rules="addRoleFormRule" ref="addRoleForm" label-position="top">
@@ -417,13 +458,14 @@
           </el-form-item>
 
           <el-form-item label="功能权限" prop="ids">
-            <el-checkbox-group v-model="addRoleForm.ids">
+            <el-checkbox-group v-model="addRoleForm.ids" v-if="getCorModuleList.length > 0">
               <el-col :span="6" v-for="(moudel,index) in getCorModuleList" :key="index">
                 
                 <el-checkbox  :label="moudel.id" >{{moudel.name}}</el-checkbox>
                 
               </el-col>
             </el-checkbox-group>
+            <div v-else>暂无功能模块</div>
           </el-form-item>
         
       
@@ -435,6 +477,38 @@
     </div>
   </el-dialog>
   <!--添加角色  弹窗 End -->
+
+  <!-- 编辑角色  弹窗  Start -->
+  <el-dialog width="500px" title="编辑角色" :visible.sync="editRole_dialog">
+    <el-form :model="editRoleForm" :label-width="formLabelWidth" :rules="editRoleFormRule" ref="editRoleFormRule" label-position="top">
+      
+          <el-form-item label="角色名称" prop="name">
+            <el-input v-model="editRoleForm.name" placeholder="请输入角色名称" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+          </el-form-item>
+        
+          <el-form-item label="角色描述" prop="description">
+            <el-input v-model="editRoleForm.description" placeholder="请填写角色描述" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+          </el-form-item>
+
+          <el-form-item label="功能权限" prop="ids">
+            <el-checkbox-group v-model="editRoleForm.ids">
+              <el-col :span="6" v-for="(moudel,index) in getCorModuleList" :key="index">
+                
+                <el-checkbox  :label="moudel.id" >{{moudel.name}}</el-checkbox>
+                
+              </el-col>
+            </el-checkbox-group>
+          </el-form-item>
+        
+      
+    </el-form>
+    <div slot="footer"  class="dialog-footer tar">
+      <span @click="editRole_dialog = false" class="dialogCancel">取 消</span>
+      <el-button type="primary" @click="confirmEditRole()" class="dialogSure">确 认</el-button>
+
+    </div>
+  </el-dialog>
+  <!--编辑角色  弹窗 End -->
 </div>
 </template>
 
@@ -525,9 +599,10 @@ export default {
       add_dialogFormVisible:false,
       addAccountForm: {
         name:'',
-        account: '',
+        username: '',
         password: '',
         roleId:'',
+        departmentId:''
       },
       edit_dialogFormVisible: false,
       EditAccountForm: {
@@ -548,12 +623,9 @@ export default {
       },
       act_index:'0',
       totalPageSize:0, // 总页数
+      totalPage:0,
       queryParam:{
-        // offset:1,
-        // limit:10,
-        // queryStr: "",
-        // status:'',
-        // roleId:''
+       
         departmentId: "",
         limit: 10,
         offset: 0,
@@ -561,7 +633,7 @@ export default {
       },
       getAllAccountJson: [],
       roleQueryParam: {
-        limit: 100,
+        limit: 8,
         offset:1,
         search: "",
         // queryStr: ""
@@ -582,7 +654,7 @@ export default {
       },
       adType:'',
       addAccountRules: {
-        account: [
+        username: [
           {required: true, message: '请输入登录账号', trigger: 'blur' },
           { min: 11, max: 11, message: '登录账号错误，请输入11位手机号', trigger: 'blur' },
           {
@@ -599,7 +671,9 @@ export default {
         roleId: [
           { required: true, message: '请选择角色', trigger: 'change' }
         ],
-   
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ]
       
       },
       editAccountRules: {
@@ -619,9 +693,9 @@ export default {
         roleId: [
           {required: true, message: '请选择角色', trigger: 'change' }
         ],
-        gender: [
-          {required: true, message: '请选择角色', trigger: 'change' }
-        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ]
       
       },
       resetPasswordDialogVisoble: false,
@@ -672,13 +746,30 @@ export default {
         ids:[]
       },
       addRoleFormRule: {
-       
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' },
           { max: 20, message: '名称字符长度过长，请控制在20位字符以内', trigger: 'blur' },
         ],
       
       },
+      checkRole:{},
+      getRoleModuleList:[],
+      dialogRoleDelete:false,
+      editRole_dialog:false,
+      editRoleForm:{
+        name:'',
+        description:'',
+        ids: []
+      },
+      editRoleFormRule: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' },
+          { max: 20, message: '名称字符长度过长，请控制在20位字符以内', trigger: 'blur' },
+        ],
+      
+      },
+      count:1,
+      clickName:''
     }
   },
   components: {
@@ -705,20 +796,83 @@ export default {
   },
   mounted() {
     // this.queryParam.corpId = window.localStorage.getItem('corpId')
-    // this.getAllRoleData()
+    this.getAllRoleData()
     this.getAllAccountData()
+    this.getCorpMo()
     // this.getAllDepartmentData()
-    this.getAllDepartmentData()
+    // this.getAllDepartmentData()
 
-    // this.getCorpMo()
+    
   },
   methods: {
+    confirmEditRole(){
+
+    },
+    // 删除角色
+    deleteRole(){
+      api.accountApi.deleteRole({id:this.activeM}).then((res) => {
+
+        if (res.data.code === 200) {
+          this.$message.success('删除角色成功');
+          this.getAllRoleData()
+          this.dialogRoleDelete = false
+        } else{
+          this.$message.error(res.data.message);
+        }
+      })
+    },
+    openEditRoleDialog() {
+      this.editRole_dialog = true
+      this.editRoleForm.name = this.checkRole.name
+      this.editRoleForm.description = this.checkRole.description
+      this.editRoleForm.ids = []
+      this.getRoleModuleList.forEach(item =>{
+        this.editRoleForm.ids.push(item.id)
+      })
+
+      console.log(" 1124124===" + JSON.stringify(this.getRoleModuleList))
+    },
+    // 获取公司模块
+    getRoleMo(id){
+      this.getRoleModuleList = []
+      api.accountApi.roleGetmodule(id).then((res) => {
+        if (res.data.code === 200) {
+          this.getRoleModuleList = res.data.data || []
+          // this.getCorModuleList.forEach(item =>{
+            // this.checkMoudel.push(item.id)
+          // })
+        }
+      }).catch((res) => {
+        
+      })
+    },
+    clickRole(row){
+      this.activeM = row.id
+      this.dialogRoleName = row.name
+      this.checkRole = row
+      this.getRoleMo(this.activeM)
+      // this.value4 = []
+      // api.roleApi.getMoRe(row.id).then((res) => {
+
+      //   if (res.data.code === 200) {
+      //     this.morelist = res.data.data
+      //     this.morelist.forEach(item =>{
+      //       this.value4.push(item.id)
+      //       // res.data.data.map(Number)
+      //     })
+      //     this.value4.map(Number)
+      //     console.log("this.value4" + this.value4)
+      //   }
+      // })
+
+      
+    },
     // 获取公司模块
     getCorpMo(){
       this.getCorModuleList = []
       api.accountApi.getCorModules().then((res) => {
         if (res.data.code === 200) {
-          this.getCorModuleList = res.data.data
+          this.getCorModuleList = res.data.data || []
         }
       }).catch((res) => {
         
@@ -749,8 +903,8 @@ export default {
               // api.accountApi.accountBindRole(this.bindRoleForm).then((res) => {
               //   if (res.data.code === 200) {
               this.$message.success('创建成功！');
-              this.getAllAccountData()
-              this.add_dialogFormVisible = false
+              this.getAllRoleData()
+              this.addRole_dialog = false
                 
               //   }
               // }).catch((res) => {
@@ -767,9 +921,12 @@ export default {
       })
       
     },
-    handleLeftclick(data, node) {
+    handleLeftclick(data, Node) {
       console.log("data" + JSON.stringify(data))
-      this.queryParam.departmentId = data.id
+      this.queryParam.departmentId = Node.level == 1 ? '': data.id
+      // this.queryParam.departmentId = Node.level == 1 ? '': data.id
+      this.addAccountForm.departmentId = Node.level == 1 ? '': data.id
+      this.clickName = data.name
       this.getAllAccountData()
     },
     // 点击更多操作
@@ -796,8 +953,9 @@ export default {
 
         return false;
       }
-      let id = Math.ceil(Math.random() * 100);
-      this.createDep.name = '新增节点'+id
+      // let id = Math.ceil(Math.random() * 100);
+      this.count++
+      this.createDep.name = '部门'+ this.count
       this.createDep.parentId = this.currentData.id
       api.accountApi.createDepartments(this.createDep).then((res) => {
         if(res.data.code === 200 && res.data.message === 'success'){
@@ -862,8 +1020,11 @@ export default {
       // debugger
 
       console.log(Node, data);
-
-      if (data.name.length === 0) {
+      console.log(this.currentData.name);
+      if(this.clickName == data.name){
+        this.$set(data, "isEdit", false);
+        return false;
+      } else if (data.name.length === 0) {
         this.$message.error("名称不可为空！");
 
         return false;
@@ -873,6 +1034,9 @@ export default {
             if(res.data.code === 200 && res.data.message === 'success'){
 
               this.$set(data, "isEdit", false);
+              this.$message.success("编辑成功")
+            } else{
+              this.$message.error(res.data.message)
             }
           })
           
@@ -886,19 +1050,21 @@ export default {
       }
     },
     // 懒加载
-    loadNode1(node, resolve) {
+    loadNode1(Node, resolve) {
       this.resolve = resolve
-//       if (node.level === 0) {
-// //         console.log("getAllDepJson111===" + JSON.stringify(this.getAllDepJson))
-//         return resolve([{'corpId': "1229819391223214081",
-// 'createTime': "2020-02-19 01:26:06",
-// 'id': "1",
-// 'name': "AAA商户",
-// 'parentId': "1229819391223214081"}]);
-//       }
+      //       if (node.level === 0) {
+      // //         console.log("getAllDepJson111===" + JSON.stringify(this.getAllDepJson))
+      //         return resolve([{'corpId': "1229819391223214081",
+      // 'createTime': "2020-02-19 01:26:06",
+      // 'id': "1",
+      // 'name': "AAA商户",
+      // 'parentId': "1229819391223214081"}]);
+      //       }
       // if (node.level > 1) return resolve([]);.el
       // if(node.level >= 1) { // 二级节点
-        this.getAllDepartmentData(node,resolve)
+      console.log("Node" + Node.level)
+        this.getAllDepartmentData(Node,resolve)
+
       // }
       // setTimeout(() => {
         // const data = [{
@@ -916,12 +1082,12 @@ export default {
       // }, 500);
     },
     // 查询所有部门
-    getAllDepartmentData(node,resolve){
+    getAllDepartmentData(Node,resolve){
       // node.forEach(element => {
-        console.log("222===" + node)
+        console.log("222===" + Node)
 
       // });
-      api.accountApi.getDepartments(node.level == 0 ? 'corp' : node.data.id).then((res) => {
+      api.accountApi.getDepartments(Node.level && Node.level !== 0 ?  Node.data.id :'corp').then((res) => {
         if(res.data.code === 200 && res.data.message === 'success'){
           this.getAllDepJson = res.data.data || []
           // this.totalPageSize = res.data.data.total
@@ -945,7 +1111,7 @@ export default {
       
     },
     tableRowClassName({row, rowIndex}) {
-      if (row.valid === 0) {
+      if (row.isValid === 0) {
         return 'gray-row';
       }
       return '';
@@ -967,8 +1133,8 @@ export default {
     },
 
     // 删除账号
-    deleteStaff(index, row){
-      api.accountApi.deleteStaff(this.checkedStaffs).then((res) => {
+    deleteStaff(){
+      api.accountApi.deleteAccount({ids:this.multipleSelection}).then((res) => {
         if (res.data.code === 200) {
           this.$message.success('删除成功！');
           this.getAllAccountData()
@@ -1036,6 +1202,7 @@ export default {
         if(res.data.code === 200 && res.data.message === 'success'){
           this.getAllAccountJson = res.data.data.records
           this.totalPageSize = res.data.data.total
+          console.log("dsgfdsgdfh==" + JSON.stringify(this.getAllAccountJson))
           // for(var i = 0; i < this.getAllAccountJson.length; i++){
             
           //   // console.log("aaaaaaaaaaaaa===" + this.rolesJson.length)
@@ -1092,6 +1259,7 @@ export default {
     },
     // 打开重置密码弹窗
     openResetPasswordDialog(account){
+      this.edit_dialogFormVisible = false; 
       this.resetPasswordDialogVisoble = true
       this.confirmReset = account
     },
@@ -1101,23 +1269,15 @@ export default {
       this.confirmReset = {}
     },
     // 确认重置密码
-    resetPassword(row){
-      // this.$confirm('是否重置密码?（重置后的密码为666666）', '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   type: 'error'
-      // }).then(() => {
-        api.accountApi.resetAccount({"ids":row.id.split(",")}).then((res) => {
+    resetPassword(){
+          console.log("this.EditAccountForm" +JSON.stringify(this.EditAccountForm))
+        api.accountApi.resetAccount({"id":this.EditAccountForm.id}).then((res) => {
           if (res.data.code === 200) {
             this.getAllAccountData()
             this.resetPasswordDialogVisoble = false
-            if(res.data.message == "账号重置成功,管理员账号需要更高权限"){
-              this.$message.error("账号操作权限不足");
-            } else {
-              this.$message.error(res.data.message);
-            }
+            this.$message.success("重置密码成功");
+           
           } else {
-            // this.$message.error(res.data.message);
             this.$message.error("账号操作权限不足");
           }
         }).catch((res) => {
@@ -1138,14 +1298,15 @@ export default {
     },
     // 编辑账号
     editAccount(index, row) {
-      this.EditAccountForm.uid = row.id
-      this.EditAccountForm.account = row.username
-      this.EditAccountForm.name = row.name
+      console.log("1111111==" +JSON.stringify(row))
+      this.EditAccountForm = row
+      // this.EditAccountForm.username = row.username
+      // this.EditAccountForm.name = row.name
   
-      this.EditAccountForm.roleId = "-1"
-      if(row.roleId) {
-        this.EditAccountForm.roleId = row.roleId
-      }
+      // this.EditAccountForm.roleId = "-1"
+      // if(row.roleId) {
+        this.EditAccountForm.roleId = parseInt(row.roleId)
+      // }
       this.adType = row.type
       // this.EditAccountForm.phoneNumber = row.phoneNumber
       // this.edit_roleNameArr = row.roleName.split(',')
@@ -1243,7 +1404,7 @@ export default {
       // console.log('event==' + event)
       // console.log('index==' + index)
       // console.log('row==' + JSON.stringify(row))
-      api.accountApi.enableAccount({"uid":row.id, "enable":event}).then((res) => {
+      api.accountApi.enableAccount({"id":row.id, "valid":event}).then((res) => {
         
         // console.log("res.data.code" + res.data.data.records[0])
         if (res.data.code == 200) {
@@ -1282,7 +1443,9 @@ export default {
       api.accountApi.getRoles(this.roleQueryParam).then((res) => {
         if (res.data.code === 200) {
           this.rolesJson = res.data.data.records
-
+          this.totalPage = res.data.data.total
+          // 获取模块资源，默认选中第一个模块
+          this.clickRole(this.rolesJson[0])
           // this.periods = [{ label: '全部', value: "" }]
           
           // this.rolesJson.forEach((item) =>{
@@ -1295,6 +1458,17 @@ export default {
       }).catch((res) => {
         
       })
+    },
+    // 当前分页改变
+    currentPageChange(current) {
+      this.roleQueryParam.offset = current
+      this.getAllRoleData()
+    },
+
+    // 分页大小改变
+    pageSizeChange(size) {
+      this.roleQueryParam.limit = size
+      this.getAllRoleData()      
     },
 
     // 打开添加账号弹窗
@@ -1359,14 +1533,16 @@ export default {
   .wrapper
     overflow: hidden;
     position relative
-    height: 786px;
+    height: 987px;
   .panelLeft
-    width: 290px;height: 100%; 
+    width: 290px;
+    height: 987px; 
+    
     box-shadow: 8px 0 14px 2px rgba(196,203,239,0.39)
     border-radius: 8px 0px 0px 8px;
-    margin-bottom: -9999px;
+    // margin-bottom: -9999px;
     z-index: 999;
-    padding:0 0 9999px 0
+    padding:0
     
   .panelRight
     margin-left: 290px;
@@ -1457,5 +1633,19 @@ export default {
     position: absolute;
     z-index: 1000;
   }
-
+  .el-col{
+    margin 10px 0
+  }
+  .iconSpan
+    width 22px
+    height 22px
+    background url('../../assets/images/hs/write@2x.png') no-repeat left center;
+    display inline-block
+    float: right;
+    background-size 22px
+    margin 35px 40px 0 0
+    cursor pointer
+  .deleteIcon
+    background url('../../assets/images/hs/delete@2x.png') no-repeat left center;
+    background-size 22px
 </style>

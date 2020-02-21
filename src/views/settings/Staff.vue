@@ -317,8 +317,9 @@
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer tar">
-      <span @click="edit_dialogFormVisible = false" class="dialogCancel">取 消</span>
-      <el-button type="primary" @click="confirmEdit" class="dialogSure">确 认</el-button>
+      <!-- <span @click="edit_dialogFormVisible = false" class="dialogCancel">取 消</span> -->
+      <el-button type="primary" @click="edit_dialogFormVisible = false" class="dialogSure">确 认</el-button>
+      <!-- <el-button type="primary" @click="confirmEdit" class="dialogSure">确 认</el-button> -->
 
     </div>
   </el-dialog>
@@ -693,7 +694,7 @@ export default {
     // this.queryParam.corpId = window.localStorage.getItem('corpId')
     // this.getAllRoleData()
     this.getAllAccountData()
-    this.getAllDepartmentData()
+    // this.getAllDepartmentData()
   },
   methods: {
     // 懒加载
@@ -755,10 +756,13 @@ export default {
       })
       
     },
-    handleLeftclick1(data, node) {
-      console.log("data" + JSON.stringify(data))
+    handleLeftclick1(data, Node) {
+      // Node.forEach(item =>{
+      console.log("data" + Node.level)
+
+      // })
       this.checkDepName1 = data.name
-      this.queryParam.departmentId = data.id
+      this.queryParam.departmentId = Node.level == 1 ? '': data.id
       this.getAllAccountData()
     },
     handleLeftclick(data, node) {
