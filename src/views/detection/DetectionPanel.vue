@@ -605,9 +605,10 @@ export default {
   line-height: 32px !important;
 }
 .det-head-select .el-input__inner{
-  font-size: 30px !important;
+  font-size: 20px !important;
   color: #3572FF !important;
   font-weight: bold !important;
+  text-align: center;
 }
 .el-select.x-select .el-input .el-select__caret{
   font-size: 14px !important;
