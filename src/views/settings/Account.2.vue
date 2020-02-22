@@ -960,12 +960,10 @@ export default {
       api.accountApi.createDepartments(this.createDep).then((res) => {
         if(res.data.code === 200 && res.data.message === 'success'){
 
-          // this.$refs.tree.append(data, this.currentNode);
           this.currentNode.childNodes = [] // 这里把子节点清空，是因为再次调用 loadNode 的时候会往 childNodes 里 push 节点，所以会有节点重复的情况。
           // this.loadNode1(this.currentNode, this.resolve)
           this.refreshNode(this.currentData.id)
-
-          // this.loadNode1(this.currentNode, resolve)
+          this.$message.success("添加成功")
         }
       })
       // let id = Math.ceil(Math.random() * 100);

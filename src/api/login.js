@@ -25,15 +25,12 @@ export default  {
   //     `${http.localURL}/arctic/sms`, params
   //   )
   // },
-  // refreshToken(params) {
-  //   return http.post(
-  //     `${url2}/refresh/token`, params
-  //   )
-  // },
-  // 批量录入电梯（地产）
-  // batchAddLift(params) {
-  //   return http.post(`${http.localURL}/arctic/upload/parks/file`, params, 5 * 60 * 1000)
-  // },
+  refreshToken(params) {
+    return http.post(
+      `${url2}/refresh/token`, params
+    )
+  },
+  
   // 批量录入员工
   batchAddStaff(params) {
     return http.post(`${url2}/upload/file`, params)

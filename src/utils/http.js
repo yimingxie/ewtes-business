@@ -102,23 +102,13 @@ axios.interceptors.request.use(config => {
 // 响应拦截器即异常处理
 axios.interceptors.response.use(response => {
   // console.log("response===" + JSON.stringify(response))
-
   // token失效
   if(response.data.code == 407) {
-    
-    // if(localStorage.getItem('accessToken')) {
-    //   // message.info(res.data.Errors + ',请重新登录', 3);
-    //   alert('token失效，请重新登录');
-    // }
-    // // 清除token
-    // localStorage.removeItem('accessToken');
-    // // 跳转登陆页
-    // router.push('/');
-
     let refreshToken = localStorage.getItem('refreshToken')
-
+    // console.log("response===" + refreshToken)
     // 通过refreshToken重新获取token
     api.log.refreshToken({'refreshToken': refreshToken}).then((res) => {
+      
 
       if(res.data.code == 200){
         // 成功
@@ -126,9 +116,9 @@ axios.interceptors.response.use(response => {
         window.localStorage.setItem('accessToken', token)
 
         // // 将新的Token设置到重发的请求头
-        // response.config.headers['G-Token'] = token;
+        response.config.headers['token'] = token;
         // // 请求重发
-        // return axios.request(response.config);
+        return axios.request(response.config);
       
       } else {
         // 失败，跳转至登录页

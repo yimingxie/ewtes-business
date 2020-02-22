@@ -6,24 +6,6 @@
     <div class="panel topSelect">
       <div class="subSelect">
        
-        <!-- <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部单位" class="regionPicker">
-          <el-option
-            v-for="item in getAllDepJson"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select>
-        <span class="splitLine">|</span> -->
-
-        <!-- <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部部门" class="regionPicker">
-          <el-option
-            v-for="item in getAllDepJson"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select> -->
         <el-dropdown :hide-on-click="false" trigger="click" class="treeDep" style="width:168px!important">
           <span class="el-dropdown-link" >
             <span v-if="queryParam.departmentId !== ''">{{checkDepName1}}</span>
@@ -106,7 +88,10 @@
             </template>
           </el-table-column>
           
-          <el-table-column prop="phone" label="手机号">
+          <el-table-column label="手机号">
+            <template slot-scope="scope">
+              <span v-html="scope.row.phone && scope.row.phone !== ''? scope.row.phone: '--'" ></span>
+            </template>
           </el-table-column>
 
 
@@ -284,7 +269,7 @@
       <el-row :gutter="18">
         <el-col :span="12">
           <el-form-item label="手机号" prop="phone">
-            <span class="formShowContent">{{EditAccountForm.phone}}</span>
+            <span class="formShowContent">{{EditAccountForm.phone && EditAccountForm.phone !== '' ? EditAccountForm.phone : '暂无'}}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -603,16 +588,15 @@ export default {
       },
       adType:'',
       addAccountRules: {
-        phone: [
-          // {required: true, message: '请输入登录账号', trigger: 'blur' },
-          { min: 11, max: 11, message: '登录账号错误，请输入11位手机号', trigger: 'blur' },
-          {
-            required: true,
-            pattern: /(^((1[3-9][0-9])\d{8}$))/,
-            message: '请输入正确的手机号',
-            trigger: 'blur'
-          }
-        ],
+        // phone: [
+        //   { min: 11, max: 11, message: '手机号错误，请输入11位手机号', trigger: 'blur' },
+        //   {
+        //     required: true,
+        //     pattern: /(^((1[3-9][0-9])\d{8}$))/,
+        //     message: '请输入正确的手机号',
+        //     trigger: 'blur'
+        //   }
+        // ],
         name: [
           { required: true, message: '请输入真实姓名', trigger: 'blur' },
           { max: 20, message: '真实姓名字符长度过长，请控制在20位字符以内', trigger: 'blur' },
@@ -697,54 +681,51 @@ export default {
     // this.getAllDepartmentData()
   },
   methods: {
-    // 懒加载
-    loadNode1(node, resolve) {
-      this.resolve = resolve
-      this.getAllDepartmentData(node,resolve)
-    },
-    // 查询所有部门
-    getAllDepartmentData(node,resolve){
-      // node.forEach(element => {
-        console.log("222===" + node)
-
-      // });
-      api.accountApi.getDepartments(node.level && node.level !== 0 ?  node.data.id :'corp').then((res) => {
-        if(res.data.code === 200 && res.data.message === 'success'){
-          this.getAllDepJson = res.data.data || []
-          // this.totalPageSize = res.data.data.total
-          //  this.getAllDepJson[0].isEdit = false
-          // console.log("getAllDepJson===" + JSON.stringify(this.getAllDepJson))
-          // resolve(this.getAllDepJson)
-          // if(this.getAllDepJson.length==0){
-          //   this.$message.error('数据拉取失败，请刷新再试！');
-          //   return;
-          // }
-          resolve(this.getAllDepJson);
-
-        } else {
-          this.getAllDepJson = []
-        }
-        
-        // console.log("res.data.code" + res.data.data.records[0])s
-      }).catch((res) => {
-        
-      })
-      
-    },
-    handleLeftclick1(data, Node) {
-      // Node.forEach(item =>{
-      console.log("data" + Node.level)
-
-      // })
-      this.checkDepName1 = data.name
-      this.queryParam.departmentId = Node.level == 1 ? '': data.id
-      this.getAllAccountData()
-    },
+  //   UpperString(){
+  //     console.log("this.addAccountForm.idCard===" + this.addAccountForm.idCard)
+  // 　　if(this.addAccountForm.idCardue !== ''){
+  //   　　this.addAccountForm.idCardue = this.addAccountForm.idCard.toUpperCase();
+  // 　　}
+  // console.log("this.addAccountForm.idCard===" + this.addAccountForm.idCard)
+  //   },
+    // 添加员工
     handleLeftclick(data, node) {
       console.log("data" + JSON.stringify(data))
       this.checkDepName = data.name
       this.addAccountForm.departmentId = data.id
     },
+    // 懒加载
+    loadNode1(node, resolve) {
+      this.resolve = resolve
+      this.getAllDepartmentData(node,resolve)
+      // api.accountApi.getDepartments('corp').then((res) => {
+      //   if(res.data.code === 200 && res.data.message === 'success'){
+
+      //   }
+      // })
+    },
+    // 查询所有部门
+    getAllDepartmentData(node,resolve){
+      console.log("222===" + node)
+      api.accountApi.getDepartments(node.level && node.level !== 0 ?  node.data.id :'corp').then((res) => {
+        if(res.data.code === 200 && res.data.message === 'success'){
+          this.getAllDepJson = res.data.data || []
+          resolve(this.getAllDepJson);
+        } else {
+          this.getAllDepJson = []
+        }
+        
+      }).catch((res) => {
+      })
+    },
+    // 筛选部门
+    handleLeftclick1(data, Node) {
+      console.log("data" + Node.level)
+      this.checkDepName1 = data.name
+      this.queryParam.departmentId = Node.level == 1 ? '': data.id
+      this.getAllAccountData()
+    },
+    
     // 打开批量录入弹窗
     openSubmitFile() {
       // reset TODO
@@ -823,7 +804,7 @@ export default {
     // 下载错误日志
     downloadError() {
       if (this.batchRes.failCnt !== 0) {
-        let url = `${http.localURL}/ewtes/download/file?filename=` + this.batchRes.fileName
+        let url = `${http.localURL}/ewtes/business/download/file?filename=` + this.batchRes.fileName
         window.open(url);
       } else {
         return this.$message.info('无错误日志')
