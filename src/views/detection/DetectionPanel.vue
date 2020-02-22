@@ -114,12 +114,12 @@
             </div>
 
             <div class="detection-history-choose">
-              <div class="x-select-box" style="width: 102px;">
+              <div class="x-select-box x-select-box-status" style="width: 102px;">
                 <el-select class="x-select" v-model="historyParams.valid" @change="historyStatusChange" placeholder="全部状态" clearable>
                   <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
               </div>
-              <div class="x-select-box" style="width: 130px;">
+              <div class="x-select-box x-select-box-monitor" style="width: 130px;">
                 <el-select class="x-select" v-model="historyParams.pointId" @change="historyMoniChange" placeholder="全部检测区域" clearable>
                   <el-option v-for="item in monitorOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
@@ -416,6 +416,9 @@ export default {
     // 统计
     this.getDetStat()
 
+    // 开启定时器
+    // this.setTimer()
+
   },
   beforeDestroy() {
     // 页面关闭清除定时器
@@ -678,4 +681,33 @@ export default {
   
 
 }
+
+
+@media screen and (max-width: 1600px) {
+  #DetectionPanel{
+    .xtitle-heading-h-p{
+      font-size: 20px;
+    }
+    .x-select-box-status{
+      width: 75px !important;
+    }
+    .x-select-box-monitor{
+      width: 100px !important;
+    }
+    .det-history-table{
+      padding: 0 5px;
+    }
+    .det-history-td,.det-history-th{
+      padding: 10px 5px;
+    }
+    
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  #DetectionPanel{
+    min-width: 1200px;
+  }
+}
+
 </style>
