@@ -4,7 +4,7 @@
     <!-- <div class="pageTitle">数字防疫点</div> -->
     <div class="bread-nav">
       <span @click="$router.push('/digital-list')">数字防疫点</span>
-      <em>/ 档案</em>
+      <em>/ 添加防疫点</em>
     </div>
 
     <div class="x-container">

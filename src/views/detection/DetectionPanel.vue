@@ -631,6 +631,11 @@ export default {
     padding-left: 252px;
   }
 
+  .x-digital-detail{
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
 
   .detection-history{
     .det-history-thead .det-history-th:nth-child(1),.det-history-tbody .det-history-td:nth-child(1){

@@ -131,8 +131,8 @@ export default {
   height: 40px !important;
   line-height: 40px !important;
 }
-.det-head-select .el-input__inner{
-  font-size: 30px !important;
+#DetectionQuery .det-head-select .el-input__inner{
+  font-size: 20px !important;
   color: #3572FF !important;
   font-weight: bold !important;
 }
@@ -152,10 +152,15 @@ export default {
   padding-bottom: 30px;
 
   .xddetail-name{
-    width: 232px;
+    width: 170px;
   }
   .xddetail-list{
     padding-left: 252px;
+  }
+
+  .x-digital-detail{
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 
 

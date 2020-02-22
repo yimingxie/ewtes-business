@@ -353,6 +353,8 @@ export default {
 
     // 打开添加观察任务弹窗
     openDialogAddObserve() {
+      this.dialogAddObserveTitle = '添加观察任务'
+
       this.ruleFormAddObserve = {
         "observedName": "",
         "pointId": "",   
