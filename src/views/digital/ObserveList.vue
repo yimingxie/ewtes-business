@@ -26,7 +26,7 @@
           </div>
           <div class="xddetail-list-item clearfix">
             <div class="xddetail-list-item-title">所属上级</div>
-            <div class="xddetail-list-item-p" style="padding-right: 0;"></div>
+            <div class="xddetail-list-item-p" style="padding-right: 0;">{{parentName ? parentName : '--'}}</div>
           </div>
         </div>
 
@@ -107,36 +107,43 @@
 
 
     <!-- 添加观察任务弹窗 -->
-    <el-dialog :visible.sync="dialogAddObserve" :title="dialogAddObserveTitle" :show-close="false" width="700px">
+    <el-dialog :visible.sync="dialogAddObserve" :title="dialogAddObserveTitle" @close="closeDialogObserve" :show-close="false" width="700px">
       <div class="dia-content">
         <el-form :model="ruleFormAddObserve" :rules="rulesAddObserve" ref="addObserveRef" class="diaForm">
           <div class="dia-clist">
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>任务名称：</div>
-              <div class="dia-citem-ib">
-                <el-input v-model="ruleFormAddObserve.observedName" size="small" placeholder="请输入任务名称"></el-input>
-              </div>
-            </div>
-            <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测区域：</div>
-              <div class="dia-citem-ib">
-                <!-- <el-input v-model="ruleFormCheckPoint.pointName" size="small" placeholder="请选择部件"></el-input> -->
-                <el-select v-model="ruleFormAddObserve.pointId" @change="pointIdChange" placeholder="请选择检测区域" size="small" style="width: 100%;">
-                  <el-option v-for="item in observePointOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-              </div>
-            </div>
-            <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测数据：</div>
-              <div class="dia-citem-ib">
-                <div v-if="ruleFormAddObserve.pointId">
-                  <el-radio-group v-model="ruleFormAddObserve.pointData">
-                    <el-radio v-for="item in pointDataRadio" :key="item.value" :label="item.value">{{item.label}}</el-radio>
-                    <!-- <el-radio :label="2">TODO人脸+温度 </el-radio>
-                    <el-radio :label="3">TODO人脸+温度+身份证</el-radio> -->
-                  </el-radio-group>
+              <el-form-item prop="observedName">
+                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>任务名称：</div>
+                <div class="dia-citem-ib">
+                  <el-input v-model="ruleFormAddObserve.observedName" size="small" placeholder="请输入任务名称"></el-input>
                 </div>
-              </div>
+              </el-form-item>
+            </div>
+            <div class="dia-citem">
+              <el-form-item prop="pointId">
+                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测区域：</div>
+                <div class="dia-citem-ib">
+                  <!-- <el-input v-model="ruleFormCheckPoint.pointName" size="small" placeholder="请选择部件"></el-input> -->
+                  <el-select v-model="ruleFormAddObserve.pointId" @change="pointIdChange" placeholder="请选择检测区域" size="small" style="width: 100%;">
+                    <el-option v-for="item in observePointOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                </div>
+              </el-form-item>
+            </div>
+            <div class="dia-citem">
+              <el-form-item prop="pointData">
+                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测数据：</div>
+                <div class="dia-citem-ib">
+                  <div v-if="ruleFormAddObserve.pointId">
+                    <el-radio-group v-model="ruleFormAddObserve.pointData">
+                      <el-radio v-for="item in pointDataRadio" :key="item.value" :label="item.value">{{item.label}}</el-radio>
+                      <!-- <el-radio :label="2">TODO人脸+温度 </el-radio>
+                      <el-radio :label="3">TODO人脸+温度+身份证</el-radio> -->
+                    </el-radio-group>
+                  </div>
+                </div>
+              </el-form-item>
+              
             </div>
 
           </div>
@@ -195,6 +202,7 @@ export default {
       inNum: "",         
       localArea: "",         
       address: "",  
+      parentName: "",  
 
       // --列表--
       observeList: [],
@@ -222,7 +230,11 @@ export default {
         "epedId": "", 
         "pointData": "" // 1.身份证+温度 2.人脸+温度 3.人脸+温度+身份证
       },
-      rulesAddObserve: {},
+      rulesAddObserve: {
+        observedName: [{ required: true, message: '必填', trigger: 'blur' }],
+        pointId: [{ required: true, message: '必填', trigger: 'change' }],
+        pointData: [{ required: true, message: '必填', trigger: 'change' }],
+      },
       observePointOptions: [],
       currentObId: '',
       pointDataRadio: [],
@@ -276,6 +288,7 @@ export default {
         this.inNum = detail.inNum       
         this.localArea = detail.localArea   
         this.address = detail.address
+        this.parentName = detail.parentName
       })
     },
 
@@ -374,19 +387,26 @@ export default {
 
     // 提交添加观察任务
     submitAddObserve() {
-      console.log('添加观察任务', this.ruleFormAddObserve)
-      let param = {
-        "observedName": this.ruleFormAddObserve.observedName,
-        "pointId": this.ruleFormAddObserve.pointId,
-        "epedId": this.parentCode,
-        "pointData": this.ruleFormAddObserve.pointData
-      }
-      api.digital.addObserve(param).then(res => {
-        console.log('添加成功？', res.data)
-        this.$message.success('添加成功')
-        this.dialogAddObserve = false
-        this.getObList()
+      let that = this
+      this.$refs.addObserveRef.validate(valid => {
+        if (valid) {
+          console.log('添加观察任务', this.ruleFormAddObserve)
+          let param = {
+            "observedName": this.ruleFormAddObserve.observedName,
+            "pointId": this.ruleFormAddObserve.pointId,
+            "epedId": this.parentCode,
+            "pointData": this.ruleFormAddObserve.pointData
+          }
+          api.digital.addObserve(param).then(res => {
+            console.log('添加成功？', res.data)
+            this.$message.success('添加成功')
+            this.dialogAddObserve = false
+            this.getObList()
+          })
+
+        }
       })
+      
     },
 
     // 打开编辑观察任务弹窗
@@ -410,22 +430,30 @@ export default {
 
     // 提交编辑观察任务
     submitEditObserve() {
-      console.log('编辑观察任务', this.ruleFormAddObserve)
-      let param = {
-        "observedId": this.currentObId,
-        "observedName": this.ruleFormAddObserve.observedName,
-        "pointId": this.ruleFormAddObserve.pointId,
-        "pointData": this.ruleFormAddObserve.pointData   
-      }
-      api.digital.editObserve(param).then(res => {
-        this.$message.success('编辑成功')
-        this.dialogAddObserve = false
-        this.getObList()
+      let that = this
+      this.$refs.addObserveRef.validate(valid => {
+        if (valid) {
+          console.log('编辑观察任务', this.ruleFormAddObserve)
+          let param = {
+            "observedId": this.currentObId,
+            "observedName": this.ruleFormAddObserve.observedName,
+            "pointId": this.ruleFormAddObserve.pointId,
+            "pointData": this.ruleFormAddObserve.pointData   
+          }
+          api.digital.editObserve(param).then(res => {
+            this.$message.success('编辑成功')
+            this.dialogAddObserve = false
+            this.getObList()
+          })
+
+        }
       })
+      
     },
 
     // 关闭弹窗
     closeDialogObserve() {
+      this.$refs.addObserveRef.clearValidate()
       this.dialogAddObserve = false
       this.currentObId = ''
     },

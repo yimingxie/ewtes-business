@@ -26,7 +26,7 @@
           </div>
           <div class="xddetail-list-item clearfix">
             <div class="xddetail-list-item-title">所属上级</div>
-            <div class="xddetail-list-item-p" style="padding-right: 0;"></div>
+            <div class="xddetail-list-item-p" style="padding-right: 0;">{{parentName ? parentName : '--'}}</div>
           </div>
         </div>
 
@@ -118,45 +118,54 @@
 
 
     <!-- 添加监测应用弹窗 -->
-    <el-dialog :visible.sync="dialogAddDiagn" :title="dialogAddDiagnTitle" :show-close="false" width="700px">
+    <el-dialog :visible.sync="dialogAddDiagn" :title="dialogAddDiagnTitle" @close="closeDialogDiagn" :show-close="false" width="700px">
       <div class="dia-content">
         <el-form :model="ruleFormAddDiagn" :rules="rulesAddDiagn" ref="addDiagnRef" class="diaForm">
           <div class="dia-clist">
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>监测应用名称：</div>
-              <div class="dia-citem-ib">
-                <el-input v-model="ruleFormAddDiagn.name" size="small" placeholder="请输入名称"></el-input>
-              </div>
+              <el-form-item prop="name">
+                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>监测应用名称：</div>
+                <div class="dia-citem-ib">
+                  <el-input v-model="ruleFormAddDiagn.name" size="small" placeholder="请输入名称"></el-input>
+                </div>
+              </el-form-item>
             </div>
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>观察任务：</div>
-              <div class="dia-citem-ib">
-                <el-select v-model="ruleFormAddDiagn.observTaskId" placeholder="请选择观察任务" size="small" style="width: 100%;">
-                  <el-option v-for="item in observTaskOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-              </div>
+              <el-form-item prop="observTaskId">
+                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>观察任务：</div>
+                <div class="dia-citem-ib">
+                  <el-select v-model="ruleFormAddDiagn.observTaskId" placeholder="请选择观察任务" size="small" style="width: 100%;">
+                    <el-option v-for="item in observTaskOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                </div>
+              </el-form-item>
             </div>
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>阈值判断类型</div>
-              <div class="dia-citem-ib">
-                <el-select v-model="ruleFormAddDiagn.operator" placeholder="请选择阈值判断类型" size="small" style="width: 100%;">
-                  <el-option v-for="item in operatorOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-              </div>
+              <el-form-item prop="operator">
+                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>阈值判断类型</div>
+                <div class="dia-citem-ib">
+                  <el-select v-model="ruleFormAddDiagn.operator" placeholder="请选择阈值判断类型" size="small" style="width: 100%;">
+                    <el-option v-for="item in operatorOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                </div>
+              </el-form-item>
             </div>
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>阈值：</div>
-              <div class="dia-citem-ib">
-                <el-input v-model="ruleFormAddDiagn.value" size="small" placeholder="请输入阈值"></el-input>
-              </div>
+              <el-form-item prop="value">
+                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>阈值：</div>
+                <div class="dia-citem-ib">
+                  <el-input v-model="ruleFormAddDiagn.value" size="small" placeholder="请输入阈值"></el-input>
+                </div>
+              </el-form-item>
             </div>
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>容错范围：</div>
-              <div class="dia-citem-ib">
-                <el-input v-model="ruleFormAddDiagn.error" size="small" placeholder="请输入容错值"></el-input>
-              </div>
+              <el-form-item prop="error">
+                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>容错范围：</div>
+                <div class="dia-citem-ib">
+                  <el-input v-model="ruleFormAddDiagn.error" size="small" placeholder="请输入容错值"></el-input>
+                </div>
+              </el-form-item>
             </div>
-
           </div>
         </el-form>
 
@@ -211,7 +220,8 @@ export default {
       epedName: "",    
       inNum: "",         
       localArea: "",         
-      address: "",  
+      address: "",
+      parentName: "",  
 
       // --列表--
       diagnList: [],
@@ -248,10 +258,14 @@ export default {
         "value": 38.0, // 阀值
         "error": 0.5 // 容错范围
       },
-      rulesAddDiagn: {},
-      observTaskOptions: [
-        {label: 'TODO加载', value: 3},
-      ],
+      rulesAddDiagn: {
+        name: [{ required: true, message: '必填', trigger: 'blur' }],
+        observTaskId: [{ required: true, message: '必填', trigger: 'change' }],
+        operator: [{ required: true, message: '必填', trigger: 'change' }],
+        value: [{ required: true, message: '必填', trigger: 'blur' }],
+        error: [{ required: true, message: '必填', trigger: 'blur' }],
+      },
+      observTaskOptions: [],
       currentDiagnId: '',
       operatorOptions: [
         {label: '≥', value: 3},
@@ -323,6 +337,7 @@ export default {
         this.inNum = detail.inNum       
         this.localArea = detail.localArea   
         this.address = detail.address
+        this.parentName = detail.parentName
       })
     },
 
@@ -381,21 +396,29 @@ export default {
 
     // 提交添加监测应用
     submitAddDiagn() {
-      console.log('添加监测应用', this.ruleFormAddDiagn)
-      let param = {
-        "name": this.ruleFormAddDiagn.name,
-        "epedId": this.parentCode, 
-        "observeTaskId": this.ruleFormAddDiagn.observTaskId,
-        "operator": this.ruleFormAddDiagn.operator,
-        "value": this.ruleFormAddDiagn.value,
-        "errValue": this.ruleFormAddDiagn.error
-      }
-      api.digital.addDiagnosis(param).then(res => {
-        console.log('添加成功', res.data)
-        this.$message.success('添加成功')
-        this.dialogAddDiagn = false
-        this.getDiagnList()
+      let that = this
+      this.$refs.addDiagnRef.validate(valid => {
+        if (valid) {
+          console.log('添加监测应用', this.ruleFormAddDiagn)
+          let param = {
+            "name": this.ruleFormAddDiagn.name,
+            "epedId": this.parentCode, 
+            "observeTaskId": this.ruleFormAddDiagn.observTaskId,
+            "operator": this.ruleFormAddDiagn.operator,
+            "value": this.ruleFormAddDiagn.value,
+            "errValue": this.ruleFormAddDiagn.error
+          }
+          api.digital.addDiagnosis(param).then(res => {
+            console.log('添加成功', res.data)
+            this.$message.success('添加成功')
+            this.dialogAddDiagn = false
+            this.getDiagnList()
+          })
+
+        }
+
       })
+      
     },
 
     // 打开编辑监测应用弹窗
@@ -420,27 +443,35 @@ export default {
 
     // 提交编辑监测应用
     submitEditDiagn() {
-      console.log('添加监测应用', this.ruleFormAddDiagn)
-      let param = {
-        "id": this.currentDiagnId,
-        "name": this.ruleFormAddDiagn.name,
-        // "epId": this.parentCode, 
-        "observeTaskId": this.ruleFormAddDiagn.observTaskId,
-        "operator": this.ruleFormAddDiagn.operator,
-        "value": this.ruleFormAddDiagn.value,
-        "errValue": this.ruleFormAddDiagn.error
-      }
-      api.digital.editDiagnosis(param).then(res => {
-        console.log('添加成功', res.data)
-        this.$message.success('编辑成功')
-        this.dialogAddDiagn = false
-        this.currentDiagnId = ''
-        this.getDiagnList()
+      let that = this
+      this.$refs.addDiagnRef.validate(valid => {
+        if (valid) {
+          console.log('添加监测应用', this.ruleFormAddDiagn)
+          let param = {
+            "id": this.currentDiagnId,
+            "name": this.ruleFormAddDiagn.name,
+            // "epId": this.parentCode, 
+            "observeTaskId": this.ruleFormAddDiagn.observTaskId,
+            "operator": this.ruleFormAddDiagn.operator,
+            "value": this.ruleFormAddDiagn.value,
+            "errValue": this.ruleFormAddDiagn.error
+          }
+          api.digital.editDiagnosis(param).then(res => {
+            console.log('添加成功', res.data)
+            this.$message.success('编辑成功')
+            this.dialogAddDiagn = false
+            this.currentDiagnId = ''
+            this.getDiagnList()
+          })
+
+        }
       })
+      
     },
 
     // 关闭弹窗
     closeDialogDiagn() {
+      this.$refs.addDiagnRef.clearValidate()
       this.dialogAddDiagn = false
       this.currentDiagnId = ''
     },

@@ -3,7 +3,7 @@
     <!-- TODO 面包屑 -->
     <!-- <div class="pageTitle">数字防疫点</div> -->
     <div class="bread-nav">
-      <span>数字防疫点</span>
+      <span @click="$router.push('/digital-list')">数字防疫点</span>
       <em>/ 档案</em>
     </div>
 
@@ -138,7 +138,7 @@
 
           <div class="xlist-btn-con clearfix">
             <div class="xlist-btn xlist-btn-submit" style="float: left;" @click="submit">保存</div>
-            <div class="xlist-btn xlist-btn-cancel" style="float: left; margin-left: 40px;">取消</div>
+            <div class="xlist-btn xlist-btn-cancel" @click="$router.push('/digital-list')" style="float: left; margin-left: 40px;">取消</div>
           </div>
 
         </el-form>
@@ -550,6 +550,15 @@ export default {
 <style lang="stylus" scoped>
 #DigitalAddResult{
 
+}
+
+/* 适配 */
+@media screen and (max-width: 1550px) {
+  #DigitalAddResult{
+    .lar-box-h4{
+      padding-right: 14px !important;
+    }
+  }
 }
 
 </style>

@@ -150,8 +150,8 @@ export default {
       // --筛选条件--
       selectCityFa: [],
       useDepartmentOptions: [
-        {value: '选项1', label: '单位TODO1'}, 
-        {value: '选项2', label: '单位TODO2'},
+        // {value: '选项1', label: '单位TODO1'}, 
+        // {value: '选项2', label: '单位TODO2'},
       ],
       useDepartmentValue: '',
 
@@ -394,11 +394,30 @@ export default {
 /* 适配 */
 @media screen and (max-width: 1620px) {
   #DigitalList{
+    .llt-td{
+      font-size 12px !important;  
+    }
     .llt-thead .llt-th:nth-child(6),.llt-tbody .llt-td:nth-child(6){
       width 10%;
     }
+    .llt-thead .llt-th:nth-child(8),.llt-tbody .llt-td:nth-child(8){
+      width 15%;
+    }
   }
+}
 
+@media screen and (max-width: 1500px) {
+  #DigitalList{
+    .llt-th, .llt-td{
+      padding: 16px 10px !important;
+    }
+    .llt-thead .llt-th:nth-child(5),.llt-tbody .llt-td:nth-child(5){
+      width 15%;
+    }
+    .llt-thead .llt-th:nth-child(9),.llt-tbody .llt-td:nth-child(9){
+      width 16%;
+    }
+  }
 }
 
 </style>

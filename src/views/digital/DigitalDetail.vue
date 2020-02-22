@@ -55,7 +55,7 @@
                       <el-option v-for="item in parentIdOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                   </div>
-                  <div class="show-pp" v-else>{{ruleForm.parentId && ruleForm.parentId !== '' ? ruleForm.parentId : '--'}}</div>
+                  <div class="show-pp" v-else>{{ruleForm.parentName && ruleForm.parentName !== '' ? ruleForm.parentName : '--'}}</div>
                 </el-form-item>
                 <!-- 省市区街道级联 -->
                 <el-form-item prop="areaCode" class="lar-box">
@@ -420,6 +420,7 @@ export default {
         console.log('深拷贝的', this.checkPointNative)
         this.ruleForm = detail
         console.log('this.ruleForm',this.ruleForm.areaCode)
+        // this.ruleForm.parentId = parseInt(res.data.data.parentId)
 
 
         // 特殊处理字段
@@ -771,6 +772,7 @@ export default {
             "address": this.ruleForm.address,      
             "latLon": this.ruleForm.latLon,
             "parentId": this.ruleForm.parentId,
+            // "parentName": this.ruleForm.parentName,
           }
 
           // 先调用编辑档案接口，再调用检测区域接口
@@ -947,4 +949,12 @@ export default {
 
 }
 
+/* 适配 */
+@media screen and (max-width: 1550px) {
+  #DigitalDetail{
+    .lar-box-h4{
+      padding-right: 14px !important;
+    }
+  }
+}
 </style>
