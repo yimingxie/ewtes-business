@@ -125,7 +125,8 @@ export default {
         limit:10,
         epedStatus:'',
         search:'',
-        corpId:''
+        corpId:'',
+        date:''
       },
       getAllAccountJson: [],
    

@@ -92,14 +92,14 @@
     top: 0;
     right 1px;
     width 35px
-    height 30px;
-    // background #fff url('../assets/images/xym/delete.png') no-repeat center center;
-    background #fff no-repeat center center;
+    height 27px;
+    background #fff url('../assets/images/hs/inputDelete.png') no-repeat center center;
+    // background #fff no-repeat center center;
     cursor pointer
-    opacity 0;
+    // opacity 0;
   }
-  &:hover .code-clear{
-    opacity 1
-  }
+  // &:hover .code-clear{
+  //   opacity 1
+  // }
 }
 </style>

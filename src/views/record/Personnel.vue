@@ -884,8 +884,6 @@ export default {
   .stf_p
     text-indent 30px
     margin: 12px 0;
-  .stf_phone
-    background url('../../assets/images/hs/phone.png') no-repeat left center;
     
   .stf_area
     background url('../../assets/images/hs/area.png') no-repeat left center;
