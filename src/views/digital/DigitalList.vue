@@ -23,7 +23,7 @@
           </div>
           <div class="xlist-choose-si">
             <!-- <search-input ref="searchInputRef" placeholderValue="搜索园区名称/创建人" @search="searchTask" @cancel="clearTask"></search-input> -->
-            <search-input ref="searchInputRef" @search="searchTask" @cancel="clearTask" placeholderValue="搜索防疫点名称/内部编号"></search-input>
+            <search-input ref="searchInputRef" @search="searchTask" @cancel="clearTask" placeholderValue="搜索防疫点名称/内部编号/详细地址"></search-input>
           </div>
         </div>
 
@@ -184,11 +184,15 @@ export default {
     // 查询数字化设备列表
     this.getDigitalList()
 
+    // 全部单位下拉
+    this.getUseDepartmentOptions()
+
   },
   methods: {
     // 查询数字化设备列表
     getDigitalList() {
       api.digital.getEpidemicList(this.epListParams).then(res => {
+        console.log('列表', res.data)
         this.digitalList = res.data.data.records
         // liftselevCodeOptions
 
@@ -207,7 +211,8 @@ export default {
     // TODO 全部单位下拉
     getUseDepartmentOptions() {
       
-      api.digital.getGGGG().then(res => {
+      api.digital.getUseDepartment().then(res => {
+        console.log('下拉', res.data)
         
         this.useDepartmentOptions = []
         res.data.data.forEach(item => {

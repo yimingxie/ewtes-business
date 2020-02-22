@@ -137,10 +137,11 @@ export default {
     return http.get(`${url1}/ewtes/business/epidemic/corp/list`)
   },
 
+  // 筛选条件单位下拉
+  getUseDepartment() {
+    return http.get(`${url1}/ewtes/business/epidemic/useDepartment`)
+  },
+
   
-
-
-
-
   
 }

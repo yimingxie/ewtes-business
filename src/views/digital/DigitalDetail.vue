@@ -4,7 +4,7 @@
     <!-- <div class="pageTitle">数字防疫点</div> -->
     <div class="bread-nav">
       <span @click="$router.push('/digital-list')">数字防疫点</span>
-      <em>/ 档案</em>
+      <em>/ 防疫点档案</em>
     </div>
 
     <div class="x-container">
@@ -50,15 +50,15 @@
                 </el-form-item>
 
                 <!-- TODO -->
-                <!-- <el-form-item prop="inNum" class="lar-box">
+                <el-form-item class="lar-box" v-if="submitState != 'put'">
                   <div class="lar-box-h4">所属上级</div>
-                  <div class="lar-box-el-input" v-if="submitState == 'put'">
+                  <!-- <div class="lar-box-el-input" v-if="submitState == 'put'">
                     <el-select v-model="ruleForm.parentId" placeholder="请选择所属上级" size="small" style="width: 100%;">
                       <el-option v-for="item in parentIdOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
-                  </div>
-                  <div class="show-pp" v-else>{{ruleForm.parentName && ruleForm.parentName !== '' ? ruleForm.parentName : '--'}}</div>
-                </el-form-item> -->
+                  </div> -->
+                  <div class="show-pp">{{ruleForm.parentName && ruleForm.parentName !== '' ? ruleForm.parentName : '--'}}</div>
+                </el-form-item>
 
 
                 <!-- 省市区街道级联 -->
@@ -557,6 +557,21 @@ export default {
         addMarker(e.poi.location.lng, e.poi.location.lat)
         that.ruleForm.address = e.poi.name
         // placeSearch.search(e.poi.name)
+
+        // 联动优化测试
+        that.special.areaCode = that.transformAreaCode(e.poi.adcode)
+        console.log('that.special.areaCode', that.special.areaCode)
+        that.ruleForm.areaCode = that.special.areaCode[that.special.areaCode.length - 1] || ""
+
+        // 解析地址，分割
+        var reg = /.+?(省|市|自治区|自治州|县|区)/g;
+        that.ruleForm.localArea = e.poi.district.match(reg).join('/')
+        console.log('切割地址', that.ruleForm.localArea)
+        setTimeout(() => {
+          that.$refs.laForm.clearValidate('areaCode')
+        }, 100)
+
+
       })
 
       // 点击添加点
@@ -831,14 +846,21 @@ export default {
 
             // 跳转
             setTimeout(() => {
-              this.$router.push({
-                path: '/digital-detail',
-                query: {
-                  epedId: this.parentCode,
-                  submitState: 'get'
-                }
-              })
-              this.getDigitalDetail()
+              if (res.data.code == 200) {
+                this.$message.success('编辑成功')
+                this.$router.push({
+                  path: '/digital-detail',
+                  query: {
+                    epedId: this.parentCode,
+                    submitState: 'get'
+                  }
+                })
+                this.getDigitalDetail()
+                
+              } else {
+                this.$message.error(res.data.message)
+              }
+              
             }, 300)
             
           })

@@ -354,11 +354,17 @@ export default {
         // placeSearch.search(e.poi.name)
 
         // 联动优化测试
-        // that.special.areaCode = that.transformAreaCode(e.poi.adcode)
-        // that.ruleForm.areaCode = that.special.areaCode
-        // that.cityChooseKey = Date.now()
-        // that.$refs.cityChooseRef.handleChange(that.special.areaCode)
+        that.special.areaCode = that.transformAreaCode(e.poi.adcode)
+        console.log('that.special.areaCode', that.special.areaCode)
+        that.ruleForm.areaCode = that.special.areaCode[that.special.areaCode.length - 1] || ""
 
+        // 解析地址，分割
+        var reg = /.+?(省|市|自治区|自治州|县|区)/g;
+        that.ruleForm.localArea = e.poi.district.match(reg).join('/')
+        console.log('切割地址', that.ruleForm.localArea)
+        setTimeout(() => {
+          that.$refs.laForm.clearValidate('areaCode')
+        }, 100)
         
       })
       // 点击添加点
@@ -368,6 +374,37 @@ export default {
         that.special.lat = e.lnglat.lat
         addMarker(e.lnglat.lng, e.lnglat.lat)
       });
+    },
+
+    // 特殊处理获得的areaCode区域码
+    transformAreaCode(areaCode) {
+      // 字符串转数组
+      // "440305005000" => ["44", "4403", "440305", "440305005"]
+      if (typeof areaCode == 'string') {
+        let province = areaCode.substr(0, 2)
+        let city = areaCode.substr(0, 4)
+        let region = areaCode.substr(0, 6)
+        let street = areaCode.substr(0, 9)
+        let cityShow = []
+        if (areaCode.length <= 2) {
+          cityShow.push(province)
+        } else if (areaCode.length > 2 && areaCode.length <= 4 ) {
+          cityShow.push(province, city)
+        } else if (areaCode.length > 4 && areaCode.length <= 6 ) {
+          cityShow.push(province, city, region)
+        } else {
+          cityShow.push(province, city, region, street)
+        }
+        return cityShow
+      }
+
+      // 数组转字符串
+      // ["44", "4403", "440305", "440305005"] => "440305005000"
+      if (areaCode instanceof Array) {
+        return areaCode[areaCode.length - 1]
+      }
+
+      console.log('areaCode传入类型错误')
     },
 
 
@@ -458,6 +495,8 @@ export default {
     // 提交
     submit() {
       let that = this
+      console.log('钱钱ruleForm', this.ruleForm)
+
       this.$refs.laForm.validate(valid => {
         if (valid) {
           let lng = this.special.lng || ''
@@ -514,8 +553,12 @@ export default {
 
           console.log('param----', param)
           api.digital.addEpidemic(param).then(res => {
-            that.$message.success('添加成功')
-            that.$router.push({path: '/digital-list'})
+            if (res.data.code == 200) {
+              that.$message.success('添加成功')
+              that.$router.push({path: '/digital-list'})
+            } else {
+              that.$message.error(res.data.message)
+            }
           })
 
         }
