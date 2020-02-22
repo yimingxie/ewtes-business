@@ -48,7 +48,9 @@
                   </div>
                   <div class="show-pp" v-else>{{ruleForm.inNum !== '' ? ruleForm.inNum : '--'}}</div>
                 </el-form-item>
-                <el-form-item prop="inNum" class="lar-box">
+
+                <!-- TODO -->
+                <!-- <el-form-item prop="inNum" class="lar-box">
                   <div class="lar-box-h4">所属上级</div>
                   <div class="lar-box-el-input" v-if="submitState == 'put'">
                     <el-select v-model="ruleForm.parentId" placeholder="请选择所属上级" size="small" style="width: 100%;">
@@ -56,7 +58,9 @@
                     </el-select>
                   </div>
                   <div class="show-pp" v-else>{{ruleForm.parentName && ruleForm.parentName !== '' ? ruleForm.parentName : '--'}}</div>
-                </el-form-item>
+                </el-form-item> -->
+
+
                 <!-- 省市区街道级联 -->
                 <el-form-item prop="areaCode" class="lar-box">
                   <div class="lar-box-h4">区域<i class="must-fill-icon"></i></div>
@@ -615,8 +619,8 @@ export default {
     checkPointDelete(item, i) {
       let moniInfo = item
       if (moniInfo.relatedNum !== undefined && moniInfo.relatedNum !== 0) {
-        alert('有任务，不允许删除')
-        return
+        
+        return this.$message.error('有绑定观察任务，不允许删除')
       }
       if (moniInfo.pointId) {
         this.deletingMonitorIdArr.push(moniInfo.pointId)

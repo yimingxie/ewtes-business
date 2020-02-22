@@ -383,6 +383,8 @@ export default {
 
     // 打开添加监测应用弹窗
     openDialogAddDiagn() {
+      this.dialogAddDiagnTitle = '添加监测应用'
+
       this.ruleFormAddDiagn = {
         "name": "",
         "epedId": this.parentCode, 

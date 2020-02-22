@@ -15,7 +15,7 @@
             </div>
             <div class="xcc-splitLine"></div>
             <div class="xcc-box" style="width: 110px;">
-              <el-select class="x-select" v-model="useDepartmentValue" clearable placeholder="全部单位" size="small">
+              <el-select class="x-select" v-model="epListParams.useDepartment" @change="useDepartmentChange" clearable placeholder="全部单位" size="small">
                 <el-option v-for="item in useDepartmentOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </div>
@@ -162,6 +162,7 @@ export default {
       checkedLifts: [],
       checkedAll: false,
       epListParams: {
+        "title": "",
         "epedId": "",
         "areaCode": "",
         "useDepartment": "",
@@ -203,10 +204,33 @@ export default {
       })
     },
 
+    // TODO 全部单位下拉
+    getUseDepartmentOptions() {
+      
+      api.digital.getGGGG().then(res => {
+        
+        this.useDepartmentOptions = []
+        res.data.data.forEach(item => {
+          this.useDepartmentOptions.push({
+            label: item.name,
+            value: item.id
+          })
+        })
+      })
+
+    },
+
+    // 单位筛选
+    useDepartmentChange() {
+      this.epListParams.offset = 1
+      this.getDigitalList()
+    },
+
     // 区域筛选
     selectCity(cityArr, cnName) {
       if (cityArr.length === 0) {
         this.epListParams = {
+          "title": "",
           "epedId": "",
           "areaCode": "",
           "useDepartment": "",
