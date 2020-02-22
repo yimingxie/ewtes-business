@@ -98,8 +98,6 @@
     cursor pointer
     // opacity 0;
   }
-  // &:hover .code-clear{
-  //   opacity 1
-  // }
+  
 }
 </style>
