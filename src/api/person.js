@@ -9,7 +9,12 @@ let url2 = `${http.localURL}/ewtes/business`
 
 
 export default  {
-  
+  // 防疫点人员出入记录
+  getEntryRecord(params){
+    return http.post(
+      `${url2}/epidemic/countUserRecord`,params
+    )
+  },
   // 接触记录
   contactRecord(params){
     return http.post(

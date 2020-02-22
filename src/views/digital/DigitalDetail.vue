@@ -3,21 +3,21 @@
     <!-- TODO 面包屑 -->
     <!-- <div class="pageTitle">数字防疫点</div> -->
     <div class="bread-nav">
-      <span>数字防疫点</span>
+      <span @click="$router.push('/digital-list')">数字防疫点</span>
       <em>/ 档案</em>
     </div>
 
     <div class="x-container">
       <div class="digital-detail-tabTop clearfix" style="margin-top: 30px;">
         <div class="digital-detail-tab">
-          <span class="on" style="z-index: 4">基本档案</span>
-          <span style="z-index: 3">异常档案</span>
+          <span class="on" style="z-index: 4" @click="goDigitalDetail">基本档案</span>
+          <span style="z-index: 3" @click="goAbnormalDetail">异常档案</span>
         </div>
 
         <div class="digital-detail-tabTop-a clearfix">
           <div class="digital-detail-tabTop-anav" @click="goObserveList">观察任务管理</div>
           <div class="digital-detail-tabTop-anav-span">|</div>
-          <div class="digital-detail-tabTop-anav">监测应用管理</div>
+          <div class="digital-detail-tabTop-anav" @click="goDiagnList">监测应用管理</div>
         </div>
 
 
@@ -50,10 +50,12 @@
                 </el-form-item>
                 <el-form-item prop="inNum" class="lar-box">
                   <div class="lar-box-h4">所属上级</div>
-                  <!-- <div class="lar-box-el-input" v-if="submitState == 'put'">
-                    <el-input v-model="ruleForm.inNum" placeholder="请输入防疫点内部编号" size="small"></el-input>
-                  </div> -->
-                  <div class="show-pp">{{ruleForm.pcorpId !== '' ? ruleForm.pcorpId : '--'}}</div>
+                  <div class="lar-box-el-input" v-if="submitState == 'put'">
+                    <el-select v-model="ruleForm.parentId" placeholder="请选择所属上级" size="small" style="width: 100%;">
+                      <el-option v-for="item in parentIdOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                  </div>
+                  <div class="show-pp" v-else>{{ruleForm.parentId && ruleForm.parentId !== '' ? ruleForm.parentId : '--'}}</div>
                 </el-form-item>
                 <!-- 省市区街道级联 -->
                 <el-form-item prop="areaCode" class="lar-box">
@@ -323,10 +325,15 @@ export default {
         "areaCode": "",    
         "address": "",      
         "latLon": "",
-        "pcorpId": "",
+        "parentId": "",
         "checkPoint": []
       },
-      rules: {},
+      rules: {
+        epedName: [{ required: true, message: '必填', trigger: 'blur' }],
+        inNum: [{ required: true, message: '必填', trigger: 'blur' }],
+        areaCode: [{ required: true, message: '必填', trigger: 'change' }],
+        address: [{ required: true, message: '必填', trigger: 'blur' }],
+      },
       // 用于特殊页面展示
       special: {
         areaCode: [],
@@ -334,6 +341,7 @@ export default {
         lat: '',
       },
       deletingMonitorIdArr: [], // 记录要删除的检测区域id
+      parentIdOptions: [],
 
       // --检测区域（编辑状态）--
       pointDataOptions: [
@@ -384,8 +392,25 @@ export default {
 
     this.searchMap()
 
+    this.getCorpList()
+
   },
   methods: {
+    // 获取上级
+    getCorpList() {
+      api.digital.getCorpList().then(res => {
+        console.log('上级', res.data)
+        this.parentIdOptions = []
+        res.data.data.forEach(item => {
+          this.parentIdOptions.push({
+            label: item.name,
+            value: item.id
+          })
+        })
+
+      })
+    },
+
     // 获取档案详情
     getDigitalDetail() {
       api.digital.getDigitalDetail(this.parentCode).then(res => {
@@ -622,7 +647,8 @@ export default {
 
     // 添加检测区域
     saveCheckPoint() {
-      // TODO 校验
+      let that = this
+      if (this.checkPointDataArr.length === 0 || this.ruleFormCheckPoint.pointName === '') return this.$message.error('检测区域请填写完整')
 
       this.checkPoint.push(this.ruleFormCheckPoint)
       this.closeDialogAddCheckPoint()
@@ -703,6 +729,8 @@ export default {
 
     // 编辑检测区域详情保存
     editCheckPointSubmit() {
+      if (this.checkPointDetailDataArr.length === 0 || this.ruleFormCheckPointDetail.pointName === '') return this.$message.error('检测区域请填写完整')
+
       let param = {
         "pointId" : this.ruleFormCheckPointDetail.pointId, 
         "pointName" : this.ruleFormCheckPointDetail.pointName, 
@@ -728,6 +756,8 @@ export default {
           } else {
             this.ruleForm.latLon = ''
           }
+          if (!this.special.lng || !this.special.lat) return this.$message.error('请点击地图确定电梯具体位置')
+
 
           console.log('ruleForm', this.ruleForm)
 
@@ -740,6 +770,7 @@ export default {
             "areaCode": this.ruleForm.areaCode,    
             "address": this.ruleForm.address,      
             "latLon": this.ruleForm.latLon,
+            "parentId": this.ruleForm.parentId,
           }
 
           // 先调用编辑档案接口，再调用检测区域接口
@@ -755,7 +786,9 @@ export default {
              */
 
             console.log('checkPointttttttt', this.checkPoint)
-            if (this.checkPoint.length > 0) {
+            if (this.checkPoint.length === 0) {
+              return this.$message.error('检测区域请填写完整')
+            } else {
               this.checkPoint.forEach((item, i) => {
                 if (item.pointId) {
                   // 编辑
@@ -838,7 +871,37 @@ export default {
           'epedId': this.parentCode,
         }
       })
-    }
+    },
+
+    // 跳转到监测应用
+    goDiagnList() {
+      this.$router.push({
+        path: '/diagnosis-list',
+        query: {
+          'epedId': this.parentCode,
+        }
+      })
+    },
+
+    // 跳转到基本档案
+    goDigitalDetail() {
+      this.$router.push({
+        path: '/digital-detail',
+        query: {
+          'epedId': this.parentCode,
+        }
+      })
+    },
+
+    // 跳转到异常档案
+    goAbnormalDetail() {
+      this.$router.push({
+        path: '/digital-abnormal',
+        query: {
+          'epedId': this.parentCode,
+        }
+      })
+    },
 
   },
   components: {

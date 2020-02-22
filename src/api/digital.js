@@ -34,6 +34,11 @@ export default {
     return http.delete(`${url1}/ewtes/business/epidemic?epedId=${epedIds}`)
   },
 
+  // 防疫点搜索框
+  searchEpidemic(title) {
+    return http.get(`${url1}/ewtes/business/epidemic/search?title=${title}`)
+  },
+
   // 查询防疫点档案详情
   getDigitalDetail(epedId) {
     return http.get(`${url1}/ewtes/business/epidemic?epedId=${epedId}`)
@@ -41,7 +46,7 @@ export default {
 
   // 查询防疫点下的检测区域
   getEpidemicMonitorList(epedId) {
-    return http.get(`${url1}/ewtes/business/monitor/list?epedId=${epedId}`)
+    return http.get(`${url1}/ewtes/business/epidemic/monitor/list?epedId=${epedId}`)
   },
 
   // 新增检测区域
@@ -84,6 +89,55 @@ export default {
   deleteObserve(observedIds) {
     return http.delete(`${url1}/ewtes/business/epidemic/observed?observedId=${observedIds}`)
   },
+
+
+  // 查看监测应用列表
+  getDiagnosisList(params) {
+    return http.post(`${url1}/ewtes/business/diagnosis/list`, params)
+  },
+
+  // 查询监测应用
+  getDiagnosis(id) {
+    return http.get(`${url1}/ewtes/business/diagnosis?id=${id}`)
+  },
+
+  // 添加监测应用
+  addDiagnosis(params) {
+    return http.post(`${url1}/ewtes/business/diagnosis`, params)
+  },
+
+  // 编辑监测应用
+  editDiagnosis(params) {
+    return http.put(`${url1}/ewtes/business/diagnosis`, params)
+  },
+
+  // 删除监测应用
+  deleteDiagnosis(params) {
+    return http.delete(`${url1}/ewtes/business/diagnosis`, params)
+  },
+
+  // 未绑定监测应用观察任务列表
+  getUnusedTask(epId) {
+    return http.get(`${url1}/ewtes/business/diagnosis/unused/task/list?epId=${epId}`)
+  },
+
+  // 停启用监测应用
+  switchDiagnosis(params) {
+    return http.put(`${url1}/ewtes/business/diagnosis/enable`, params)
+  },
+
+
+  // 异常档案列表
+  getAbnormalList(params) {
+    return http.get(`${url1}/ewtes/business/epidemic/abnormal`, params)
+  },
+
+  // 编辑防疫点所属上级列表
+  getCorpList() {
+    return http.get(`${url1}/ewtes/business/epidemic/corp/list`)
+  },
+
+  
 
 
 

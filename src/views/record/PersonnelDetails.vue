@@ -97,15 +97,18 @@
               </el-table-column>
               
               <el-table-column prop="elevCode" label="检测状态">
-                <template slot-scope="scope">
+                <!-- <template slot-scope="scope">
                   <span v-html="scope.row.valid ? '正常' :'异常'"></span>
+                </template> -->
+                <template slot-scope="scope">
+                  <span v-if="!scope.row.valid" style="color: #FF652C;">异常</span>
+                  <span v-else>正常</span>
                 </template>
-                
               </el-table-column>
           
               <el-table-column label="处理结果">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.result !== ''">{{result[scope.row.result]}}</span>
+                  <span v-if="scope.row.result && scope.row.result !== ''">{{result[scope.row.result]}}</span>
                   <span v-else>--</span>
                 </template>
               </el-table-column>
@@ -115,8 +118,12 @@
              
               <el-table-column prop="areaName" label="是否为高危地点">
                 
-                <template slot-scope="scope">
+                <!-- <template slot-scope="scope">
                   <span v-html="scope.row.dangerousFlag == 1 ? '是' :'否'"></span>
+                </template> -->
+                <template slot-scope="scope">
+                  <span v-if="scope.row.dangerousFlag == 1" style="color: #FF652C;">是</span>
+                  <span v-else>否</span>
                 </template>
               </el-table-column>
 
@@ -209,8 +216,9 @@
         <!-- 表格 Start -->
         <div style="position:relative;display:flex;">
           &nbsp;
-          <el-table :data="elevatorList" style="margin-top:0!important;margin-bottom: 32px;" max-height="440">
-
+         
+          <el-table :data="elevatorList" style="margin-top:0!important;margin-bottom: 32px;" max-height="288">
+          <!-- <el-table :data="getStaffInfo.data" style="margin-top:0!important;margin-bottom: 32px;" max-height="288"> -->
             <el-table-column
               label="序号"
               type="index"
@@ -226,9 +234,13 @@
             </el-table-column>
         
             <el-table-column prop="time" label="检测时间">
+              
             </el-table-column>
             
-            <el-table-column prop="value" label="测温结果">
+            <el-table-column label="测温结果">
+              <template slot-scope="scope">
+                  <span>{{scope.row.value}}℃</span>
+                </template>
             </el-table-column>
 
             <el-table-column prop="valid" label="是否有异常">

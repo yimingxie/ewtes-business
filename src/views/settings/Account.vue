@@ -151,7 +151,7 @@
 
               <el-table-column label="创建时间">
                 <template slot-scope="scope" >
-                  {{scope.row.createTime ? scope.row.createTime.substring(0,10) : '--'}}
+                  {{scope.row.createTime ? scope.row.createTime : '--'}}
                 </template>
 
               </el-table-column>
@@ -1049,22 +1049,11 @@ export default {
     // 查询所有账户
     getAllAccountData(){
       api.accountApi.getAccounts(this.queryParam).then((res) => {
-        if(res.data.code === 200 && res.data.message === 'success'){
+        if(res.data.code == 200 && res.data.message == 'success'){
+          console.log("dsgfdsgdfh==" + JSON.stringify(res.data.data))
           this.getAllAccountJson = res.data.data.records
           this.totalPageSize = res.data.data.total
           console.log("dsgfdsgdfh==" + JSON.stringify(this.getAllAccountJson))
-          // for(var i = 0; i < this.getAllAccountJson.length; i++){
-            
-          //   // console.log("aaaaaaaaaaaaa===" + this.rolesJson.length)
-          //   for(var j =0 ;j < this.rolesJson.length;j++){
-          //     // jsonArr[j] = this.rolesJson[j].name;
-          //     if(this.getAllAccountJson[i].roleId === this.rolesJson[j].id){
-          //       // console.log("1111===" + JSON.stringify(this.getAllAccountJson))
-          //       this.$set(this.getAllAccountJson[i],'roleName',this.rolesJson[j].name)
-          //     }
-          //   }
-          // }
-          
 
         } else {
           this.getAllAccountJson = []
@@ -1122,7 +1111,7 @@ export default {
     resetPassword(){
           console.log("this.EditAccountForm" +JSON.stringify(this.EditAccountForm))
         api.accountApi.resetAccount({"id":this.EditAccountForm.id}).then((res) => {
-          if (res.data.code === 200) {
+          if (res.data.code == 200) {
             this.getAllAccountData()
             this.resetPasswordDialogVisoble = false
             this.$message.success("重置密码成功");

@@ -1,8 +1,8 @@
 <template>
   <div id="ObserveList" class="xym">
     <div class="bread-nav">
-      <span>数字防疫点</span>
-      <span>/ 档案</span>
+      <span @click="$router.push('/digital-list')">数字防疫点</span>
+      <span @click="$router.go(-1)">/ 档案</span>
       <em>/ 观察任务管理</em>
     </div>
 
@@ -25,8 +25,8 @@
             <div class="xddetail-list-item-p">{{address}}</div>
           </div>
           <div class="xddetail-list-item clearfix">
-            <div class="xddetail-list-item-title">所需上级</div>
-            <div class="xddetail-list-item-p" style="padding-right: 0;">??</div>
+            <div class="xddetail-list-item-title">所属上级</div>
+            <div class="xddetail-list-item-p" style="padding-right: 0;"></div>
           </div>
         </div>
 
@@ -34,9 +34,7 @@
 
       <div class="x-list">
         <div class="xlist-choose clearfix">
-   
           <div class="xlist-choose-si">
-            <!-- <search-input ref="searchInputRef" placeholderValue="搜索园区名称/创建人" @search="searchTask" @cancel="clearTask"></search-input> -->
             <search-input ref="searchInputRef" placeholderValue="搜索观察任务名称" @search="searchTask" @cancel="clearTask"></search-input>
           </div>
         </div>
@@ -49,7 +47,6 @@
         </div>
 
         <div class="x-list-block"></div>
-
 
         <div class="ll-table">
           <div class="llt-thead">
@@ -300,7 +297,7 @@ export default {
 
     },
 
-    // 防疫点多选
+    // 任务多选
     checkedLiftsChange(val) {
       let count = this.observeList.length
       // 总数达到就全选
@@ -386,6 +383,7 @@ export default {
       }
       api.digital.addObserve(param).then(res => {
         console.log('添加成功？', res.data)
+        this.$message.success('添加成功')
         this.dialogAddObserve = false
         this.getObList()
       })
@@ -420,6 +418,7 @@ export default {
         "pointData": this.ruleFormAddObserve.pointData   
       }
       api.digital.editObserve(param).then(res => {
+        this.$message.success('编辑成功')
         this.dialogAddObserve = false
         this.getObList()
       })
@@ -446,6 +445,7 @@ export default {
         this.$message.success('删除成功')
         this.dialogDeleteObserve = false
         this.checkedLifts = []
+        this.checkedAll = false
         this.getObList()
       })
     },

@@ -130,6 +130,15 @@ const router = new Router({
       component: (resolve) => require(['./views/digital/ObserveList.vue'], resolve)
     },
     {
+      path: "/detection-query",
+      name: "detection-query",
+      meta: {
+        title: "检测诊断",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/detection/DetectionQuery.vue'], resolve)
+    },
+    {
       path: "/detection-panel",
       name: "detection-panel",
       meta: {
@@ -137,6 +146,24 @@ const router = new Router({
         auto: false // 是否需要权限
       },
       component: (resolve) => require(['./views/detection/DetectionPanel.vue'], resolve)
+    },
+    {
+      path: "/diagnosis-list",
+      name: "diagnosis-list",
+      meta: {
+        title: "监测应用管理",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/digital/DiagnosisList.vue'], resolve)
+    },
+    {
+      path: "/digital-abnormal",
+      name: "digital-abnormal",
+      meta: {
+        title: "异常档案",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/digital/DigitalAbnormal.vue'], resolve)
     },
 
     // {

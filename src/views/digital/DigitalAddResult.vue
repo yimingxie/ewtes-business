@@ -156,7 +156,7 @@
             <div class="dia-citem">
               <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>部件：</div>
               <div class="dia-citem-ib">
-                <el-input v-model="ruleFormCheckPoint.pointName" size="small" placeholder="请选择部件"></el-input>
+                <el-input v-model="ruleFormCheckPoint.pointName" size="small" placeholder="请输入部件名称"></el-input>
               </div>
             </div>
             <div class="dia-citem">
@@ -171,7 +171,7 @@
                     <div style="position: absolute;top:5px;right:10px;z-index:10;">
                       <i class="el-icon-arrow-down el-icon--right"></i>
                     </div>
-                    <el-input v-model="ruleFormCheckPoint.pointDataCN" size="small" placeholder="请选择部件"></el-input>
+                    <el-input v-model="ruleFormCheckPoint.pointDataCN" size="small" placeholder="请选择可测量数据"></el-input>
                   </span>
                   <el-dropdown-menu slot="dropdown" style="width: 640px;">
                     <div class="checkPoint-dropdown">
@@ -226,7 +226,13 @@ export default {
         ]
 
       },
-      rules: {},
+      rules: {
+        epedName: [{ required: true, message: '必填', trigger: 'blur' }],
+        inNum: [{ required: true, message: '必填', trigger: 'blur' }],
+        areaCode: [{ required: true, message: '必填', trigger: 'change' }],
+        address: [{ required: true, message: '必填', trigger: 'blur' }],
+
+      },
       // 用于特殊页面展示
       special: {
         areaCode: [],
@@ -404,8 +410,8 @@ export default {
 
     // 添加检测区域
     saveCheckPoint() {
-      // TODO 校验
-
+      let that = this
+      if (this.checkPointDataArr.length === 0 || this.ruleFormCheckPoint.pointName === '') return this.$message.error('检测区域请填写完整')
       this.checkPoint.push(this.ruleFormCheckPoint)
       this.closeDialogAddCheckPoint()
     },
@@ -462,6 +468,9 @@ export default {
             this.ruleForm.latLon = ''
           }
 
+          if (!this.special.lng || !this.special.lat) return this.$message.error('请点击地图确定电梯具体位置')
+
+
           console.log('ruleForm', this.ruleForm)
 
           
@@ -476,13 +485,30 @@ export default {
           }
 
           let tempCheckPoint = []
-          if (this.checkPoint.length > 0) {
+          if (this.checkPoint.length === 0) {
+            return this.$message.error('检测区域请填写完整')
+          } else {
             this.checkPoint.forEach(item => {
               tempCheckPoint.push({
                 'pointName': item.pointName,
                 'pointData': item.pointData.join('|')
               })
             })
+
+            // for (let i = 0; i < this.checkPoint.length; i++) {
+            //   let pointNameTemp = this.checkPoint[i].pointName
+            //   let pointDataTemp = this.checkPoint[i].pointData.join('|')
+            //   // console.log('pointDataTemp', pointDataTemp)
+              
+            //   if (pointNameTemp === '' || pointDataTemp === '') {
+            //     return this.$message.error('检测区域请填写完整')
+            //   } else {
+            //     tempCheckPoint.push({
+            //       'pointName': pointNameTemp,
+            //       'pointData': pointDataTemp
+            //     })
+            //   }
+            // }
           }
           param.checkPoint = tempCheckPoint
 

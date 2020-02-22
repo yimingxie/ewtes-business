@@ -177,14 +177,14 @@
               </el-table-column>
 
               <el-table-column label="创建时间">
-                <template slot-scope="scope" >
-                  {{scope.row.createTime ? scope.row.createTime.substring(0,10) : '--'}}
+                <template slot-scope="scope">
+                  {{scope.row.createTime ? scope.row.createTime : '--'}}
                 </template>
 
               </el-table-column>
 
               <el-table-column  label="状态" align="center">
-                <template slot-scope="scope" >
+                <template slot-scope="scope">
                   <el-switch
                     v-model="scope.row.isValid"
                     active-color="#E2E6E8"

@@ -790,8 +790,8 @@ export default {
       this.queryParam.areaCode = "" // 区域
       this.queryParam.depId = "" // 部门ID
 
-      this.queryParam.staffName = this.searchKey
-      this.queryParam.phone = this.searchKey
+      this.queryParam.search = this.searchKey
+      // this.queryParam.phone = this.searchKey
       this.queryParam.offset = 1 //页数置为1
 
       this.getAllAccountData()

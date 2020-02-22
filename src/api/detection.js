@@ -19,6 +19,30 @@ export default {
     return http.get(`${url1}/ewtes/business/epidemic/diagnosis/statistics?epedId=${epedId}`)
   },
 
+  // 实时监测
+  getRealData(epedId) {
+    return http.get(`${url1}/ewtes/business/epidemic/diagnosis/function?epedId=${epedId}`)
+  },
+
+  // 历史记录（今日）
+  getHistoryList(params) {
+    return http.post(`${url1}/ewtes/business/epidemic/diagnosis/history`, params)
+  },
+
+  // 点监测区域查看异常总详情
+  getAbnormalDetail(params) {
+    return http.post(`${url1}/ewtes/business/epidemic/abnormal/info`, params)
+  },
+
+  // 告警信息详情
+  getWarnDetail(taskId) {
+    return http.get(`${url1}/ewtes/business/epidemic/diagnosis/info?taskId=${taskId}`)
+  },
+
+  // 处理告警信息
+  dealWarn(params) {
+    return http.put(`${url1}/ewtes/business/epidemic/diagnosis/process`, params)
+  },
 
   
 }

@@ -93,3 +93,54 @@ export function returnPointDataCN(value) {
     return ''
   }
 }
+
+
+/**
+ * 返回处理状态
+ * @param {number} value 
+ */
+export function returnWarnResult(value) {
+  if (value == 1) {
+    return '未处理'
+  } else if (value == 2) {
+    return '已处理'
+  } else if (value == 3) {
+    return '解除警告'
+  } else {
+    return ''
+  }
+}
+
+/**
+ * 返回阈值
+ * 0 - == 等于, 1 - > 大于, 2 - < 小于, 3 - >= 大于等于, 4 - <= 小于等于, 5 - != 不等于
+ * @param {number} value 
+ */
+export function returnOperatorCN(value) {
+  if (value == 0) {
+    return '等于'
+  } else if (value == 1) {
+    return '大于'
+  } else if (value == 2) {
+    return '小于'
+  } else if (value == 3) {
+    return '大于等于'
+  } else if (value == 4) {
+    return '小于等于'
+  } else if (value == 5) {
+    return '不等于'
+  } else {
+    return ''
+  }
+}
+
+
+/**
+ * 分割时间
+ * @param {string} "2019-04-16 15:50:30"
+ * @return {string} "15:50:30"
+ */
+export function splitFormatDate(time) {
+  let str = time + ''
+  return str.substring(11, 19)
+}
