@@ -23,7 +23,7 @@
           <div class="xtitle-heading-h">
             <div class="xtitle-date-picker">
               <!-- <el-date-picker v-model="abnormalParams.date" class="datePicker" type="date" placeholder="选择日期"></el-date-picker> -->
-              <!-- <year-month-picker :valueMonthParent.sync="defaultTimestamp" @childVal="getYearVal"></year-month-picker> -->
+              <year-month-picker :value.sync="defaultTimestamp" @childVal="getYearVal"></year-month-picker>
 
             </div>
             <div class="xtitle-heading-h-line"></div>
@@ -296,7 +296,8 @@ export default {
       // 今日告警参数
       abnormalDetailParams: {
         "pointId": "",
-        "date": "2020-02-23 00:00:00",
+        "date": "", 
+        "allDate": "year",
         "limit": 10,
         "offset": 1
       },
@@ -328,12 +329,10 @@ export default {
     this.parentCode = this.$route.query.epedId
     this.abnormalParams.epedId = this.$route.query.epedId
 
-    // 默认以当前的年月筛选
-    this.defaultTimestamp = xymFun.dateFormat(Date.now()).substring(0, 7) // 2019-12
-
-    // this.abnormalParams.date = xymFun.dateFormat(Date.now())
-    // console.log('this.abnormalParams.date', this.abnormalParams.date)
-
+    // 默认以当前的年筛选
+    // this.defaultTimestamp = xymFun.dateFormat(Date.now()).substring(0, 7) // 2019-12
+    this.defaultTimestamp = new Date().getFullYear() + '-01-01 00:00:00'
+    this.abnormalParams.date = this.defaultTimestamp
 
   },
   mounted() {
@@ -342,6 +341,32 @@ export default {
 
   },
   methods: {
+
+    getYearVal(year) {
+      console.log('筛选日期', year) // 2020 2020-02 2020-03-01
+      this.defaultTimestamp = year
+
+      let yearStr = year + ''
+      // 查月份
+      if (yearStr.length === 7) {
+        this.abnormalParams.date = yearStr + '-01 00:00:00'
+        this.abnormalParams.allDate = 'month'
+      } 
+      // 查日
+      else if (yearStr.length === 10) {
+        this.abnormalParams.allDate = 'day'
+        this.abnormalParams.date = yearStr + ' 00:00:00'
+      }
+      // 查年
+      else {
+        this.abnormalParams.date = yearStr + '-01-01 00:00:00'
+        this.abnormalParams.allDate = 'year'
+      }
+      console.log('时间重组', this.abnormalParams.date)
+      this.closeSlider()
+      this.getAbnormalList()
+
+    },
 
     // 获取异常档案列表
     getAbnormalList() {
@@ -419,6 +444,9 @@ export default {
       this.detDetailInfo.pointName = info.pointName
       this.detDetailInfo.today = info.tody
       this.detDetailInfo.abnormalCount = info.abnormalCount
+
+      this.abnormalDetailParams.date = info.date
+
 
       api.detection.getAbnormalDetail(this.abnormalDetailParams).then(res => {
         console.log('检测区域详情', res.data)
