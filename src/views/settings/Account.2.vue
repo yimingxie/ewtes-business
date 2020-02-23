@@ -69,10 +69,11 @@
                   <el-dropdown  trigger="click" >
                     <span class="operationBtn" @click="rightClick($event,node, data)">...</span>
                     <el-dropdown-menu slot="dropdown" class="operatioDropdown">
-                      <el-dropdown-item v-if="node.level > 1">
+                      <el-dropdown-item>
                         <div class="edit" @click="editNode()">编辑</div>
                       </el-dropdown-item>
-                      <el-dropdown-item v-if="node.level > 1"><div class="delete" @click="deleteDepDialog = true;alert(1)">删除</div></el-dropdown-item>
+                      <el-dropdown-item v-if="node.level > 1"><div class="delete" @click="deleteDepDialog = true;">删除</div></el-dropdown-item>
+                      <el-dropdown-item v-else><div class="delete" style="color:#ccc!important;cursor:not-allowed">删除</div></el-dropdown-item>
                       <el-dropdown-item ><div class="add" @click="addChildNode()">添加下级</div></el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -154,21 +155,10 @@
                 </template>
               </el-table-column>
               
-              <el-table-column  label="账号状态" align="center">
+              <!-- <el-table-column  label="账号状态" align="center">
                 <template slot-scope="scope" >
                   <span v-text="scope.row.isValid== 1? '启用':'停用'"></span>
-                  <!-- <el-switch
-                    v-model="scope.row.valid"
-                    active-color="#E2E6E8"
-                    inactive-color="#E3E7E9"
-                    :active-value="1"
-                    :inactive-value="0"
-                    :width=28
-                    @change='changeStatus($event,scope.$index,scope.row)'
-                  >
-                  </el-switch> -->
-                </template>
-              </el-table-column>
+              </el-table-column> -->
 
                <el-table-column label="创建人">
                  <template slot-scope="scope" >
@@ -283,7 +273,7 @@
           </el-form-item>
         
           <el-form-item label="登录账号" prop="username">
-            <el-input v-model="addAccountForm.username" placeholder="请输入11位手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input v-model="addAccountForm.username" placeholder="请输入11位手机号" @blur="accountBlur()" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
 
           <el-form-item label="初始密码" prop="password" >
@@ -805,6 +795,11 @@ export default {
     
   },
   methods: {
+    accountBlur(){
+      if(this.addAccountForm.username.length == 11){
+        this.addAccountForm.password = this.addAccountForm.username.substring(5,11)
+      }
+    },
     confirmEditRole(){
 
     },

@@ -6,7 +6,7 @@
     <div class="panel topSelect">
       <div class="subSelect">
        
-        <el-dropdown :hide-on-click="false" trigger="click" class="treeDep" style="width:168px!important">
+        <!-- <el-dropdown :hide-on-click="false" trigger="click" class="treeDep" style="width:168px!important">
           <span class="el-dropdown-link" >
             <span v-if="queryParam.departmentId !== ''">{{checkDepName1}}</span>
             <span v-else style="color:#C2C7CC;">请选择所属部门</span>
@@ -45,7 +45,15 @@
               
             </el-tree>
           </el-dropdown-menu>
-        </el-dropdown>
+        </el-dropdown> -->
+        <el-select @change="corpSelectChange()" clearable v-model="queryParam.departmentId" placeholder="全部部门" class="regionPicker">
+          <el-option
+            v-for="item in corpLists"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
         <!-- <span class="splitLine">|</span>
         <radio-group :items="periods1" :value.sync="period1">
           <span slot="label">防疫点类型：</span>
@@ -84,7 +92,7 @@
           
           <el-table-column  label="部门">
             <template slot-scope="scope">
-              <span v-html="scope.row.departmentName ? scope.row.departmentName: '--'" ></span>
+              <span v-html="scope.row.departmentId ? scope.row.departmentId: '--'" ></span>
             </template>
           </el-table-column>
           
@@ -157,47 +165,7 @@
 
         <el-col :span="12">
           <el-form-item label="所属部门" prop="departmentId" >
-            <el-dropdown :hide-on-click="false" trigger="click" class="treeDep">
-              <span class="el-dropdown-link" >
-                <span v-if="addAccountForm.departmentId !== ''">{{checkDepName}}</span>
-                <span v-else style="color:#C2C7CC;">请选择所属部门</span>
-                <i class="el-icon-arrow-down el-icon--right"></i>
-              </span>
-              <el-dropdown-menu slot="dropdown" class="liftDropdown">
-                <el-tree
-
-                  :expand-on-click-node="true"
-
-                  node-key="id"
-
-                  :load="loadNode1"
-
-                  :props= defaultProps
-
-                  lazy
-
-                  :check-on-click-node= "true"
-
-                  @node-click="handleLeftclick"
-
-                  ref="tree"
-
-                  highlight-current
-
-                  >
-
-                  <span class="slot-t-node" slot-scope="{ node, data }" >
-
-                    <span>
-                      <span >{{node.label}}</span>
-                    </span>
-                  
-                  </span>
-                  
-                </el-tree>
-              </el-dropdown-menu>
-            </el-dropdown>
-            
+            <el-input v-model="addAccountForm.departmentId" placeholder="请输入所属部门" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -228,7 +196,7 @@
                   <el-input v-model="addAccountForm.idCardPre" placeholder="前六位" auto-complete="off" clearable size="small" required minlength="6" maxlength="6"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="12" style="margin-top:32px">
+              <el-col :span="12" style="margin-top:42px">
                 <el-form-item label="" prop="idCardAfter">
                   <el-input v-model="addAccountForm.idCardAfter" placeholder="后六位" auto-complete="off" clearable size="small" required minlength="6" maxlength="6"></el-input>
                 </el-form-item>
@@ -251,7 +219,6 @@
 
   <!-- 编辑员工  弹窗  Start -->
   <el-dialog  width="700px" title="员工详情" :visible.sync="edit_dialogFormVisible" custom-class="addAccount" @closed="editDialogClose">
-    <!-- <div class="showName">{{ EditAccountForm.name }}</div> -->
     <el-form :model="EditAccountForm" :label-width="formLabelWidth" ref="editForm" label-position="top" class="detailDialog">
       
       <el-row :gutter="18">
@@ -269,35 +236,42 @@
       <el-row :gutter="18">
         <el-col :span="12">
           <el-form-item label="手机号" prop="phone">
-            <span class="formShowContent">{{EditAccountForm.phone && EditAccountForm.phone !== '' ? EditAccountForm.phone : '暂无'}}</span>
+            <span class="formShowContent">{{EditAccountForm.phone && EditAccountForm.phone !== '' ? EditAccountForm.phone : '--'}}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          
+          <el-form-item label="所属单位" prop="corpName" >
+            <span class="formShowContent">{{EditAccountForm.corpName}}</span>
+          </el-form-item>
         </el-col>
       </el-row>
 
       <el-row :gutter="18">
         <el-col :span="12">
-          <el-form-item label="身份证类型" prop="idType" >
-            <span class="formShowContent">{{EditAccountForm.idType}}</span>
+          <el-form-item label="所属部门" prop="departmentId" >
+            <span class="formShowContent">{{EditAccountForm.departmentId && EditAccountForm.departmentId !== '' ? EditAccountForm.departmentId : '--'}}</span>
           </el-form-item>
+          
         </el-col>
         <el-col :span="12">
-          <el-form-item label="身份证号" prop="idCard" >
-            <span class="formShowContent">{{EditAccountForm.idCard}}</span>
+          <el-form-item label="身份证类型" prop="idType" >
+            <span class="formShowContent">{{EditAccountForm.idType}}</span>
           </el-form-item>
         </el-col>
       </el-row>
       
       <el-row :gutter="18">
         <el-col :span="12">
-          <el-form-item label="所属部门" prop="departmentName" >
-            <span class="formShowContent">{{EditAccountForm.departmentName}}</span>
+          <el-form-item label="身份证号" prop="idCard" >
+            <span class="formShowContent">{{EditAccountForm.idCard}}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          
+          <el-form-item label="出生日期" prop="birthday">
+            <span class="formShowContent">
+              {{EditAccountForm.birthday}}&nbsp;&nbsp;&nbsp;&nbsp;{{EditAccountForm.age}}
+            </span>
+          </el-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -499,6 +473,16 @@ import http from '../../utils/http'
 
 export default {
   data() {
+    let validID=(rule,value,callback)=>{
+        if(value==''||value==undefined){
+            callback()
+        }else{
+            // let reg=/^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+            let reg=/[0-9a-zA-Z]{4,9}/
+            if(!reg.test(value)){callback(new Error('身份证号码不正确'))}
+        }
+        
+    };
     return {
       isShow: false,
 
@@ -544,6 +528,7 @@ export default {
         sex:1,
         idType: 1,
         idCard: "",
+        corpName:''
       },
       query:'',
       searchKey:'',
@@ -656,7 +641,9 @@ export default {
       // 录入结果
       dialogBatchResult: false,
       checkDepName:'',
-      checkDepName1:''
+      checkDepName1:'',
+      corpLists:[],
+
     }
   },
   components: {
@@ -678,9 +665,26 @@ export default {
     // this.queryParam.corpId = window.localStorage.getItem('corpId')
     // this.getAllRoleData()
     this.getAllAccountData()
-    // this.getAllDepartmentData()
+    this.getStaffDeps()
   },
   methods: {
+    // 获取员工部门
+    getStaffDeps(){
+      api.accountApi.getStaffDeps().then((res) => {
+        if(res.data.code == 200) {
+          this.corpLists = res.data.data || []
+        }
+      })
+    },
+    // 筛选防疫点
+    corpSelectChange(){
+      if(this.queryParam.departmentId !== '') {
+        this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
+      }
+      // 筛选时默认跳到第一页
+      this.queryParam.offset = 0
+      this.getAllAccountData()
+    },
   //   UpperString(){
   //     console.log("this.addAccountForm.idCard===" + this.addAccountForm.idCard)
   // 　　if(this.addAccountForm.idCardue !== ''){
@@ -875,15 +879,15 @@ export default {
       
     // },
     // 根据部门筛选
-    depSelectChange() {
-      if(this.queryParam.depId !== '') {
-        this.searchKey = this.queryParam.staffName = this.queryParam.phone = '' // 筛选时清空搜索
-      }
-      // 筛选时默认跳到第一页
-      this.queryParam.offset = 0
+    // depSelectChange() {
+    //   if(this.queryParam.depId !== '') {
+    //     this.searchKey = this.queryParam.staffName = this.queryParam.phone = '' // 筛选时清空搜索
+    //   }
+    //   // 筛选时默认跳到第一页
+    //   this.queryParam.offset = 0
 
-      this.getAllAccountData()
-    },
+    //   this.getAllAccountData()
+    // },
     // 查询所有账户
     getAllAccountData(){
       api.accountApi.getStaffs(this.queryParam).then((res) => {
@@ -998,16 +1002,26 @@ export default {
       //   sex:1,
       //   idType: 1,
       //   idCard: "",
-
-      this.EditAccountForm.id = row.id
-      this.EditAccountForm.phone = row.phone
-      this.EditAccountForm.name = row.name
-      this.EditAccountForm.departmentName = row.departmentName || '暂无'
-      this.EditAccountForm.sex = row.sex  == 1 ? '男':"女"
-      this.EditAccountForm.idType = row.idType == 1 ? '完整': '简单'
-      this.EditAccountForm.idCard = row.idCard
-
-      
+      api.accountApi.staffDetail(row.id).then((res) => {
+         if(res.data.code == 200){
+            this.EditAccountForm = res.data.data
+            this.EditAccountForm.departmentName = row.departmentName || '--'
+            this.EditAccountForm.sex = row.sex  == 1 ? '男':"女"
+            this.EditAccountForm.idType = row.idType == 1 ? '完整': '简要'
+            this.EditAccountForm.birthday = row.birthday ? row.birthday.substring(0, 4)+'-' + row.birthday.substring(4, 6)+'-' +row.birthday.substring(6, 8): '--'
+            this.EditAccountForm.age = row.age ? row.age + '岁' : '--'
+         }
+      })
+      // this.EditAccountForm.id = row.id
+      // this.EditAccountForm.phone = row.phone
+      // this.EditAccountForm.name = row.name
+      // this.EditAccountForm.departmentName = row.departmentName || '--'
+      // this.EditAccountForm.sex = row.sex  == 1 ? '男':"女"
+      // this.EditAccountForm.idType = row.idType == 1 ? '完整': '简要'
+      // this.EditAccountForm.idCard = row.idCard
+      // this.EditAccountForm.corpName = row.corpName
+      // this.EditAccountForm.birthday = row.birthday ? row.birthday.substring(0, 4)+'-' + row.birthday.substring(4, 6)+'-' +row.birthday.substring(6, 8): '--'
+      // this.EditAccountForm.age = row.age ? row.age + '岁'
       // this.EditAccountForm.phoneNumber = row.phoneNumber
       // this.edit_roleNameArr = row.roleName.split(',')
       this.edit_dialogFormVisible = true
