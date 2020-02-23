@@ -516,7 +516,7 @@ export default {
       ///////////
       shenfen:[
         {id:1,name:'完整'},
-        {id:2,name:'简单'}
+        {id:2,name:'简要'}
       ],
       rolesJson:[],
       // roleNameArr:[],
