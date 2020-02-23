@@ -264,6 +264,9 @@
     font-size: 12px;
     color: #999999;
     text-align: right;
+    overflow hidden;
+    text-overflow: ellipsis;
+    white-space nowrap;
   }
   .lar-box-el-input,.show-pp{
     position relative;
@@ -278,6 +281,9 @@
     font-size: 16px;
     color: #333333;
     line-height 32px;
+    overflow hidden;
+    text-overflow: ellipsis;
+    white-space nowrap;
   }
   .map-box{
     margin-top: 30px;
@@ -455,7 +461,7 @@
     font-size: 12px;
     color: #3F3F3F;
   }
-  .dia-citem-label span{
+  .dia-citem-label span,.dia-citem-label-must{
     color #F56B25;
     display inline-block;
     margin-right: 3px;
@@ -624,6 +630,8 @@
     background-image: linear-gradient(137deg, #3572FF 0%, #3596FF 100%);
     box-shadow: 0 5px 12px 0 rgba(195,195,195,0.40);
     border-radius: 10px;
+    height: calc(100vh - 260px);
+    overflow: hidden;
   }
   .detection-real-content{
     padding: 0 30px;
@@ -631,6 +639,7 @@
     z-index 3;
     overflow: auto;
     margin-top -20px;
+    height: calc(100vh - 350px);
   }
   .detreal-box{
     box-sizing: border-box;
@@ -709,10 +718,13 @@
     position relative;
     float right
     width 27%;
-    height 720px;
+    // height 720px;
     background: #FFFFFF;
     box-shadow: 0 5px 12px 0 rgba(196,203,239,0.39);
     border-radius: 10px;
+    height: calc(100vh - 260px);
+    overflow: hidden;
+    
   }
   .detection-history-choose{
     position: absolute;

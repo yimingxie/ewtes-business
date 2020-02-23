@@ -4,7 +4,7 @@
     <!-- <div class="pageTitle">数字防疫点</div> -->
     <div class="bread-nav">
       <span @click="$router.push('/digital-list')">数字防疫点</span>
-      <em>/ 档案</em>
+      <em>/ 防疫点档案</em>
     </div>
 
     <div class="x-container">
@@ -50,15 +50,15 @@
                 </el-form-item>
 
                 <!-- TODO -->
-                <!-- <el-form-item prop="inNum" class="lar-box">
+                <el-form-item class="lar-box" v-if="submitState != 'put'">
                   <div class="lar-box-h4">所属上级</div>
-                  <div class="lar-box-el-input" v-if="submitState == 'put'">
+                  <!-- <div class="lar-box-el-input" v-if="submitState == 'put'">
                     <el-select v-model="ruleForm.parentId" placeholder="请选择所属上级" size="small" style="width: 100%;">
                       <el-option v-for="item in parentIdOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
-                  </div>
-                  <div class="show-pp" v-else>{{ruleForm.parentName && ruleForm.parentName !== '' ? ruleForm.parentName : '--'}}</div>
-                </el-form-item> -->
+                  </div> -->
+                  <div class="show-pp">{{ruleForm.parentName && ruleForm.parentName !== '' ? ruleForm.parentName : '--'}}</div>
+                </el-form-item>
 
 
                 <!-- 省市区街道级联 -->
@@ -100,13 +100,13 @@
               <div class="dd-checkArea-box" v-for="(item, i) in checkPoint" :key="i">
                 <div class="dd-checkArea-box-close" @click="checkPointDelete(item, i)"></div>
                 <div class="ddcarea-item">
-                  <div class="ddcarea-item-label">检测区域名称</div>
+                  <div class="ddcarea-item-label"><span class="dia-citem-label-must">*</span>检测区域名称</div>
                   <div class="ddcarea-item-input">
                     <el-input v-model="item.pointName" size="small"></el-input>
                   </div>
                 </div>
                 <div class="ddcarea-item">
-                  <div class="ddcarea-item-label">可测量数据</div>
+                  <div class="ddcarea-item-label"><span class="dia-citem-label-must">*</span>可测量数据</div>
                   <div class="ddcarea-item-input">
                     <!-- <el-select v-model="item.pointData" placeholder="请选择可测量数据" size="small" style="width: 100%;">
                       <el-option v-for="selectItem in pointDataOptions" :key="selectItem.value" :label="selectItem.label" :value="selectItem.value"></el-option>
@@ -209,13 +209,13 @@
         <el-form :model="ruleFormCheckPoint" :rules="rulesCheckPoint" ref="checkPointRef" class="diaForm">
           <div class="dia-clist">
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>部件：</div>
+              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测区域名称</div>
               <div class="dia-citem-ib">
                 <el-input v-model="ruleFormCheckPoint.pointName" size="small" placeholder="请选择部件"></el-input>
               </div>
             </div>
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>可测量数据：</div>
+              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>可测量数据（多选）</div>
               <div class="dia-citem-ib">
                 <!-- <el-select v-model="ruleFormCheckPoint.pointData" placeholder="请选择可测量数据" size="small" style="width: 100%;">
                   <el-option v-for="item in pointDataOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -258,14 +258,14 @@
         <el-form :model="ruleFormCheckPointDetail" :rules="rulesCheckPointDetail" ref="checkPointDetailRef" class="diaForm">
           <div class="dia-clist">
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>部件：</div>
+              <div class="dia-citem-label"><span class="dia-citem-label-must" v-if="checkPointDetailState == 'put'">*</span>检测区域名称</div>
               <div class="dia-citem-ib" v-if="checkPointDetailState == 'put'">
                 <el-input v-model="ruleFormCheckPointDetail.pointName" size="small" placeholder="请选择部件"></el-input>
               </div>
               <div class="cpd-pp" v-else>{{ruleFormCheckPointDetail.pointName !== '' ? ruleFormCheckPointDetail.pointName : '--'}}</div>
             </div>
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>可测量数据：</div>
+              <div class="dia-citem-label"><span class="dia-citem-label-must" v-if="checkPointDetailState == 'put'">*</span>可测量数据<i v-if="checkPointDetailState == 'put'">（多选）</i></div>
               <div class="dia-citem-ib" v-if="checkPointDetailState == 'put'">
                 <el-dropdown trigger="click" style="width: 100%;">
                   <span class="el-dropdown-link">
@@ -285,6 +285,12 @@
               </div>
               <div class="cpd-pp" v-else>{{ruleFormCheckPointDetail.pointDataCN !== '' ? ruleFormCheckPointDetail.pointDataCN : '--'}}</div>
 
+            </div>
+
+            <!-- TODO -->
+            <div class="dia-citem" v-if="checkPointDetailState != 'put'">
+              <div class="dia-citem-label"><span class="dia-citem-label-must" v-if="checkPointDetailState == 'put'">*</span>已关联观察任务</div>
+              <div class="cpd-pp">{{ruleFormCheckPointDetail.observeName !== '' ? ruleFormCheckPointDetail.observeName : '--'}}</div>
             </div>
 
           </div>
@@ -375,7 +381,8 @@ export default {
         pointId: '',
         pointName: '',
         pointData: [], // 存的是多选值
-        pointDataCN: '' // 转化出的中文
+        pointDataCN: '', // 转化出的中文
+        observeName: ''
       },
       rulesCheckPointDetail: {},
       checkPointDetailDataArr: [], // 存详情多选框选中的数组值
@@ -450,7 +457,8 @@ export default {
               "pointName": item.pointName,
               "pointData": pointDataTempArr, // [], 处理成能多选的数组
               "pointDataCN": pointDataTempCNArr.join('，'),  // 转为中文
-              "relatedNum": item.relatedNum
+              "relatedNum": item.relatedNum,
+              "observeName": item.observeName
             })
 
           })
@@ -557,6 +565,21 @@ export default {
         addMarker(e.poi.location.lng, e.poi.location.lat)
         that.ruleForm.address = e.poi.name
         // placeSearch.search(e.poi.name)
+
+        // 联动优化测试
+        that.special.areaCode = that.transformAreaCode(e.poi.adcode)
+        console.log('that.special.areaCode', that.special.areaCode)
+        that.ruleForm.areaCode = that.special.areaCode[that.special.areaCode.length - 1] || ""
+
+        // 解析地址，分割
+        var reg = /.+?(省|市|自治区|自治州|县|区)/g;
+        that.ruleForm.localArea = e.poi.district.match(reg).join('/')
+        console.log('切割地址', that.ruleForm.localArea)
+        setTimeout(() => {
+          that.$refs.laForm.clearValidate('areaCode')
+        }, 100)
+
+
       })
 
       // 点击添加点
@@ -702,12 +725,14 @@ export default {
     openDialogCPDetail(i) {
       this.checkPointDetailState = ''
       let cpDetail = this.checkPoint[i]
+      console.log('cpDetail', cpDetail)
       this.dialogCheckPointDetail = true
       this.ruleFormCheckPointDetail = {
         pointId: cpDetail.pointId,
         pointName: cpDetail.pointName,
         pointData: cpDetail.pointData, // 存的是多选值
-        pointDataCN: cpDetail.pointDataCN // 转化出的中文
+        pointDataCN: cpDetail.pointDataCN, // 转化出的中文
+        observeName: cpDetail.observeName
       }
       this.checkPointDetailDataArr = cpDetail.pointData
       console.log('this.checkPointDetailDataArr', this.checkPointDetailDataArr)
@@ -831,14 +856,21 @@ export default {
 
             // 跳转
             setTimeout(() => {
-              this.$router.push({
-                path: '/digital-detail',
-                query: {
-                  epedId: this.parentCode,
-                  submitState: 'get'
-                }
-              })
-              this.getDigitalDetail()
+              if (res.data.code == 200) {
+                this.$message.success('编辑成功')
+                this.$router.push({
+                  path: '/digital-detail',
+                  query: {
+                    epedId: this.parentCode,
+                    submitState: 'get'
+                  }
+                })
+                this.getDigitalDetail()
+                
+              } else {
+                this.$message.error(res.data.message)
+              }
+              
             }, 300)
             
           })

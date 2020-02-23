@@ -82,7 +82,7 @@ export default {
   methods: {
     // 传给父组件
     handleChange(city) {
-      console.log('黑科技？', city, this.$refs['cityCascader'].currentLabels)
+      console.log('子组件黑科技？', city, this.$refs['cityCascader'].currentLabels)
       // let cityName = ''
       // city.forEach(item => {
       //   cityName = cityName + this.newFormat[item]

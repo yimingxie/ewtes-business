@@ -92,13 +92,13 @@
               <div class="dd-checkArea-box" v-for="(item, i) in checkPoint" :key="i">
                 <div class="dd-checkArea-box-close" @click="checkPointDelete(i)"></div>
                 <div class="ddcarea-item">
-                  <div class="ddcarea-item-label">检测区域名称</div>
+                  <div class="ddcarea-item-label"><span class="dia-citem-label-must">*</span>检测区域名称</div>
                   <div class="ddcarea-item-input">
                     <el-input v-model="item.pointName" size="small"></el-input>
                   </div>
                 </div>
                 <div class="ddcarea-item">
-                  <div class="ddcarea-item-label">可测量数据</div>
+                  <div class="ddcarea-item-label"><span class="dia-citem-label-must">*</span>可测量数据</div>
                   <div class="ddcarea-item-input">
                     <!-- <el-select v-model="item.pointData" placeholder="请选择可测量数据" size="small" style="width: 100%;">
                       <el-option v-for="selectItem in pointDataOptions" :key="selectItem.value" :label="selectItem.label" :value="selectItem.value"></el-option>
@@ -154,13 +154,13 @@
         <el-form :model="ruleFormCheckPoint" :rules="rulesCheckPoint" ref="checkPointRef" class="diaForm">
           <div class="dia-clist">
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>部件：</div>
+              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测区域名称</div>
               <div class="dia-citem-ib">
                 <el-input v-model="ruleFormCheckPoint.pointName" size="small" placeholder="请输入部件名称"></el-input>
               </div>
             </div>
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>可测量数据：</div>
+              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>可测量数据（多选）</div>
               <div class="dia-citem-ib">
                 <!-- <el-select v-model="ruleFormCheckPoint.pointData" placeholder="请选择可测量数据" size="small" style="width: 100%;">
                   <el-option v-for="item in pointDataOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -354,11 +354,17 @@ export default {
         // placeSearch.search(e.poi.name)
 
         // 联动优化测试
-        // that.special.areaCode = that.transformAreaCode(e.poi.adcode)
-        // that.ruleForm.areaCode = that.special.areaCode
-        // that.cityChooseKey = Date.now()
-        // that.$refs.cityChooseRef.handleChange(that.special.areaCode)
+        that.special.areaCode = that.transformAreaCode(e.poi.adcode)
+        console.log('that.special.areaCode', that.special.areaCode)
+        that.ruleForm.areaCode = that.special.areaCode[that.special.areaCode.length - 1] || ""
 
+        // 解析地址，分割
+        var reg = /.+?(省|市|自治区|自治州|县|区)/g;
+        that.ruleForm.localArea = e.poi.district.match(reg).join('/')
+        console.log('切割地址', that.ruleForm.localArea)
+        setTimeout(() => {
+          that.$refs.laForm.clearValidate('areaCode')
+        }, 100)
         
       })
       // 点击添加点
@@ -368,6 +374,37 @@ export default {
         that.special.lat = e.lnglat.lat
         addMarker(e.lnglat.lng, e.lnglat.lat)
       });
+    },
+
+    // 特殊处理获得的areaCode区域码
+    transformAreaCode(areaCode) {
+      // 字符串转数组
+      // "440305005000" => ["44", "4403", "440305", "440305005"]
+      if (typeof areaCode == 'string') {
+        let province = areaCode.substr(0, 2)
+        let city = areaCode.substr(0, 4)
+        let region = areaCode.substr(0, 6)
+        let street = areaCode.substr(0, 9)
+        let cityShow = []
+        if (areaCode.length <= 2) {
+          cityShow.push(province)
+        } else if (areaCode.length > 2 && areaCode.length <= 4 ) {
+          cityShow.push(province, city)
+        } else if (areaCode.length > 4 && areaCode.length <= 6 ) {
+          cityShow.push(province, city, region)
+        } else {
+          cityShow.push(province, city, region, street)
+        }
+        return cityShow
+      }
+
+      // 数组转字符串
+      // ["44", "4403", "440305", "440305005"] => "440305005000"
+      if (areaCode instanceof Array) {
+        return areaCode[areaCode.length - 1]
+      }
+
+      console.log('areaCode传入类型错误')
     },
 
 
@@ -458,6 +495,8 @@ export default {
     // 提交
     submit() {
       let that = this
+      console.log('钱钱ruleForm', this.ruleForm)
+
       this.$refs.laForm.validate(valid => {
         if (valid) {
           let lng = this.special.lng || ''
@@ -514,8 +553,12 @@ export default {
 
           console.log('param----', param)
           api.digital.addEpidemic(param).then(res => {
-            that.$message.success('添加成功')
-            that.$router.push({path: '/digital-list'})
+            if (res.data.code == 200) {
+              that.$message.success('添加成功')
+              that.$router.push({path: '/digital-list'})
+            } else {
+              that.$message.error(res.data.message)
+            }
           })
 
         }

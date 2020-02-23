@@ -624,6 +624,10 @@ export default {
 <style lang="stylus" scoped>
 #DetectionPanel{
   padding-bottom: 30px;
+  .det-history-table{
+    height: calc(100vh - 350px);
+    overflow: auto;    
+  }
 
   .xddetail-name{
     width: 232px;

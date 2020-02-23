@@ -22,7 +22,9 @@
         <div class="xtitle-heading">
           <div class="xtitle-heading-h">
             <div class="xtitle-date-picker">
-              <el-date-picker v-model="abnormalParams.date" class="datePicker" type="date" placeholder="选择日期"></el-date-picker>
+              <!-- <el-date-picker v-model="abnormalParams.date" class="datePicker" type="date" placeholder="选择日期"></el-date-picker> -->
+              <!-- <year-month-picker :valueMonthParent.sync="defaultTimestamp" @childVal="getYearVal"></year-month-picker> -->
+
             </div>
             <div class="xtitle-heading-h-line"></div>
             <div class="xtitle-heading-h-p">记录</div>
@@ -33,6 +35,7 @@
           <div class="llt-thead">
             <div class="llt-tr clearfix">
               <div class="llt-th">检测区域名称</div>
+              <div class="llt-th">日期</div>
               <div class="llt-th">总数</div>
               <div class="llt-th" @click="getDetDetail">操作</div>
             </div>
@@ -43,6 +46,7 @@
             <div class="llt-tr clearfix" v-for="(item, i) in abnormalList" :key="i">
               <div class="llt-tr-container clearfix">
                 <div class="llt-td">{{item.pointName}}</div>
+                <div class="llt-td">{{item.date}}</div>
                 <div class="llt-td">{{item.abnormalCount}}</div>
                 <div class="llt-td">
                   <span class="llt-td-a" @click="getDetDetail(item)">详情</span>
@@ -52,7 +56,7 @@
           </div>
 
           <!-- 分页 -->
-          <!-- <div class="list-page">
+          <div class="list-page">
             <el-pagination
               @size-change="pageSizeChange"
               @current-change="currentPageChange"
@@ -62,7 +66,7 @@
               layout="prev, pager, next, sizes, jumper"
               :total="totalPage">
             </el-pagination>
-          </div> -->
+          </div>
 
 
         </div>
@@ -75,7 +79,7 @@
 
     <!-- 检测区域详情 -->
     <div class="detdetail-slider" :class="sliderShow ? 'on' : ''">
-      <div class="detdetail-slider-close" @click="sliderShow=false"></div>
+      <div class="detdetail-slider-close" @click="closeSlider"></div>
       <div class="detdetail-slider-title">
         <div class="detdetail-slider-title-line"></div>
         <div class="detdetail-slider-title-h">检测区域详情</div>
@@ -121,7 +125,7 @@
       <div class="detdetail-block"></div>
 
       <div class="detdetail-warn">
-        <div class="detdetail-warn-title">今日告警</div>
+        <div class="detdetail-warn-title">告警列表</div>
         <div class="detdetail-warn-container">
           <div class="x-no-data" style="margin-top: 100px;" v-if="detailWarnList.length === 0">今日暂无告警</div>
 
@@ -141,7 +145,7 @@
                 <div class="det-history-td">15:20</div>
                 <div class="det-history-td">去处理</div>
               </div> -->
-              <div class="det-history-tr clearfix" v-for="(item, i) in detailWarnList" :key="i" @click="openDialogDeal(item.id)">
+              <div class="det-history-tr clearfix" :class="item.result == 1 ? 'warn' : ''" v-for="(item, i) in detailWarnList" :key="i" @click="openDialogDeal(item.id)">
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.celsius}}℃</div>
                 <div class="det-history-td">{{item.time | splitFormatDate}}</div>
@@ -149,6 +153,21 @@
               </div>
         
             </div>
+
+            <!-- 分页 -->
+            <div class="list-page">
+              <el-pagination
+                @size-change="pageSizeChangeDetail"
+                @current-change="currentPageChangeDetail"
+                :current-page="currentPageDetail"
+                :page-sizes="[10, 20, 30]"
+                :page-size="pageSizeDetail"
+                layout="prev, pager, next, sizes, jumper"
+                :total="totalPageDetail">
+              </el-pagination>
+            </div>
+
+
           </div>
         </div>
 
@@ -238,6 +257,8 @@ import api from '../../api'
 import xymFun from '../../utils/xymFun'
 import Footer from "../../views/common/fotter";
 import CityChoose from '../../components/CityChoose'
+import YearMonthPicker from '../../components/YearMonthPicker'
+
 export default {
   data() {
     return {
@@ -245,12 +266,13 @@ export default {
       parentCode: '',
 
       // --列表--
+      defaultTimestamp: '',
       abnormalList: [],
       abnormalParams: {
         "epedId": "",
-        "date": "",
-        // "limit": 10,
-        // "offset": 1
+        "date": "2020-02-23 00:00:00", // 今天的数据就传2020-02-23 00:00:00 这个月就2020-02-01 00:00:00  今年就2020-01-01 00:00:00
+        "limit": 10,
+        "offset": 1
       },
 
       currentPage: 1,
@@ -258,6 +280,7 @@ export default {
       pageSize: 10,
 
       // --检测区域详情侧滑--
+      currentDetailItem: '', // 当前查看的详情对象
       sliderShow: false,
       abnormalCount: 0,
       processCount: 0,
@@ -270,6 +293,16 @@ export default {
         today: '',
         abnormalCount: ''
       },
+      // 今日告警参数
+      abnormalDetailParams: {
+        "pointId": "",
+        "date": "2020-02-23 00:00:00",
+        "limit": 10,
+        "offset": 1
+      },
+      currentPageDetail: 1,
+      totalPageDetail: 1,
+      pageSizeDetail: 10,
 
 
       // --告警处理弹窗--
@@ -295,6 +328,13 @@ export default {
     this.parentCode = this.$route.query.epedId
     this.abnormalParams.epedId = this.$route.query.epedId
 
+    // 默认以当前的年月筛选
+    this.defaultTimestamp = xymFun.dateFormat(Date.now()).substring(0, 7) // 2019-12
+
+    // this.abnormalParams.date = xymFun.dateFormat(Date.now())
+    // console.log('this.abnormalParams.date', this.abnormalParams.date)
+
+
   },
   mounted() {
     // 获取异常档案列表
@@ -307,10 +347,10 @@ export default {
     getAbnormalList() {
       api.digital.getAbnormalList(this.abnormalParams).then(res => {
         console.log('异常档案', res.data)
-        this.abnormalList = res.data.data
+        this.abnormalList = res.data.data.records
         // 分页
-        // this.currentPage = res.data.data.current
-        // this.totalPage = res.data.data.total
+        this.currentPage = res.data.data.current
+        this.totalPage = res.data.data.total
       })
     },
 
@@ -370,18 +410,17 @@ export default {
 
     // 获取检测区域详情
     getDetDetail(item) {
+      this.currentDetailItem = item
       let info = item
       this.sliderShow = true
-      let param = {
-        "pointId": info.pointId,
-        "limit": 10000,
-        "offset": 1
-      }
+
+      this.abnormalDetailParams.pointId = info.pointId
+
       this.detDetailInfo.pointName = info.pointName
       this.detDetailInfo.today = info.tody
       this.detDetailInfo.abnormalCount = info.abnormalCount
 
-      api.detection.getAbnormalDetail(param).then(res => {
+      api.detection.getAbnormalDetail(this.abnormalDetailParams).then(res => {
         console.log('检测区域详情', res.data)
         let abInfo = res.data.data
         this.abnormalCount = abInfo.abnormalCount
@@ -391,6 +430,29 @@ export default {
 
         this.detailWarnList = abInfo.data.records
       })
+    },
+
+    // 当前分页改变
+    currentPageChangeDetail(current) {
+      this.abnormalDetailParams.offset = current
+      this.getDetDetail(this.currentDetailItem)
+    },
+
+    // 分页大小改变
+    pageSizeChangeDetail(size) {
+      this.abnormalDetailParams.limit = size
+      this.getDetDetail(this.currentDetailItem)
+    },
+
+    // 关闭详情侧滑
+    closeSlider() {
+      this.abnormalDetailParams = {
+        "pointId": "",
+        "limit": 10,
+        "offset": 1
+      }
+      this.currentDetailItem = ''
+      this.sliderShow = false
     },
 
     // 打开异常处理弹窗
@@ -425,9 +487,15 @@ export default {
       }
       api.detection.dealWarn(param).then(res => {
         console.log('处理异常', res.data)
-        this.$message.success('提交成功')
-        this.dialogDeal = false
-        this.sliderShow = false
+        if (res.data.code == 200) {
+          this.$message.success('提交成功')
+          this.dialogDeal = false
+          this.closeSlider()
+        } else {
+          this.$message.error(res.data.message)
+          this.dialogDeal = false
+          this.closeSlider()
+        }
 
       })
 
@@ -435,6 +503,7 @@ export default {
 
   },
   components: {
+    'year-month-picker': YearMonthPicker
 
   }
 }
@@ -443,13 +512,16 @@ export default {
 <style lang="stylus" scoped>
 #DigitalAbnormal{
   .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
-    width 44%;
+    width 30%;
   }
   .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
-    width 42%;
+    width 27%;
   }
   .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
-    width 14%;
+    width 28%;
+  }
+  .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
+    width 15%;
   }
 
 

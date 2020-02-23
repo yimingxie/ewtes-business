@@ -317,8 +317,9 @@ export default {
     getObservTaskOptions() {
       api.digital.getUnusedTask(this.parentCode).then(res => {
         console.log('观察任务下拉', res.data)
-        let detail = res.data.data
+        let detail = res.data.data || []
         this.observTaskOptions = []
+        if (detail.length === 0) return
         detail.forEach(item => {
           this.observTaskOptions.push({
             label: item.name,
@@ -383,6 +384,7 @@ export default {
 
     // 打开添加监测应用弹窗
     openDialogAddDiagn() {
+      this.getObservTaskOptions()
       this.dialogAddDiagnTitle = '添加监测应用'
 
       this.ruleFormAddDiagn = {
@@ -412,9 +414,14 @@ export default {
           }
           api.digital.addDiagnosis(param).then(res => {
             console.log('添加成功', res.data)
-            this.$message.success('添加成功')
-            this.dialogAddDiagn = false
-            this.getDiagnList()
+            if (res.data.code == 200) {
+              this.$message.success('添加成功')
+              this.dialogAddDiagn = false
+              this.getDiagnList()
+            } else {
+              this.$message.error(res.data.message)
+            }
+            
           })
 
         }
@@ -459,11 +466,16 @@ export default {
             "errValue": this.ruleFormAddDiagn.error
           }
           api.digital.editDiagnosis(param).then(res => {
-            console.log('添加成功', res.data)
-            this.$message.success('编辑成功')
-            this.dialogAddDiagn = false
-            this.currentDiagnId = ''
-            this.getDiagnList()
+            console.log('编辑成功', res.data)
+            if (res.data.code == 200) {
+              this.$message.success('编辑成功')
+              this.dialogAddDiagn = false
+              this.currentDiagnId = ''
+              this.getDiagnList()
+            } else {
+              this.$message.error(res.data.message)
+            }
+            
           })
 
         }
