@@ -37,14 +37,14 @@
                 <el-form-item prop="epedName" class="lar-box clearfix">
                   <div class="lar-box-h4">防疫点名称<i class="must-fill-icon"></i></div>
                   <div class="lar-box-el-input" v-if="submitState == 'put'">
-                    <el-input v-model="ruleForm.epedName" placeholder="请输入防疫点名称" size="small"></el-input>
+                    <el-input v-model="ruleForm.epedName" maxlength="100" placeholder="请输入防疫点名称" size="small"></el-input>
                   </div>
                   <div class="show-pp" v-else>{{ruleForm.epedName !== '' ? ruleForm.epedName : '--'}}</div>
                 </el-form-item>
                 <el-form-item prop="inNum" class="lar-box">
                   <div class="lar-box-h4">内部编号<i class="must-fill-icon"></i></div>
                   <div class="lar-box-el-input" v-if="submitState == 'put'">
-                    <el-input v-model="ruleForm.inNum" placeholder="请输入防疫点内部编号" size="small"></el-input>
+                    <el-input v-model="ruleForm.inNum" maxlength="100" placeholder="请输入防疫点内部编号" size="small"></el-input>
                   </div>
                   <div class="show-pp" v-else>{{ruleForm.inNum !== '' ? ruleForm.inNum : '--'}}</div>
                 </el-form-item>
@@ -72,7 +72,7 @@
                 <el-form-item prop="address" class="lar-box">
                   <div class="lar-box-h4">详细地址<i class="must-fill-icon"></i></div>
                   <div class="lar-box-el-input" v-if="submitState == 'put'">
-                    <el-input v-model="ruleForm.address" size="small" id="address" placeholder="请输入详细地址"></el-input>
+                    <el-input v-model="ruleForm.address" maxlength="100" size="small" id="address" placeholder="请输入详细地址"></el-input>
                   </div>
                   <div class="show-pp" v-else>{{ruleForm.address !== '' ? ruleForm.address : '--'}}</div>
                 </el-form-item>
@@ -102,7 +102,7 @@
                 <div class="ddcarea-item">
                   <div class="ddcarea-item-label"><span class="dia-citem-label-must">*</span>检测区域名称</div>
                   <div class="ddcarea-item-input">
-                    <el-input v-model="item.pointName" size="small"></el-input>
+                    <el-input v-model="item.pointName" maxlength="50" size="small"></el-input>
                   </div>
                 </div>
                 <div class="ddcarea-item">
@@ -211,7 +211,7 @@
             <div class="dia-citem">
               <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测区域名称</div>
               <div class="dia-citem-ib">
-                <el-input v-model="ruleFormCheckPoint.pointName" size="small" placeholder="请选择部件"></el-input>
+                <el-input v-model="ruleFormCheckPoint.pointName" maxlength="50" size="small" placeholder="请选择部件"></el-input>
               </div>
             </div>
             <div class="dia-citem">
@@ -260,7 +260,7 @@
             <div class="dia-citem">
               <div class="dia-citem-label"><span class="dia-citem-label-must" v-if="checkPointDetailState == 'put'">*</span>检测区域名称</div>
               <div class="dia-citem-ib" v-if="checkPointDetailState == 'put'">
-                <el-input v-model="ruleFormCheckPointDetail.pointName" size="small" placeholder="请选择部件"></el-input>
+                <el-input v-model="ruleFormCheckPointDetail.pointName" maxlength="50" size="small" placeholder="请选择部件"></el-input>
               </div>
               <div class="cpd-pp" v-else>{{ruleFormCheckPointDetail.pointName !== '' ? ruleFormCheckPointDetail.pointName : '--'}}</div>
             </div>
@@ -768,15 +768,22 @@ export default {
       }
 
       api.digital.editEpidemicMonitor(param).then(res => {
-        console.log('编辑保存成功')
-        this.dialogCheckPointDetail = false
-        this.getDigitalDetail()
+        if (res.data.code == 200) {
+          this.$message.success('保存成功')
+          this.dialogCheckPointDetail = false
+          this.getDigitalDetail()
+        } else {
+          this.$message.error(res.data.message)
+        }
+        
       })
     },
 
     // 提交
     submit() {
       let that = this
+      let flag = true
+      let flagMsg = ''
       this.$refs.laForm.validate(valid => {
         if (valid) {
           let lng = this.special.lng || ''
@@ -830,6 +837,10 @@ export default {
                   }
                   api.digital.editEpidemicMonitor(param).then(res => {
                     console.log('编辑成功', i, res.data)
+                    if (res.data.code != 200) {
+                      flag = false
+                      flagMsg = res.data.message
+                    }
                   })
                 } else {
                   // 新增
@@ -840,6 +851,10 @@ export default {
                   }
                   api.digital.addEpidemicMonitor(param).then(res => {
                     console.log('新增成功', i, res.data)
+                    if (res.data.code != 200) {
+                      flag = false
+                      flagMsg = res.data.message
+                    }
                   })
                 }
               })
@@ -856,7 +871,7 @@ export default {
 
             // 跳转
             setTimeout(() => {
-              if (res.data.code == 200) {
+              if (res.data.code == 200 && flag) {
                 this.$message.success('编辑成功')
                 this.$router.push({
                   path: '/digital-detail',
@@ -868,10 +883,14 @@ export default {
                 this.getDigitalDetail()
                 
               } else {
-                this.$message.error(res.data.message)
+                if (flagMsg) {
+                  this.$message.error(flagMsg)
+                } else {
+                  this.$message.error(res.data.message)
+                }
               }
               
-            }, 300)
+            }, 500)
             
           })
           

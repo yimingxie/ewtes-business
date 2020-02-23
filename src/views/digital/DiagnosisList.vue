@@ -416,7 +416,7 @@ export default {
             console.log('添加成功', res.data)
             if (res.data.code == 200) {
               this.$message.success('添加成功')
-              this.dialogAddDiagn = false
+              this.closeDialogDiagn()
               this.getDiagnList()
             } else {
               this.$message.error(res.data.message)
@@ -432,6 +432,8 @@ export default {
 
     // 打开编辑监测应用弹窗
     openDialogEditDiagn(id) {
+      this.getObservTaskOptions()
+
       api.digital.getDiagnosis(id).then(res => {
         console.log('res查看', res.data)
         let diagnInfo = res.data.data
@@ -469,7 +471,7 @@ export default {
             console.log('编辑成功', res.data)
             if (res.data.code == 200) {
               this.$message.success('编辑成功')
-              this.dialogAddDiagn = false
+              this.closeDialogDiagn()
               this.currentDiagnId = ''
               this.getDiagnList()
             } else {
@@ -504,10 +506,17 @@ export default {
       }
       api.digital.deleteDiagnosis(param).then(res => {
         console.log('删除成功', res.data)
-        this.$message.success('删除成功')
-        this.dialogDeleteDiagn = false
-        this.checkedLifts = []
-        this.getDiagnList()
+        if (res.data.code == 200) {
+          this.$message.success('删除成功')
+          this.dialogDeleteDiagn = false
+          this.checkedAll = false
+          this.checkedLifts = []
+          this.getDiagnList()
+        } else {
+          this.$message.error(res.data.message)
+          this.dialogDeleteDiagn = false
+        }
+        
       })
     },
 
