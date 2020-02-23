@@ -129,7 +129,7 @@ export default {
 
   // 异常档案列表
   getAbnormalList(params) {
-    return http.get(`${url1}/ewtes/business/epidemic/abnormal`, params)
+    return http.post(`${url1}/ewtes/business/epidemic/abnormal`, params)
   },
 
   // 编辑防疫点所属上级列表

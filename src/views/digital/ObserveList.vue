@@ -57,7 +57,7 @@
               <div class="llt-th">观察任务名称</div>
               <div class="llt-th">检测区域</div>
               <div class="llt-th">观察数据类型</div>
-              <div class="llt-th">操作</div>
+              <!-- <div class="llt-th">操作</div> -->
             </div>
           </div>
 
@@ -74,9 +74,9 @@
                 <div class="llt-td">{{item.observedName}}</div>
                 <div class="llt-td">{{item.pointName}}</div>
                 <div class="llt-td">{{item.pointData | returnPointDataCN}}</div>
-                <div class="llt-td">
+                <!-- <div class="llt-td">
                   <span class="llt-td-a" @click="openDialogEditObserve(item.observedId)">编辑</span>
-                </div>
+                </div> -->
               </div>
             </div>
 
@@ -353,13 +353,15 @@ export default {
 
     // 打开添加观察任务弹窗
     openDialogAddObserve() {
+      // 获取下拉
+      this.getObservePointOptions()
       this.dialogAddObserveTitle = '添加观察任务'
 
       this.ruleFormAddObserve = {
         "observedName": "",
         "pointId": "",   
         "epedId": this.parentCode, 
-        "pointData": "" // 1.身份证+温度 2.人脸+温度 3.人脸+温度+身份证
+        "pointData": "", // 1.身份证+温度 2.人脸+温度 3.人脸+温度+身份证
       },
       this.dialogAddObserve = true
     },
@@ -400,10 +402,15 @@ export default {
             "pointData": this.ruleFormAddObserve.pointData
           }
           api.digital.addObserve(param).then(res => {
-            console.log('添加成功？', res.data)
-            this.$message.success('添加成功')
-            this.dialogAddObserve = false
-            this.getObList()
+            console.log('添加成功', res.data)
+            if (res.data.code == 200) {
+              this.$message.success('添加成功')
+              this.dialogAddObserve = false
+              this.getObList()
+            } else {
+              this.$message.error(res.data.message)
+            }
+            
           })
 
         }
@@ -443,11 +450,14 @@ export default {
             "pointData": this.ruleFormAddObserve.pointData   
           }
           api.digital.editObserve(param).then(res => {
-            this.$message.success('编辑成功')
-            this.dialogAddObserve = false
-            this.getObList()
+            if (res.data.code == 200) {
+              this.$message.success('编辑成功')
+              this.dialogAddObserve = false
+              this.getObList()
+            } else {
+              this.$message.error(res.data.message)
+            }
           })
-
         }
       })
       
@@ -500,17 +510,17 @@ export default {
     text-overflow: clip;
   }
   .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
-    width 22%;
+    width 35%;
   }
   .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
-    width 25%;
+    width 32%;
   }
   .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
-    width 33%;
+    width 29%;
   }
-  .llt-thead .llt-th:nth-child(5),.llt-tbody .llt-td:nth-child(5){
-    width 16%;
-  }
+  // .llt-thead .llt-th:nth-child(5),.llt-tbody .llt-td:nth-child(5){
+  //   width 16%;
+  // }
 
 }
 

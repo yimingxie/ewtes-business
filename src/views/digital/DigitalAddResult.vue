@@ -92,13 +92,13 @@
               <div class="dd-checkArea-box" v-for="(item, i) in checkPoint" :key="i">
                 <div class="dd-checkArea-box-close" @click="checkPointDelete(i)"></div>
                 <div class="ddcarea-item">
-                  <div class="ddcarea-item-label">检测区域名称</div>
+                  <div class="ddcarea-item-label"><span class="dia-citem-label-must">*</span>检测区域名称</div>
                   <div class="ddcarea-item-input">
                     <el-input v-model="item.pointName" size="small"></el-input>
                   </div>
                 </div>
                 <div class="ddcarea-item">
-                  <div class="ddcarea-item-label">可测量数据</div>
+                  <div class="ddcarea-item-label"><span class="dia-citem-label-must">*</span>可测量数据</div>
                   <div class="ddcarea-item-input">
                     <!-- <el-select v-model="item.pointData" placeholder="请选择可测量数据" size="small" style="width: 100%;">
                       <el-option v-for="selectItem in pointDataOptions" :key="selectItem.value" :label="selectItem.label" :value="selectItem.value"></el-option>
@@ -154,13 +154,13 @@
         <el-form :model="ruleFormCheckPoint" :rules="rulesCheckPoint" ref="checkPointRef" class="diaForm">
           <div class="dia-clist">
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>部件：</div>
+              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测区域名称</div>
               <div class="dia-citem-ib">
                 <el-input v-model="ruleFormCheckPoint.pointName" size="small" placeholder="请输入部件名称"></el-input>
               </div>
             </div>
             <div class="dia-citem">
-              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>可测量数据：</div>
+              <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>可测量数据（多选）</div>
               <div class="dia-citem-ib">
                 <!-- <el-select v-model="ruleFormCheckPoint.pointData" placeholder="请选择可测量数据" size="small" style="width: 100%;">
                   <el-option v-for="item in pointDataOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>

@@ -25,8 +25,9 @@ export default {
   data() {
     
     return {
-      valueMonth: this.valueMonthParent,
-      valueYear:this.value
+      // valueMonth: this.valueMonthParent,
+      valueMonth: this.value,
+      valueYear: this.valueMonthParent
     }
   },
 
@@ -84,7 +85,7 @@ export default {
 .year-month-picker .el-input__icon{
   line-height: 22px !important;
   height: 22px !important;
-  background: rgb(26,27,31) !important;
+  // background: rgb(26,27,31) !important;
   margin-top: 1px !important;
   
 }
@@ -141,7 +142,7 @@ export default {
     right 4px;
     width 24px;
     height 22px;
-    background url('../assets/imagesPark/xym/calendar.png') no-repeat center center;
+    background url('../assets/images/xym/calendar.png') no-repeat center center;
     // background red;
     background-size 12px;
   }
