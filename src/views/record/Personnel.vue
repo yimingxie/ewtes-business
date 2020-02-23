@@ -15,8 +15,15 @@
           </el-option>
         </el-select>
 
-        <!-- <span class="splitLine">|</span> -->
-  
+        <span class="splitLine">|</span>
+        <el-select @change="depSelectChange()" clearable v-model="queryParam.departmentId" placeholder="全部部门" class="regionPicker">
+          <el-option
+            v-for="item in depLists"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
         <!-- <el-select @change="dotSelectChange()" clearable v-model="queryParam.epedId" placeholder="请选择防疫点" class="regionPicker">
           <el-option
             v-for="item in getAllDotJson"
@@ -91,7 +98,7 @@
                     <div class="stf_department">{{account.phone}}</div>
                     <div class="stf_wendu">
                       <span style="margin-right:20px">{{account.lastTemperature ? account.lastTemperature : '--'}}℃</span>
-                      <!-- <span>{{account.lastEpedId}}</span> -->
+                      <span>{{account.epedName ? account.epedName : '--'}}</span>
                     </div>
                     <!-- <div class="stf_p stf_phone">{{account.username}}</div> -->
                     <div class="stf_p stf_area">{{account.corpName}}</div>
@@ -386,7 +393,9 @@ export default {
       props: {
         value: 'label',
         children: 'cities'
-      }
+      },
+      depLists:[],
+
     }
   },
   components: {
@@ -408,18 +417,32 @@ export default {
     }
   },
   mounted() {
-    // this.getAllRoleData()
-    this.getCorps()
+    
     // 所有员工列表
     this.getAllAccountData()
-    // 所有部门列表
-    // this.getAllDepartmentData()
-    // 加载省市下拉选项
-    // this.regionOptions = newArea.newAreaOption()
-    // 防疫区域列表
-    this.getDots()
+    // 获取员工部门
+    this.getStaffDeps()
+    // 获取单位列表
+    this.getCorps()
   },
   methods: {
+    // 获取员工部门
+    getStaffDeps(){
+      api.accountApi.getStaffDeps().then((res) => {
+        if(res.data.code == 200) {
+          this.depLists = res.data.data || []
+        }
+      })
+    },
+    // 筛选部门
+    depSelectChange(){
+      if(this.queryParam.departmentId !== '') {
+        this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
+      }
+      // 筛选时默认跳到第一页
+      this.queryParam.offset = 0
+      this.getAllAccountData()
+    },
     loadNode1(node, resolve) {
       this.getAllDepartmentData(node,resolve)
     },

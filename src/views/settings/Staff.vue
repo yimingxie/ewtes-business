@@ -46,9 +46,9 @@
             </el-tree>
           </el-dropdown-menu>
         </el-dropdown> -->
-        <el-select @change="corpSelectChange()" clearable v-model="queryParam.departmentId" placeholder="全部部门" class="regionPicker">
+        <el-select @change="depSelectChange()" clearable v-model="queryParam.departmentId" placeholder="全部部门" class="regionPicker">
           <el-option
-            v-for="item in corpLists"
+            v-for="item in depLists"
             :key="item"
             :label="item"
             :value="item">
@@ -144,7 +144,7 @@
       <el-row :gutter="78">
         <el-col :span="12">
           <el-form-item label="姓名" prop="name">
-            <el-input v-model="addAccountForm.name" placeholder="请输入姓名" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input v-model="addAccountForm.name" placeholder="请输入姓名" auto-complete="off" clearable size="small" ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -584,7 +584,7 @@ export default {
         // ],
         name: [
           { required: true, message: '请输入真实姓名', trigger: 'blur' },
-          { max: 20, message: '真实姓名字符长度过长，请控制在20位字符以内', trigger: 'blur' },
+          // { max: 20, message: '真实姓名字符长度过长，请控制在20位字符以内', trigger: 'blur' },
         ],
         idType: [
           {required: true, message: '请选择身份证类型', trigger: 'change' }
@@ -642,7 +642,7 @@ export default {
       dialogBatchResult: false,
       checkDepName:'',
       checkDepName1:'',
-      corpLists:[],
+      depLists:[],
 
     }
   },
@@ -672,12 +672,13 @@ export default {
     getStaffDeps(){
       api.accountApi.getStaffDeps().then((res) => {
         if(res.data.code == 200) {
-          this.corpLists = res.data.data || []
+          this.depLists = res.data.data || []
         }
       })
     },
-    // 筛选防疫点
-    corpSelectChange(){
+
+    // 筛选部门
+    depSelectChange(){
       if(this.queryParam.departmentId !== '') {
         this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
       }
@@ -685,43 +686,20 @@ export default {
       this.queryParam.offset = 0
       this.getAllAccountData()
     },
-  //   UpperString(){
-  //     console.log("this.addAccountForm.idCard===" + this.addAccountForm.idCard)
-  // 　　if(this.addAccountForm.idCardue !== ''){
-  //   　　this.addAccountForm.idCardue = this.addAccountForm.idCard.toUpperCase();
-  // 　　}
-  // console.log("this.addAccountForm.idCard===" + this.addAccountForm.idCard)
-  //   },
+
     // 添加员工
     handleLeftclick(data, node) {
       console.log("data" + JSON.stringify(data))
       this.checkDepName = data.name
       this.addAccountForm.departmentId = data.id
     },
+
     // 懒加载
     loadNode1(node, resolve) {
       this.resolve = resolve
       this.getAllDepartmentData(node,resolve)
-      // api.accountApi.getDepartments('corp').then((res) => {
-      //   if(res.data.code === 200 && res.data.message === 'success'){
-
-      //   }
-      // })
     },
-    // 查询所有部门
-    getAllDepartmentData(node,resolve){
-      console.log("222===" + node)
-      api.accountApi.getDepartments(node.level && node.level !== 0 ?  node.data.id :'corp').then((res) => {
-        if(res.data.code === 200 && res.data.message === 'success'){
-          this.getAllDepJson = res.data.data || []
-          resolve(this.getAllDepJson);
-        } else {
-          this.getAllDepJson = []
-        }
-        
-      }).catch((res) => {
-      })
-    },
+    
     // 筛选部门
     handleLeftclick1(data, Node) {
       console.log("data" + Node.level)
@@ -825,6 +803,7 @@ export default {
       }
       this.dialogDelete = true
     },
+
     // 删除员工账号
     deleteStaff(index, row){
       api.accountApi.deleteStaff(this.multipleSelection).then((res) => {
@@ -840,6 +819,7 @@ export default {
       })
       
     },
+
     // 多选框勾选
     handleSelectionChange(val) {
         
@@ -894,17 +874,7 @@ export default {
         if(res.data.code === 200 && res.data.message === 'success'){
           this.getAllAccountJson = res.data.data.records
           this.totalPageSize = res.data.data.total
-          // for(var i = 0; i < this.getAllAccountJson.length; i++){
-            
-          //   // console.log("aaaaaaaaaaaaa===" + this.rolesJson.length)
-          //   for(var j =0 ;j < this.rolesJson.length;j++){
-          //     // jsonArr[j] = this.rolesJson[j].name;
-          //     if(this.getAllAccountJson[i].roleId === this.rolesJson[j].id){
-          //       // console.log("1111===" + JSON.stringify(this.getAllAccountJson))
-          //       this.$set(this.getAllAccountJson[i],'roleName',this.rolesJson[j].name)
-          //     }
-          //   }
-          // }
+          
           
 
         } else {
@@ -915,38 +885,7 @@ export default {
       }).catch((res) => {
         
       })
-      // api.log.getAllAccount(this.currentPage,this.pageSize).then((res) => {
-        //   if(res.data.success){
-            
-        //     this.getAllAccountJson = res.data.result.records
-        //     this.totalPageSize = res.data.result.total
-        //     // 遍历所有账户，查询其角色
-        //     this.getAllAccountJson.forEach((item) => {
-
-        //       // console.log('iddddddddddddddddddddd=======' + item.id)
-        //       // this.rolesJson.forEach((item2) => {
-        //           // console.log('rolesJson=======' + this.rolesJson)
-
-        //         var roleNames = ''
-        //         var roleIds = []
-        //         api.log.getAccount_Role(item.id).then((res1) => {
-        //           if(res1.data.result){
-        //             for(var i = 0; i<res1.data.result.length ; i++){
-        //               roleNames = res1.data.result[i].name + " </br> " + roleNames
-        //               roleIds.push(res1.data.result[i].id)
-        //             }
-        //           }
-                  
-        //           Vue.set(item, 'roleName', roleNames)
-        //           Vue.set(item, 'roleIds', roleIds)
-        //         })
-                
-        //       // })
-        //     })
-        //   }
-        // }).catch((res) => {
-        
-      // })
+     
     },
     // 打开重置密码弹窗
     openResetPasswordDialog(account){
@@ -1206,9 +1145,14 @@ export default {
               // api.accountApi.accountBindRole(this.bindRoleForm).then((res) => {
               //   if (res.data.code === 200) {
               this.$message.success('创建成功！');
+              
+              // 员工列表
               this.getAllAccountData()
+
               this.add_dialogFormVisible = false
-                
+
+              // 部门列表
+              this.getStaffDeps()
               //   }
               // }).catch((res) => {
               //   this.$message.error(res.data.message);

@@ -18,7 +18,8 @@
         <div class="panel topPanel " :class="{'highlightDiv hightLight' : 1 == getStaffInfo.warnStatus}">
           <!-- <el-avatar shape="square" :size="210" :fit="fits" :src="url" class="s_pic" style=""></el-avatar> -->
           <div class="s_pic" style="">
-            <img :src="url"  alt="" width="190" height="190"/>
+            <img v-if="url" :src="url"  alt="" width="190" height="190"/>
+            <img v-else src="../../assets/images/hs/header.png"  alt="" width="190" height="190"/>
           </div>
           <div class="s_contain">
             <!-- <router-link :to="{ name: 'editStaff', params: { staffId: this.$route.params.staffId }}"><span class="s_de_edit" ></span></router-link> -->
@@ -35,7 +36,7 @@
                   <!-- <td><span class="tie" style="font-size: 38px;color: #3572FF;">36.8<span style="font-size: 16px;color: color: #173000;">℃</span></span></td> -->
                   <td><span class="tie">手机号码：</span><span >{{getStaffInfo.phone}}</span></td>
                   <td><span class="tie">出生日期：</span>
-                    <span v-if="getStaffInfo.birthday">{{ getStaffInfo.birthday | dateformat(dateFormat)}} &nbsp;{{ birthdayFrom}}</span>
+                    <span v-if="getStaffInfo.birthday">{{ getStaffInfo.birthday.substring(0,4)+'-'+getStaffInfo.birthday.substring(4,6)+'-'+getStaffInfo.birthday.substring(6,8)}}</span>
                     <span v-else>--</span>
                   </td>
                   <td><span class="tie">身份证号：</span><span>{{getStaffInfo.idCard}}</span></td>
