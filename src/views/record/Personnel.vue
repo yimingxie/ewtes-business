@@ -15,34 +15,17 @@
           </el-option>
         </el-select>
 
-        <span class="splitLine">|</span>
+        <!-- <span class="splitLine">|</span> -->
   
-        <!-- <el-select @change="depSelectChange()" clearable v-model="queryParam.depId" placeholder="全部部门" class="regionPicker">
-          <el-option
-            v-for="item in getAllDepJson"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select> -->
-        <!-- <el-cascader
-          :options="options2"
-          @active-item-change="handleItemChange"
-          :props="props"
-        ></el-cascader>
-        <span class="splitLine">|</span> -->
-
-        <el-select @change="dotSelectChange()" clearable v-model="queryParam.epedId" placeholder="请选择防疫点" class="regionPicker">
+        <!-- <el-select @change="dotSelectChange()" clearable v-model="queryParam.epedId" placeholder="请选择防疫点" class="regionPicker">
           <el-option
             v-for="item in getAllDotJson"
             :key="item.epedId"
             :label="item.epedName"
             :value="item.epedId">
           </el-option>
-        </el-select>
-        <!-- <radio-group :items="periods" :value.sync="period">
-          <span slot="label">作业状态：</span>
-        </radio-group> -->
+        </el-select> -->
+     
         <span class="splitLine">|</span>
         <radio-group :items="periods1" :value.sync="period1">
           <span slot="label">人员状态：</span>

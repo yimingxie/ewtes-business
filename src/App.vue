@@ -7,7 +7,7 @@
     <div class="page-container-lay">
       
     </div>
-    <div id="page-container-layout" class=" ant-layout-has-sider" :key="appKey">
+    <div id="page-container-layout" class="ant-layout-has-sider" :key="appKey" style="position:relative">
 
       <!-- Start: 菜单栏 -->
       
@@ -340,12 +340,8 @@
 
   .ant-layout {
     box-sizing: border-box;
-    // display: flex;
-    // flex: auto;
-    // flex-direction: column;
     background: #F5F7FD;
-    // bg_color_submain("")
-    height: calc(100vh);
+    min-height: calc(100vh);
     position: relative;
     width 100%
     padding-left 120px

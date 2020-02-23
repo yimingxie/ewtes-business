@@ -271,6 +271,7 @@
 <style lang="stylus">
 @import '../../assets/stylus/utilities'
 #login
+  position absolute
   background #4272FF
   size 100%
   display: flex;
@@ -282,7 +283,7 @@
   .loginRight
     absolute bottom 0 right 0
   .loginBrand
-    absolute bottom 40px right 40px
+    absolute bottom 40px 
     display inline-block
     width: 293px;
     height: 18px;

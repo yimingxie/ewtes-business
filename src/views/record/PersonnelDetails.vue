@@ -196,8 +196,8 @@
             
             </span>
             <span class="detailsSpan">
-              <el-form-item label="所属单位" prop="account">
-                <span class="formShowContent">{{detailsList.corpName}}</span>
+              <el-form-item label="检测区域" prop="pointName">
+                <span class="formShowContent">{{detailsList.pointName}}</span>
               </el-form-item>
             
               <el-form-item label="是否为高危地点" prop="gender">
@@ -370,6 +370,7 @@ export default {
       this.staffMLiftParam.epedId = row.epedId
       this.staffMLiftParam.pointId = row.epedId
       this.staffMLiftParam.date = row.time
+      this.staffMLiftParam.pointName = row.pointName
       this.getStaffManageLift()
       this.checkDetailsDialog = true
 

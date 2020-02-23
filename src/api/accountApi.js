@@ -264,6 +264,17 @@ export default  {
     return http.delete(
       `${url2}/user`,params
     )
+  },
+  staffDetail(id){
+    return http.get(
+      `${url2}/staff?id=${id}`
+    )
+  },
+  // 获取员工部门
+  getStaffDeps(){
+    return http.get(
+      `${url2}/staff/department/list`
+    )
   }
 }
 
