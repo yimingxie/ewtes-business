@@ -211,12 +211,12 @@ if (process.env.NODE_ENV == 'development') {
   devURL = `${protocol}//192.168.100.2`
   xiaohuURL = `${protocol}//192.168.100.89:8080`
   shupingURL = `${protocol}//192.168.100.8:8080`
-  localURL = `${protocol}//192.168.100.8:8080`
-  // localURL = `${protocol}//192.168.100.17:8081`
+  // localURL = `${protocol}//192.168.100.8:8080`
+  localURL = `${protocol}//192.168.100.17:8081`
   // localURL = `${protocol}//iot.gidomino.com`
   // localURL = `${protocol}//192.168.100.3`
   // localURL = `${protocol}//192.168.100.17:8081`
-  localURL = `${protocol}//192.168.100.8:8080`
+  // localURL = `${protocol}//192.168.100.8:8080`
   // localURL = `${protocol}//192.168.100.89:8080`
   // localURL = `${protocol}//lorns.gidomino.com`
 } else if (process.env.NODE_ENV == 'production') {

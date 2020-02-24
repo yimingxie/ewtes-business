@@ -46,7 +46,7 @@
             </el-tree>
           </el-dropdown-menu>
         </el-dropdown> -->
-        <el-select @change="depSelectChange()" clearable v-model="queryParam.departmentId" placeholder="全部部门" class="regionPicker">
+        <el-select @change="depSelectChange()" clearable v-model="queryParam.departmentName" placeholder="全部部门" class="regionPicker">
           <el-option
             v-for="item in depLists"
             :key="item"
@@ -92,7 +92,7 @@
           
           <el-table-column  label="部门">
             <template slot-scope="scope">
-              <span v-html="scope.row.departmentId ? scope.row.departmentId: '--'" ></span>
+              <span v-html="scope.row.departmentName ? scope.row.departmentName: '--'" ></span>
             </template>
           </el-table-column>
           
@@ -164,8 +164,8 @@
         </el-col>
 
         <el-col :span="12">
-          <el-form-item label="所属部门" prop="departmentId" >
-            <el-input v-model="addAccountForm.departmentId" placeholder="请输入所属部门" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+          <el-form-item label="所属部门" prop="departmentName" >
+            <el-input v-model="addAccountForm.departmentName" placeholder="请输入所属部门" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -217,9 +217,9 @@
   </el-dialog>
   <!--添加员工  弹窗 End -->
 
-  <!-- 编辑员工  弹窗  Start -->
+  <!-- 员工详情  弹窗  Start -->
   <el-dialog  width="700px" title="员工详情" :visible.sync="edit_dialogFormVisible" custom-class="addAccount" @closed="editDialogClose">
-    <el-form :model="EditAccountForm" :label-width="formLabelWidth" ref="editForm" label-position="top" class="detailDialog">
+    <el-form :model="EditAccountForm" :label-width="formLabelWidth" label-position="top" class="detailDialog">
       
       <el-row :gutter="18">
         <el-col :span="12">
@@ -229,7 +229,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="性别" prop="sex">
-            <span class="formShowContent">{{EditAccountForm.sex}}</span>
+            <span class="formShowContent">{{EditAccountForm.sex == 1 ? '男':"女"}}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -248,14 +248,14 @@
 
       <el-row :gutter="18">
         <el-col :span="12">
-          <el-form-item label="所属部门" prop="departmentId" >
-            <span class="formShowContent">{{EditAccountForm.departmentId && EditAccountForm.departmentId !== '' ? EditAccountForm.departmentId : '--'}}</span>
+          <el-form-item label="所属部门" prop="departmentName" >
+            <span class="formShowContent">{{EditAccountForm.departmentName && EditAccountForm.departmentName !== '' ? EditAccountForm.departmentName : '--'}}</span>
           </el-form-item>
           
         </el-col>
         <el-col :span="12">
           <el-form-item label="身份证类型" prop="idType" >
-            <span class="formShowContent">{{EditAccountForm.idType}}</span>
+            <span class="formShowContent">{{EditAccountForm.idType == 1 ? '完整': '简要'}}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -276,13 +276,93 @@
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer tar">
-      <!-- <span @click="edit_dialogFormVisible = false" class="dialogCancel">取 消</span> -->
-      <el-button type="primary" @click="edit_dialogFormVisible = false" class="dialogSure">确 认</el-button>
+      <span @click="edit_dialogFormVisible = false;edit1_dialogFormVisible = true" class="dialogCancel">编 辑</span>
+      <el-button type="primary" @click="edit_dialogFormVisible = false" class="dialogSure">关 闭</el-button>
       <!-- <el-button type="primary" @click="confirmEdit" class="dialogSure">确 认</el-button> -->
 
     </div>
   </el-dialog>
-  <!-- 编辑账号 弹窗 End -->
+  <!-- 员工详情 弹窗 End -->
+
+  <!-- 编辑员工  弹窗  Start -->
+  <el-dialog width="700px" title="编辑员工" :visible.sync="edit1_dialogFormVisible">
+    <el-form :model="Edit1AccountForm" :label-width="formLabelWidth" :rules="addAccountRules" ref="editForm" label-position="top">
+      <el-row :gutter="78">
+        <el-col :span="12">
+          <el-form-item label="姓名" prop="name">
+            <el-input v-model="Edit1AccountForm.name" placeholder="请输入姓名" auto-complete="off" clearable size="small" ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="性别" prop="sex">
+            <el-radio-group v-model="Edit1AccountForm.sex">
+              <el-radio :label="1">男</el-radio>
+              <el-radio :label="0">女</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="78">
+        <el-col :span="12">
+          <el-form-item label="手机号" prop="phone">
+            <el-input v-model="Edit1AccountForm.phone" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="12">
+          <el-form-item label="所属部门" prop="departmentName" >
+            <el-input v-model="Edit1AccountForm.departmentName" placeholder="请输入所属部门" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="78">
+        <el-col :span="12">
+          <!-- {{Edit1AccountForm.idType}} -->
+          <el-form-item label="身份证类型" prop="idType">
+            <el-select v-model="Edit1AccountForm.idType" placeholder="请选择身份证类型" size="small">
+              <el-option
+                v-for="item in shenfen"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-if="Edit1AccountForm.idType == 1">
+          <el-form-item label="身份证号" prop="idCard" >
+            <el-input v-model="Edit1AccountForm.idCard" placeholder="请输入身份证号" auto-complete="off" clearable size="small" minlength="18" maxlength="18"></el-input>
+          </el-form-item>
+           
+        </el-col>
+        <el-col :span="12" v-if="Edit1AccountForm.idType == 2">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="身份证号" prop="idCardPre">
+                  <el-input v-model="Edit1AccountForm.idCardPre" placeholder="前六位" auto-complete="off" clearable size="small" required minlength="6" maxlength="6"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12" style="margin-top:42px">
+                <el-form-item label="" prop="idCardAfter">
+                  <el-input v-model="Edit1AccountForm.idCardAfter" placeholder="后六位" auto-complete="off" clearable size="small" required minlength="6" maxlength="6"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+        </el-col>
+      
+      </el-row>
+      
+      
+      
+    </el-form>
+    <div slot="footer"  class="dialog-footer tar">
+      <span @click="edit1_dialogFormVisible = false" class="dialogCancel">取 消</span>
+      <el-button type="primary" @click="confirmEdit()" class="dialogSure">确 认</el-button>
+
+    </div>
+  </el-dialog>
+  <!--编辑员工  弹窗 End -->
 
   <!-- 重置密码对话框 -->
   <el-dialog custom-class="noneTitle" :show-close="false" :visible.sync="resetPasswordDialogVisoble">
@@ -510,7 +590,7 @@ export default {
       addAccountForm: {
         phone: '',
         name:'',
-        departmentId:'',
+        departmentName:'',
         sex:1,
         idType: 1,
         idCard: "",
@@ -520,7 +600,8 @@ export default {
       },
       // idCardPre:'',
       // idCardAfter:'',
-      edit_dialogFormVisible: false,
+      edit_dialogFormVisible: false, // 查看详情
+      edit1_dialogFormVisible: false, // 编辑
       EditAccountForm: {
         phone: '',
         name:'',
@@ -530,6 +611,7 @@ export default {
         idCard: "",
         corpName:''
       },
+      Edit1AccountForm:{},
       query:'',
       searchKey:'',
       queryTypeOptions: [
@@ -545,7 +627,7 @@ export default {
       queryParam:{
         offset:1,
         limit:10,
-        departmentId: "",
+        departmentName: "",
         search: ""
       },
       getAllAccountJson: [],
@@ -643,7 +725,7 @@ export default {
       checkDepName:'',
       checkDepName1:'',
       depLists:[],
-
+      
     }
   },
   components: {
@@ -679,7 +761,7 @@ export default {
 
     // 筛选部门
     depSelectChange(){
-      if(this.queryParam.departmentId !== '') {
+      if(this.queryParam.departmentName !== '') {
         this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
       }
       // 筛选时默认跳到第一页
@@ -691,7 +773,7 @@ export default {
     handleLeftclick(data, node) {
       console.log("data" + JSON.stringify(data))
       this.checkDepName = data.name
-      this.addAccountForm.departmentId = data.id
+      this.addAccountForm.departmentName = data.id
     },
 
     // 懒加载
@@ -704,7 +786,7 @@ export default {
     handleLeftclick1(data, Node) {
       console.log("data" + Node.level)
       this.checkDepName1 = data.name
-      this.queryParam.departmentId = Node.level == 1 ? '': data.id
+      this.queryParam.departmentName = Node.level == 1 ? '': data.id
       this.getAllAccountData()
     },
     
@@ -833,41 +915,9 @@ export default {
         // this.selectData[Number(this.mParam.offset-1)].push(index)
       })
 
-      
-      // val.forEach((item, index) => {
-      //   console.log("fdsg==" + Number(this.mParam.offset-1))
-      //   this.selectData[Number(this.mParam.offset-1)].push(index)
-      // })
-
-      // console.log("this.selectData===" + JSON.stringify(this.selectData))
+  
     },
-    // 查询所有部门
-    // getAllDepartmentData(){
-    //   api.accountApi.getDepartments(this.queryDepartParam).then((res) => {
-    //     if(res.data.code === 200 && res.data.message === 'success'){
-    //       this.getAllDepJson = res.data.data.records
-    //       // this.totalPageSize = res.data.data.total
-
-    //     } else {
-    //       this.getAllDepJson = []
-    //     }
-        
-    //     // console.log("res.data.code" + res.data.data.records[0])s
-    //   }).catch((res) => {
-        
-    //   })
-      
-    // },
-    // 根据部门筛选
-    // depSelectChange() {
-    //   if(this.queryParam.depId !== '') {
-    //     this.searchKey = this.queryParam.staffName = this.queryParam.phone = '' // 筛选时清空搜索
-    //   }
-    //   // 筛选时默认跳到第一页
-    //   this.queryParam.offset = 0
-
-    //   this.getAllAccountData()
-    // },
+    
     // 查询所有账户
     getAllAccountData(){
       api.accountApi.getStaffs(this.queryParam).then((res) => {
@@ -928,41 +978,42 @@ export default {
 
     // 关闭编辑弹窗
     editDialogClose () {
-      // console.log("1")
-      this.$refs['editForm'].clearValidate();
-      this.$refs['editForm'].resetFields()
-      // console.log("2")
+      // this.$refs['editForm'].clearValidate();
+      // this.$refs['editForm'].resetFields()
     },
-    // 编辑账号
+    // 查看详情
     editAccount(index, row) {
-      //  phone: '',
-      //   name:'',
-      //   departmentName:'',
-      //   sex:1,
-      //   idType: 1,
-      //   idCard: "",
+      
+      this.EditAccountForm = {}
+      this.Edit1AccountForm = {}
       api.accountApi.staffDetail(row.id).then((res) => {
          if(res.data.code == 200){
+           // 编辑
+            this.Edit1AccountForm = res.data.data
+            // 详情
             this.EditAccountForm = res.data.data
-            this.EditAccountForm.departmentName = row.departmentName || '--'
-            this.EditAccountForm.sex = row.sex  == 1 ? '男':"女"
-            this.EditAccountForm.idType = row.idType == 1 ? '完整': '简要'
+
+            // this.EditAccountForm.departmentName = row.departmentName || '--'
+            // this.EditAccountForm.sex = row.sex  == 1 ? '男':"女"
+            // this.EditAccountForm.idType = row.idType == 1 ? '完整': '简要'
             this.EditAccountForm.birthday = row.birthday ? row.birthday.substring(0, 4)+'-' + row.birthday.substring(4, 6)+'-' +row.birthday.substring(6, 8): '--'
             this.EditAccountForm.age = row.age ? row.age + '岁' : '--'
+            if(this.EditAccountForm.idCard !== '' ){
+              this.EditAccountForm.idCardPre = this.EditAccountForm.idCard.substring(0,6)
+              this.EditAccountForm.idCardAfter = this.EditAccountForm.idCard.substring(12,18)
+            }
+
+            // 编辑
+            this.Edit1AccountForm = res.data.data
+            if(this.Edit1AccountForm.idCard !== '' ) {
+              this.Edit1AccountForm.idCardPre = this.Edit1AccountForm.idCard.substring(0,6)
+              this.Edit1AccountForm.idCardAfter = this.Edit1AccountForm.idCard.substring(12,18)
+            }
+            console.log("this.Edit1AccountForm====111==" + JSON.stringify(row))
          }
+
       })
-      // this.EditAccountForm.id = row.id
-      // this.EditAccountForm.phone = row.phone
-      // this.EditAccountForm.name = row.name
-      // this.EditAccountForm.departmentName = row.departmentName || '--'
-      // this.EditAccountForm.sex = row.sex  == 1 ? '男':"女"
-      // this.EditAccountForm.idType = row.idType == 1 ? '完整': '简要'
-      // this.EditAccountForm.idCard = row.idCard
-      // this.EditAccountForm.corpName = row.corpName
-      // this.EditAccountForm.birthday = row.birthday ? row.birthday.substring(0, 4)+'-' + row.birthday.substring(4, 6)+'-' +row.birthday.substring(6, 8): '--'
-      // this.EditAccountForm.age = row.age ? row.age + '岁'
-      // this.EditAccountForm.phoneNumber = row.phoneNumber
-      // this.edit_roleNameArr = row.roleName.split(',')
+      
       this.edit_dialogFormVisible = true
 
       // // 重置
@@ -976,33 +1027,17 @@ export default {
     confirmEdit(){
       this.$refs['editForm'].validate((valid) => {
         if (valid) {
+          if(this.Edit1AccountForm.idType == 2){
+            this.Edit1AccountForm.idCard = this.Edit1AccountForm.idCardPre + '******' + this.Edit1AccountForm.idCardAfter
+          }
         // 修改账号名
-          api.accountApi.editAccount(this.EditAccountForm).then((res) => {
+          api.accountApi.editAccount(this.Edit1AccountForm).then((res) => {
             
             if(res.data.code == 200){
-              // 超管修改
-              // if (this.adType =='administrator') {
-                this.$message.success(res.data.message);
-                this.getAllAccountData()
-                this.edit_dialogFormVisible = false
-              // }
-              // // 普通管理员修改
-              // else if (this.adType !='administrator') {
-              //   api.accountApi.accountBindRole(this.bindRoleForm).then((res) => {
-
-              //     if (res.data.code === 200) {
-              //       this.$message.success('修改成功！');
-              //       this.edit_dialogFormVisible = false
-              //       this.getAllAccountData()
-              //     } else {
-              //       this.$message.error(res.data.message);
-              //     }
-              //   }).catch((res) => {})
-              //   // this.getAllAccountData()
-              //   // this.edit_dialogFormVisible = false
-                
-              // }
-              // this.getAllAccountData()
+              this.$message.success(res.data.message);
+              this.getAllAccountData()
+              this.edit1_dialogFormVisible = false
+              
             } else {
               if(res.data.message == "无权"){
                 this.$message.error("账号操作权限不足");
@@ -1190,29 +1225,5 @@ export default {
     text-align: center;
     line-height 42px
     padding 0 0 30px 0
-  .treeDep
-    width 100%!important
-    border-radius: 4px!important;
-    border: 1px solid #dcdfe6!important;
-    height: 32px !important;
-    line-height: 32px !important;
-    position relative!important
-    padding: 0 10px!important;
-    overflow: hidden!important;
-    white-space: nowrap!important;
-    text-overflow: ellipsis!important;
-    .el-dropdown-link,.el-dropdown-menu
-      width: 100%!important;
-    .el-dropdown-link
-      display: inline-block!important;
-    .el-icon-arrow-down
-      float: right!important;
-      color: #c0c4cc!important;
-      height: 32px!important;
-      line-height: 29px!important;
-.liftDropdown
-  width 280px
-  .search1 .search_input
-    width: 415px;
-    padding: 0 10px;
+
 </style>

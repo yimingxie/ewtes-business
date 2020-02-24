@@ -33,7 +33,12 @@ export default  {
       `${url2}/user`, params
     )
   },
-
+  // 修改账号
+  editManager(params){
+    return http.put(
+      `${url2}/user`, params
+    )
+  },
   // 根据账户列表模糊查询 仅限account
   getAccounts(params){
     return http.post(
@@ -57,10 +62,10 @@ export default  {
   //     `${url2}/account/pick`, params
   //   )
   // },
-  // 修改用户账号
+  // 修改员工
   editAccount(params){
     return http.put(
-      `${url2}/manage/staff`, params
+      `${url2}/staff`, params
     )
   },
   

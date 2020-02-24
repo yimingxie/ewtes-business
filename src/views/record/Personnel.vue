@@ -16,7 +16,7 @@
         </el-select>
 
         <span class="splitLine">|</span>
-        <el-select @change="depSelectChange()" clearable v-model="queryParam.departmentId" placeholder="全部部门" class="regionPicker">
+        <el-select @change="depSelectChange()" clearable v-model="queryParam.departmentName" placeholder="全部部门" class="regionPicker">
           <el-option
             v-for="item in depLists"
             :key="item"
@@ -96,13 +96,13 @@
                     </span>
                     
                     <div class="stf_department">{{account.phone}}</div>
-                    <div class="stf_wendu">
+                    <div class="stf_wendu" style="width: 100%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: inline-block;vertical-align: middle;">
                       <span style="margin-right:20px">{{account.lastTemperature ? account.lastTemperature : '--'}}℃</span>
-                      <span style="max-width: 70px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: inline-block;vertical-align: middle;">{{account.epedName ? account.epedName : '--'}}</span>
+                      <span style="">{{account.epedName ? account.epedName : '--'}}</span>
                     </div>
                     <!-- <div class="stf_p stf_phone">{{account.username}}</div> -->
                     <div class="stf_p stf_area">{{account.corpName}}</div>
-                    <div class="stf_p stf_liftnum">{{account.departmentId ? account.departmentId : '--'}} </div>
+                    <div class="stf_p stf_liftnum">{{account.departmentName ? account.departmentName : '--'}} </div>
                   </span>
                   <span class="stf_active" :class="{'activeFree' : 1 == account.warnStatus}">
                     <i></i><span v-text="account.warnStatus == 0 ? '正常' : '异常'"></span>
@@ -131,7 +131,7 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-sizes="[1,9, 20, 30]"
+          :page-sizes="[1, 12, 20, 30]"
           :page-size="queryParam.limit"
           :current-page="queryParam.offset"
           layout="prev, pager, next, sizes, jumper"
@@ -318,8 +318,8 @@ export default {
       totalPageSize:0, // 总页数
       queryParam:{
         offset:0,
-        limit:9,
-        departmentId : "",        // 部门ID 
+        limit:12,
+        departmentName : "",        // 部门ID 
         epedId : "",   //防疫点ID
         search : "",   //名字或手机号
         warnStatus:""      //状态
@@ -436,7 +436,7 @@ export default {
     },
     // 筛选部门
     depSelectChange(){
-      if(this.queryParam.departmentId !== '') {
+      if(this.queryParam.departmentName !== '') {
         this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
       }
       // 筛选时默认跳到第一页
