@@ -888,7 +888,7 @@ export default {
     margin 1px 0 7px 0
   .stf_wendu
     font-size: 18px;
-    margin-bottom 16px
+    margin-bottom 6px
   .stf_p
     text-indent 30px
     margin: 12px 0;

@@ -815,7 +815,7 @@ export default {
     tabPeriod(val){
       // this.queryParam.roleId = val
       // this.getAllAccountData()
-      console.log("value====" + value)
+      // console.log("value====" + value)
     },
     period(val){
       this.queryParam.roleId = val

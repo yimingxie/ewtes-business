@@ -59,7 +59,7 @@
           <el-table-column prop="countNum" label="日人流量">
           </el-table-column>
 
-          <el-table-column label="告警数">
+          <el-table-column label="异常人数">
             <template slot-scope="scope">
               <span v-text="scope.row.abnormalNum" style="color: #F56B25;"></span>
             </template>

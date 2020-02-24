@@ -52,13 +52,26 @@
      
       </el-menu>
       <!-- 维保 end -->
-      <!-- <div class="codeDiv">
-        <div class="anzhuo">Android</div>
-        <div class="kuang">
-          扫描二维码下载
+      <div class="codeDiv">
+        <div class="anzhuo">
+          <div class="kuang">
+            扫描二维码下载
+            <div class="appIcon"></div>
+          </div>
+          Android
+          
         </div>
-        <div class="ios" style="color:#999">ios</div>
-      </div> -->
+        
+        <div class="ios" style="color:#999">
+          ios
+          <div class="kuang">
+            <div class="yinying"></div>
+            内测中
+            <div class="appIcon"></div>
+
+          </div>
+        </div>
+      </div>
       
 
       <div class="ant-layout" :style="{'padding-left': layout === 'admin'? '120px':0,'min-height': layout !== 'admin' ?'calc(100vh)' :''}">
@@ -495,8 +508,6 @@
   //     background url('assets/images/hs/submenuIcon/set2.png') no-repeat center;
   //     background-size 12px
     // 设置侧边栏图标 end
-
-
   #contentDiv
     position: absolute;
     top: 0;
@@ -507,6 +518,7 @@
       float: left;
       background: #f0dfdf;
     }
+
   .codeDiv
     background: #FFFFFF;
     box-shadow: 0 -2px 3px 0 rgba(196,203,239,0.39);
@@ -520,21 +532,51 @@
     height 60px
     text-align: center;
     padding: 30px;
+    position relative
   .anzhuo
     background url('assets/images/hs/anzhuo.png') no-repeat center 10px;
     background-size 13px auto
+    &:hover{
+      .kuang{
+        display block
+      }
+    }
   .ios
     background url('assets/images/hs/ios.png') no-repeat center 13px;
     background-size 10px auto
+    &:hover{
+      .kuang{
+        display block
+      }
+    }
   .kuang
-    background: #FFFFFF;
     box-shadow: 0 2px 4px 0 rgba(129,144,213,0.28);
     width 160px
     height 160px
     text-align center
-    background url('assets/images/hs/code.png') no-repeat center 13px;
+    background url('assets/images/hs/code.png') no-repeat center 13px #FFFFFF;
     background-size 100px
-
+    padding-top: 124px;
+    position absolute
+    top: -163px;
+    left: 23px;
+    display none
+    .yinying
+      width 100px
+      height 100px
+      display inline-block
+      background rgba(0,0,0,0.90);
+      position absolute
+      top: 13px;
+      left: 31px; 
+    .appIcon
+      width 26px
+      height 26px
+      position absolute
+      top: 49px;
+      left: 68px; 
+      background url('assets/images/hs/appIcon.png') no-repeat center;
+      background-size 26px
 
 @media screen and (max-width: 1280px) {
   #page-container{
