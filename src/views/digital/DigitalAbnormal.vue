@@ -147,7 +147,7 @@
               </div> -->
               <div class="det-history-tr clearfix" :class="item.result == 1 ? 'warn' : ''" v-for="(item, i) in detailWarnList" :key="i" @click="openDialogDeal(item.id)">
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
-                <div class="det-history-td">{{item.celsius}}℃</div>
+                <div class="det-history-td">{{item.celsius ? item.celsius : '--'}}℃</div>
                 <div class="det-history-td">{{item.time | splitFormatDate}}</div>
                 <div class="det-history-td">{{item.result | returnWarnResult}}</div>
               </div>
@@ -198,15 +198,15 @@
           <div class="det-deal-mid">
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">姓名</div>
-              <div class="det-deal-mid-box-p">{{diaDealInfo.userName}}</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.userName ? diaDealInfo.userName : '--'}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">所属部门</div>
-              <div class="det-deal-mid-box-p">{{diaDealInfo.depaName}}</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.depaName ? diaDealInfo.depaName : '--'}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">位置</div>
-              <div class="det-deal-mid-box-p">{{diaDealInfo.pointName}}</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.pointName ? diaDealInfo.pointName : '--'}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">时间</div>

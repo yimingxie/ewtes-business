@@ -107,7 +107,7 @@ export function returnWarnResult(value) {
   } else if (value == 3) {
     return '解除警告'
   } else {
-    return ''
+    return '--'
   }
 }
 
