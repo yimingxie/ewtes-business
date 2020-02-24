@@ -147,7 +147,7 @@
               </div> -->
               <div class="det-history-tr clearfix" :class="item.result == 1 ? 'warn' : ''" v-for="(item, i) in detailWarnList" :key="i" @click="openDialogDeal(item.id)">
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
-                <div class="det-history-td">{{item.celsius}}℃</div>
+                <div class="det-history-td">{{item.celsius ? item.celsius : '--'}}℃</div>
                 <div class="det-history-td">{{item.time | splitFormatDate}}</div>
                 <div class="det-history-td">{{item.result | returnWarnResult}}</div>
               </div>
@@ -184,7 +184,8 @@
 
           <div class="det-deal-left">
             <div class="det-deal-avator">
-              <img :src="diaDealInfo.url" alt="">
+              <img v-if="diaDealInfo.url" :src="diaDealInfo.url" alt="">
+              <img v-else src="../../assets/images/xym/avatar.png" alt="">
             </div>
             <div class="det-deal-temper">
               <div class="det-deal-temper-h">体温</div>
@@ -197,15 +198,15 @@
           <div class="det-deal-mid">
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">姓名</div>
-              <div class="det-deal-mid-box-p">{{diaDealInfo.userName}}</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.userName ? diaDealInfo.userName : '--'}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">所属部门</div>
-              <div class="det-deal-mid-box-p">{{diaDealInfo.depaName}}</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.depaName ? diaDealInfo.depaName : '--'}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">位置</div>
-              <div class="det-deal-mid-box-p">{{diaDealInfo.pointName}}</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.pointName ? diaDealInfo.pointName : '--'}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">时间</div>
@@ -228,7 +229,7 @@
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">处理描述</div>
               <div class="ddeal-desc" v-if="diaDealState == 'put'">
-                <textarea class="ddeal-desc-textarea" v-model="dealDesc"></textarea>
+                <textarea class="ddeal-desc-textarea" maxlength="200" v-model="dealDesc"></textarea>
               </div>
               <div class="det-deal-mid-box-p" style="line-height: 24px;" v-else>{{diaDealInfo.description}}</div>
             </div>
