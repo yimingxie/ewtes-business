@@ -292,7 +292,7 @@ export default {
     this.getDigitalDetail()
 
     this.getObservTaskOptions()
-
+    
   },
   methods: {
     // 获取监测应用列表

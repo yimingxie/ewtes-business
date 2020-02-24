@@ -166,7 +166,7 @@
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.value}}℃</div>
                 <div class="det-history-td">{{item.pointName}}</div>
-                <div class="det-history-td">{{item.time | splitFormatDate}}</div>
+                <div class="det-history-td">{{item.time | timeDiff}}</div>
               </div>
             </div>
           </div>
@@ -622,6 +622,27 @@ export default {
   font-weight: bold !important;
   font-size: 22px !important;
 }
+.x-select-box .el-input__inner{
+  text-align: center;
+}
+
+@media screen and (max-width: 1600px) {
+  .x-select-box-status{
+    width: 80px !important;
+  }
+  .x-select-box-monitor{
+    width: 110px !important;
+  }
+  .x-select-box-status .el-input__inner{
+    padding-left: 0 !important;
+    padding-right: 25px !important;
+  }
+  .x-select-box-monitor .el-input__inner{
+    padding-left: 0 !important;
+    padding-right: 25px !important;
+  }
+
+}
 
 </style>
 
@@ -702,12 +723,11 @@ export default {
     .xtitle-heading-h-p{
       font-size: 20px;
     }
-    .x-select-box-status{
-      width: 75px !important;
+    .detection-history-choose{
+      right: 0 !important;
     }
-    .x-select-box-monitor{
-      width: 100px !important;
-    }
+    
+    
     .det-history-table{
       padding: 0 5px;
     }
