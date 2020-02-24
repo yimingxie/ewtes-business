@@ -124,7 +124,7 @@ const router = new Router({
       path: "/observe-list",
       name: "observe-list",
       meta: {
-        title: "观察任务管理",
+        title: "检测任务管理",
         auto: false // 是否需要权限
       },
       component: (resolve) => require(['./views/digital/ObserveList.vue'], resolve)

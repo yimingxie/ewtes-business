@@ -3,7 +3,7 @@
     <div class="bread-nav">
       <span @click="$router.push('/digital-list')">数字防疫点</span>
       <span @click="$router.go(-1)">/ 档案</span>
-      <em>/ 观察任务管理</em>
+      <em>/ 检测任务管理</em>
     </div>
 
     <div class="x-container">
@@ -35,13 +35,13 @@
       <div class="x-list">
         <div class="xlist-choose clearfix">
           <div class="xlist-choose-si">
-            <search-input ref="searchInputRef" placeholderValue="搜索观察任务名称" @search="searchTask" @cancel="clearTask"></search-input>
+            <search-input ref="searchInputRef" placeholderValue="搜索检测任务名称" @search="searchTask" @cancel="clearTask"></search-input>
           </div>
         </div>
 
         <div class="xlist-operator">
           <div class="xlist-operator-content clearfix">
-            <div class="xop-btn-submit" @click="openDialogAddObserve">添加观察任务</div>
+            <div class="xop-btn-submit" @click="openDialogAddObserve">添加检测任务</div>
             <div class="xop-btn-delete" @click="openDialogDeleteObserve">删除任务</div>
           </div>
         </div>
@@ -54,9 +54,9 @@
               <div class="llt-th">
                 <el-checkbox v-model="checkedAll" @change="checkedAllChange">{{test}}</el-checkbox>
               </div>
-              <div class="llt-th">观察任务名称</div>
+              <div class="llt-th">检测任务名称</div>
               <div class="llt-th">检测区域</div>
-              <div class="llt-th">观察数据类型</div>
+              <div class="llt-th">检测数据类型</div>
               <!-- <div class="llt-th">操作</div> -->
             </div>
           </div>
@@ -106,7 +106,7 @@
     </div>
 
 
-    <!-- 添加观察任务弹窗 -->
+    <!-- 添加检测任务弹窗 -->
     <el-dialog :visible.sync="dialogAddObserve" :title="dialogAddObserveTitle" @close="closeDialogObserve" :show-close="false" width="700px">
       <div class="dia-content">
         <el-form :model="ruleFormAddObserve" :rules="rulesAddObserve" ref="addObserveRef" class="diaForm">
@@ -149,7 +149,7 @@
           </div>
         </el-form>
 
-        <div class="dia-btn-con" v-if="dialogAddObserveTitle=='添加观察任务'" style="text-align: right;">
+        <div class="dia-btn-con" v-if="dialogAddObserveTitle=='添加检测任务'" style="text-align: right;">
           <div class="dia-btn dia-btn-cancel" @click="closeDialogObserve">取消</div>
           <div class="dia-btn dia-btn-submit" @click="submitAddObserve">完成</div>
         </div>
@@ -163,8 +163,8 @@
 
     </el-dialog>
 
-    <!-- 删除观察任务弹窗 -->
-    <el-dialog :visible.sync="dialogDeleteObserve" title="删除观察任务" :show-close="false" width="700px">
+    <!-- 删除检测任务弹窗 -->
+    <el-dialog :visible.sync="dialogDeleteObserve" title="删除检测任务" :show-close="false" width="700px">
       <div class="dia-content">
         <div class="dia-con-p">
           <h4>是否确认删除</h4>
@@ -221,8 +221,8 @@ export default {
       totalPage: 1,
       pageSize: 10,
 
-      // --添加观察任务弹窗（编辑可共用？）--
-      dialogAddObserveTitle: '添加观察任务',
+      // --添加检测任务弹窗（编辑可共用？）--
+      dialogAddObserveTitle: '添加检测任务',
       dialogAddObserve: false,
       ruleFormAddObserve: {
         "observedName": "",
@@ -250,7 +250,7 @@ export default {
     this.observeParams.epedId = this.$route.query.epedId
   },
   mounted() {
-    // 获取观察任务列表
+    // 获取检测任务列表
     this.getObList()
 
     // 获取详情
@@ -261,10 +261,10 @@ export default {
 
   },
   methods: {
-    // 获取观察任务列表
+    // 获取检测任务列表
     getObList() {
       api.digital.getObserveList(this.observeParams).then(res => {
-        console.log('观察任务列表', res.data)
+        console.log('检测任务列表', res.data)
         this.observeList = res.data.data.records
 
         // 用于全选
@@ -351,11 +351,11 @@ export default {
       this.getObList()
     },
 
-    // 打开添加观察任务弹窗
+    // 打开添加检测任务弹窗
     openDialogAddObserve() {
       // 获取下拉
       this.getObservePointOptions()
-      this.dialogAddObserveTitle = '添加观察任务'
+      this.dialogAddObserveTitle = '添加检测任务'
 
       this.ruleFormAddObserve = {
         "observedName": "",
@@ -389,12 +389,12 @@ export default {
 
     },
 
-    // 提交添加观察任务
+    // 提交添加检测任务
     submitAddObserve() {
       let that = this
       this.$refs.addObserveRef.validate(valid => {
         if (valid) {
-          console.log('添加观察任务', this.ruleFormAddObserve)
+          console.log('添加检测任务', this.ruleFormAddObserve)
           let param = {
             "observedName": this.ruleFormAddObserve.observedName,
             "pointId": this.ruleFormAddObserve.pointId,
@@ -418,7 +418,7 @@ export default {
       
     },
 
-    // 打开编辑观察任务弹窗
+    // 打开编辑检测任务弹窗
     openDialogEditObserve(observedId) {
       api.digital.getObserveDetail(observedId).then(res => {
         console.log('res', res.data)
@@ -426,7 +426,7 @@ export default {
         this.dialogAddObserve = true
 
         this.currentObId = obInfo.observedId
-        this.dialogAddObserveTitle = '编辑观察任务'
+        this.dialogAddObserveTitle = '编辑检测任务'
         this.ruleFormAddObserve = {
           "observedName": obInfo.observedName,
           "pointId": obInfo.pointId,   
@@ -437,12 +437,12 @@ export default {
       })
     },
 
-    // 提交编辑观察任务
+    // 提交编辑检测任务
     submitEditObserve() {
       let that = this
       this.$refs.addObserveRef.validate(valid => {
         if (valid) {
-          console.log('编辑观察任务', this.ruleFormAddObserve)
+          console.log('编辑检测任务', this.ruleFormAddObserve)
           let param = {
             "observedId": this.currentObId,
             "observedName": this.ruleFormAddObserve.observedName,
@@ -472,7 +472,7 @@ export default {
 
     // 打开删除任务弹窗
     openDialogDeleteObserve() {
-      if (this.checkedLifts.length === 0) return this.$message.error('请选择要删除的观察任务') 
+      if (this.checkedLifts.length === 0) return this.$message.error('请选择要删除的检测任务') 
 
       this.dialogDeleteObserve = true
     },

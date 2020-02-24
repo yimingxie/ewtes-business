@@ -1037,7 +1037,7 @@ export default {
               this.$message.success(res.data.message);
               this.getAllAccountData()
               this.edit1_dialogFormVisible = false
-              
+              this.getStaffDeps()
             } else {
               if(res.data.message == "无权"){
                 this.$message.error("账号操作权限不足");

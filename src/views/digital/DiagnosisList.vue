@@ -56,7 +56,7 @@
                 <el-checkbox v-model="checkedAll" @change="checkedAllChange">{{test}}</el-checkbox>
               </div>
               <div class="llt-th">监测应用名称</div>
-              <div class="llt-th">已关联观察任务(id)</div>
+              <div class="llt-th">已关联检测任务(id)</div>
               <div class="llt-th">阈值判断类型</div>
               <div class="llt-th">阈值</div>
               <div class="llt-th">容错范围</div>
@@ -132,9 +132,9 @@
             </div>
             <div class="dia-citem">
               <el-form-item prop="observTaskId">
-                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>观察任务：</div>
+                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测任务：</div>
                 <div class="dia-citem-ib">
-                  <el-select v-model="ruleFormAddDiagn.observTaskId" placeholder="请选择观察任务" size="small" style="width: 100%;">
+                  <el-select v-model="ruleFormAddDiagn.observTaskId" placeholder="请选择检测任务" size="small" style="width: 100%;">
                     <el-option v-for="item in observTaskOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                   </el-select>
                 </div>
@@ -292,7 +292,7 @@ export default {
     this.getDigitalDetail()
 
     this.getObservTaskOptions()
-
+    
   },
   methods: {
     // 获取监测应用列表
@@ -316,7 +316,7 @@ export default {
     // 获取下拉
     getObservTaskOptions() {
       api.digital.getUnusedTask(this.parentCode).then(res => {
-        console.log('观察任务下拉', res.data)
+        console.log('检测任务下拉', res.data)
         let detail = res.data.data || []
         this.observTaskOptions = []
         if (detail.length === 0) return

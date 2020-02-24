@@ -12,7 +12,7 @@
           <span class="on" style="z-index: 3" @click="goAbnormalDetail">异常档案</span>
         </div>
         <div class="digital-detail-tabTop-a clearfix">
-          <div class="digital-detail-tabTop-anav" @click="goObserveList">观察任务管理</div>
+          <div class="digital-detail-tabTop-anav" @click="goObserveList">检测任务管理</div>
           <div class="digital-detail-tabTop-anav-span">|</div>
           <div class="digital-detail-tabTop-anav" @click="goDiagnList">监测应用管理</div>
         </div>
@@ -184,7 +184,7 @@
 
           <div class="det-deal-left">
             <div class="det-deal-avator">
-              <img v-if="diaDealInfo.url" :src="diaDealInfo.url" alt="">
+              <img v-if="diaDealInfo.url" :src="diaDealInfo.imgUrl" alt="">
               <img v-else src="../../assets/images/xym/avatar.png" alt="">
             </div>
             <div class="det-deal-temper">
@@ -394,7 +394,7 @@ export default {
 
     
 
-    // 跳转到观察任务
+    // 跳转到检测任务
     goObserveList() {
       this.$router.push({
         path: '/observe-list',
@@ -490,6 +490,8 @@ export default {
         console.log('告警信息详情', res.data)
         this.dialogDeal = true
         this.diaDealInfo = res.data.data
+        this.diaDealInfo.imgUrl = api.accountApi.viewPic(this.diaDealInfo.url)
+
         // 未处理
         if (this.diaDealInfo.result == 1) {
           this.diaDealState = 'put'
