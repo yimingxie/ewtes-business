@@ -1144,8 +1144,8 @@ export default {
               // this.bindRoleForm.userId = 
               // api.accountApi.accountBindRole(this.bindRoleForm).then((res) => {
               //   if (res.data.code === 200) {
-              this.$message.success('创建成功！');
-              
+              this.$message.success(res.data.message);
+
               // 员工列表
               this.getAllAccountData()
 

@@ -12,6 +12,7 @@
           placeholder="选择日期"
           value-format="yyyy-MM-dd HH:mm:ss"
           @change="getAllAccountData()"
+          :picker-options="pickerOptions"
           >
         </el-date-picker>
         <span class="splitLine">|</span>
@@ -111,6 +112,11 @@ import fotter from "../../views/common/fotter";
 export default {
   data() {
     return {
+      pickerOptions: { // 工单时间不让选择今天以后的
+        disabledDate(time) {
+          return time.getTime() > Date.now()
+        },
+      },
       rolesJson:[],
       // roleNameArr:[],
       edit_roleNameArr:[],

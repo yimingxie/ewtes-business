@@ -216,10 +216,12 @@ export default  {
       `${http.localURL}/ewtes/business/upload/image`, params
     )
   },
+  
   // 查看图片
   viewPic(picName){
     return `${http.localURL}/ewtes/business/view/image?filename=${picName}`
   },
+
   // 员工作业记录
   staffTaskList(params){
     return http.post(
