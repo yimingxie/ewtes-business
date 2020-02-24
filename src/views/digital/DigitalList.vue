@@ -15,7 +15,7 @@
             </div>
             <div class="xcc-splitLine"></div>
             <div class="xcc-box" style="width: 110px;">
-              <el-select class="x-select" v-model="epListParams.useDepartment" @change="useDepartmentChange" clearable placeholder="全部单位" size="small">
+              <el-select class="digital-list-select" v-model="epListParams.useDepartment" @change="useDepartmentChange" clearable placeholder="全部单位" size="small">
                 <el-option v-for="item in useDepartmentOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </div>
@@ -69,7 +69,7 @@
                 <div class="llt-td">{{item.inNum}}</div>
                 <div class="llt-td">{{item.localArea}}</div>
                 <div class="llt-td">{{item.address}}</div>
-                <div class="llt-td">{{item.useDepartment}}</div>
+                <div class="llt-td">{{item.useDepartment ? item.useDepartment : '--'}}</div>
                 <div class="llt-td">{{item.monitorNum}}</div>
                 <div class="llt-td">{{item.lastTime ? item.lastTime : '--'}}</div>
                 <!-- <div class="llt-td">
@@ -142,6 +142,8 @@ import RadioGroup from "../../components/RadioGroup";
 import SearchInput from "../../components/SearchInput";
 import Footer from "../../views/common/fotter";
 import CityChoose2 from '../../components/CityChoose2'
+import xymFun from '../../utils/xymFun';
+
 
 
 export default {
@@ -186,6 +188,21 @@ export default {
 
     // 全部单位下拉
     this.getUseDepartmentOptions()
+
+    // 2020-02-24 20:20:20
+    // function judgeDay(time) {
+    //   if (time === '') return '--'
+    //   let currentDay = xymFun.dateFormat(Date.now()).substring(0, 10) // 当天日期 2020-02-24
+    //   console.log('currentDay', currentDay)
+    //   if (time.substring(0, 10) == currentDay) {
+    //     // 当天则返回02-24 20:20
+    //     return time.substring(5, 16)
+    //   } else {
+    //     time.substring(2, 16)
+    //   }
+    // }
+    // console.log('ceceshi', judgeDay())
+    // judgeDay()
 
   },
   methods: {
@@ -380,11 +397,17 @@ export default {
 .xcc-box-city .el-input__inner{
   border: none !important;
 }
+.digital-list-select .el-input__inner{
+  height: 32px !important;
+  line-height: 32px !important;
+  border: none;
+}
 
 </style>
 
 <style lang="stylus" scoped>
 #DigitalList{
+  
   .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
     width 3%;
     text-align center;

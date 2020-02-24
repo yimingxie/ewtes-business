@@ -25,6 +25,8 @@ export default {
    */
   dateFormat(timestamp) {
     // str.slice(-2) 从字符串的倒数第二个字符开始截取 "abcd" -> "cd"
+    if (typeof timestamp == 'string') return timestamp
+
     var dateObj = new Date(timestamp)
     var year = dateObj.getFullYear(),
       month = ("0" + (dateObj.getMonth() + 1)).slice(-2),
@@ -34,6 +36,22 @@ export default {
       second = ("0" + dateObj.getSeconds()).slice(-2);
 
     var result = year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
+    return result;
+  },
+
+  dateFormat3(timestamp) {
+    // str.slice(-2) 从字符串的倒数第二个字符开始截取 "abcd" -> "cd"
+    if (typeof timestamp == 'string') return timestamp
+
+    var dateObj = new Date(timestamp)
+    var year = dateObj.getFullYear(),
+      month = ("0" + (dateObj.getMonth() + 1)).slice(-2),
+      date = ("0" + dateObj.getDate()).slice(-2),
+      hour = ("0" + dateObj.getHours()).slice(-2),
+      minute = ("0" + dateObj.getMinutes()).slice(-2),
+      second = ("0" + dateObj.getSeconds()).slice(-2);
+
+    var result = year + '-' + month + '-' + date;
     return result;
   },
 
@@ -115,7 +133,21 @@ export default {
    */
   timeDiff(d1) {//di作为一个变量传进来
     //如果时间格式是正确的，那下面这一步转化时间格式就可以不用了
-    let dateBegin = new Date(d1.replace(/-/g, "/"));//将-转化为/，使用new Date
+    let tt = d1
+    if (typeof d1 == 'number') {
+      var dateObj = new Date(d1)
+      var year = dateObj.getFullYear(),
+        month = ("0" + (dateObj.getMonth() + 1)).slice(-2),
+        date = ("0" + dateObj.getDate()).slice(-2),
+        hour = ("0" + dateObj.getHours()).slice(-2),
+        minute = ("0" + dateObj.getMinutes()).slice(-2),
+        second = ("0" + dateObj.getSeconds()).slice(-2);
+
+      tt = year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
+    }
+
+
+    let dateBegin = new Date(tt.replace(/-/g, "/"));//将-转化为/，使用new Date
     let dateEnd = new Date();//获取当前时间
     let dateDiff = dateEnd.getTime() - dateBegin.getTime();//时间差的毫秒数
     let dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000));//计算出相差天数

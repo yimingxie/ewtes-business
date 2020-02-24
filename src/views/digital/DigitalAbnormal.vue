@@ -36,7 +36,7 @@
             <div class="llt-tr clearfix">
               <div class="llt-th">检测区域名称</div>
               <div class="llt-th">日期</div>
-              <div class="llt-th">总数</div>
+              <div class="llt-th">异常总数</div>
               <div class="llt-th" @click="getDetDetail">操作</div>
             </div>
           </div>
@@ -46,7 +46,7 @@
             <div class="llt-tr clearfix" v-for="(item, i) in abnormalList" :key="i">
               <div class="llt-tr-container clearfix">
                 <div class="llt-td">{{item.pointName}}</div>
-                <div class="llt-td">{{item.date}}</div>
+                <div class="llt-td">{{item.date | dateFormat3}}</div>
                 <div class="llt-td">{{item.abnormalCount}}</div>
                 <div class="llt-td">
                   <span class="llt-td-a" @click="getDetDetail(item)">详情</span>
@@ -446,7 +446,7 @@ export default {
       this.detDetailInfo.today = info.tody
       this.detDetailInfo.abnormalCount = info.abnormalCount
 
-      this.abnormalDetailParams.date = info.date
+      this.abnormalDetailParams.date = xymFun.dateFormat3(info.date)
 
 
       api.detection.getAbnormalDetail(this.abnormalDetailParams).then(res => {
