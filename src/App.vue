@@ -52,10 +52,16 @@
      
       </el-menu>
       <!-- 维保 end -->
-      
+      <!-- <div class="codeDiv">
+        <div class="anzhuo">Android</div>
+        <div class="kuang">
+          扫描二维码下载
+        </div>
+        <div class="ios" style="color:#999">ios</div>
+      </div> -->
       
 
-      <div class="ant-layout" :style="{'padding-left': layout === 'admin'? '120px':0}">
+      <div class="ant-layout" :style="{'padding-left': layout === 'admin'? '120px':0,'min-height': layout !== 'admin' ?'calc(100vh)' :''}">
         <!-- Start: 头部 -->
         <keep-alive>
           <!-- <transition name="header" mode="out-in"> -->
@@ -341,7 +347,7 @@
   .ant-layout {
     box-sizing: border-box;
     background: #F5F7FD;
-    min-height: calc(100vh);
+    // min-height: calc(100vh);
     position: relative;
     width 100%
     padding-left 120px
@@ -501,6 +507,33 @@
       float: left;
       background: #f0dfdf;
     }
+  .codeDiv
+    background: #FFFFFF;
+    box-shadow: 0 -2px 3px 0 rgba(196,203,239,0.39);
+    width 120px
+    height 120px
+    position fixed
+    bottom 0
+    left 0
+    z-index: 99999;
+  .anzhuo,.ios
+    height 60px
+    text-align: center;
+    padding: 30px;
+  .anzhuo
+    background url('assets/images/hs/anzhuo.png') no-repeat center 10px;
+    background-size 13px auto
+  .ios
+    background url('assets/images/hs/ios.png') no-repeat center 13px;
+    background-size 10px auto
+  .kuang
+    background: #FFFFFF;
+    box-shadow: 0 2px 4px 0 rgba(129,144,213,0.28);
+    width 160px
+    height 160px
+    text-align center
+    background url('assets/images/hs/code.png') no-repeat center 13px;
+    background-size 100px
 
 
 @media screen and (max-width: 1280px) {

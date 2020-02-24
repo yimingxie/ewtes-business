@@ -162,7 +162,7 @@
 
                <el-table-column label="创建人">
                  <template slot-scope="scope" >
-                  {{scope.row.createUser ? scope.row.createUser : '--'}}
+                  {{scope.row.createUser ? scope.row.createUser : '系统创建'}}
                 </template>
               </el-table-column>
 
@@ -310,7 +310,7 @@
       </el-form-item>
 
       <el-form-item label="登录账号：" prop="username">
-        <el-input v-model="EditAccountForm.username" placeholder="请输入登录账号，即手机号" auto-complete="off" disabled clearable size="small"></el-input>
+        <el-input v-model="EditAccountForm.username" placeholder="请输入登录账号，即手机号" auto-complete="off" clearable size="small" maxlength="11"></el-input>
       </el-form-item>
       
      
@@ -326,16 +326,57 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="所属组织" prop="roleId" v-if="adType !='administrator'">
+      <el-form-item label="所属组织" prop="departmentId" v-if="adType !='administrator'">
    
-        <el-select v-model="EditAccountForm.roleId" placeholder="请选择角色" size="small">
+        <!-- <el-select v-model="EditAccountForm.roleId" placeholder="请选择角色" size="small">
           <el-option
             v-for="item in rolesJson"
             :key="item.id"
             :label="item.name"
             :value="item.id">
           </el-option>
-        </el-select>
+        </el-select> -->
+
+        <el-dropdown :hide-on-click="false" trigger="click" class="treeDep">
+          <span class="el-dropdown-link" >
+            <span v-if="EditAccountForm.departmentId !== ''">{{checkDepName1}}</span>
+            <span v-else style="color:#C2C7CC;">请选择所属部门</span>
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown" class="depTreeDropdown">
+            <el-tree
+
+              :expand-on-click-node="true"
+
+              node-key="id"
+
+              :load="loadNode1"
+
+              :props= defaultProps
+
+              lazy
+
+              :check-on-click-node= "true"
+
+              @node-click="handleAddtclick"
+
+              ref="treeDrop"
+
+              highlight-current
+              
+              >
+
+              <span class="slot-t-node" slot-scope="{ node, data }" >
+
+                <span>
+                  <span >{{node.label}}</span>
+                </span>
+              
+              </span>
+              
+            </el-tree>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer ">
@@ -596,10 +637,9 @@ export default {
       },
       edit_dialogFormVisible: false,
       EditAccountForm: {
-        uid: "",
         name: "",
-        // account: "",
         roleId : "222",
+        departmentId:0
       },
       query:'',
       searchKey:'',
@@ -759,7 +799,9 @@ export default {
       
       },
       count:1,
-      clickName:''
+      clickName:'',
+      checkDepName1:'',
+
     }
   },
   components: {
@@ -795,6 +837,21 @@ export default {
     
   },
   methods: {
+    // 添加员工
+    handleAddtclick(data, node) {
+      console.log("data" + JSON.stringify(data))
+      this.checkDepName1 = data.name
+      this.EditAccountForm.departmentId = data.id
+      this.checkDepName1 = data.name
+      console.log("this.checkDepName1==" + this.EditAccountForm.departmentId)
+
+    },
+
+    // // 懒加载
+    // loadNode1(node, resolve) {
+    //   this.resolve = resolve
+    //   this.getAllDepartmentData(node,resolve)
+    // },
     accountBlur(){
       if(this.addAccountForm.username.length == 11){
         this.addAccountForm.password = this.addAccountForm.username.substring(5,11)
@@ -916,6 +973,7 @@ export default {
       })
       
     },
+
     handleLeftclick(data, Node) {
       console.log("data" + JSON.stringify(data))
       this.queryParam.departmentId = Node.level == 1 ? '': data.id
@@ -924,6 +982,7 @@ export default {
       this.clickName = data.name
       this.getAllAccountData()
     },
+
     // 点击更多操作
     rightClick(event,Node,object) {
       // this.menuVisible = true;
@@ -937,6 +996,7 @@ export default {
       console.log("currentData==" + JSON.stringify(this.currentData))
       console.log("currentNode==" + this.currentNode)
     },
+
     // 增加下级
     addChildNode() {
       console.log(this.currentData);
@@ -1262,11 +1322,13 @@ export default {
       this.resetPasswordDialogVisoble = true
       this.confirmReset = account
     },
+
     // 关闭重置密码弹窗
     cancelResetPassword(){
       this.resetPasswordDialogVisoble = false
       this.confirmReset = {}
     },
+
     // 确认重置密码
     resetPassword(){
           console.log("this.EditAccountForm" +JSON.stringify(this.EditAccountForm))
@@ -1295,18 +1357,23 @@ export default {
       this.$refs['editForm'].resetFields()
       // console.log("2")
     },
+
     // 编辑账号
     editAccount(index, row) {
       console.log("1111111==" +JSON.stringify(row))
-      this.EditAccountForm = row
-      // this.EditAccountForm.username = row.username
-      // this.EditAccountForm.name = row.name
-  
+      this.EditAccountForm.id = row.id
+
+      this.EditAccountForm.username = row.username
+
+      this.EditAccountForm.name = row.name
+
+      this.EditAccountForm.departmentId = row.departmentId
+
       // this.EditAccountForm.roleId = "-1"
       // if(row.roleId) {
-        this.EditAccountForm.roleId = parseInt(row.roleId)
+      this.EditAccountForm.roleId = parseInt(row.roleId)
       // }
-      this.adType = row.type
+      // this.adType = row.type
       // this.EditAccountForm.phoneNumber = row.phoneNumber
       // this.edit_roleNameArr = row.roleName.split(',')
       this.edit_dialogFormVisible = true
@@ -1323,7 +1390,7 @@ export default {
       this.$refs['editForm'].validate((valid) => {
         if (valid) {
         // 修改账号名
-          api.accountApi.editAccount(this.EditAccountForm).then((res) => {
+          api.accountApi.editManager(this.EditAccountForm).then((res) => {
             
             if(res.data.code == 200){
               // 超管修改
@@ -1646,4 +1713,30 @@ export default {
   .deleteIcon
     background url('../../assets/images/hs/delete@2x.png') no-repeat left center;
     background-size 22px
+  // 下拉框树状
+  .treeDep
+    width 100%!important
+    border-radius: 4px!important;
+    border: 1px solid #dcdfe6!important;
+    height: 32px !important;
+    line-height: 32px !important;
+    position relative!important
+    padding: 0 10px!important;
+    overflow: hidden!important;
+    white-space: nowrap!important;
+    text-overflow: ellipsis!important;
+    .el-dropdown-link,.el-dropdown-menu
+      width: 100%!important;
+    .el-dropdown-link
+      display: inline-block!important;
+    .el-icon-arrow-down
+      float: right!important;
+      color: #c0c4cc!important;
+      height: 32px!important;
+      line-height: 29px!important;
+.depTreeDropdown
+  width 436px
+  .search1 .search_input
+    width: 415px;
+    padding: 0 10px;
 </style>

@@ -181,7 +181,7 @@
 
     <!-- 检测区域详情 -->
     <div class="detdetail-slider" :class="sliderShow ? 'on' : ''">
-      <div class="detdetail-slider-close" @click="sliderShow=false"></div>
+      <div class="detdetail-slider-close" @click="closeSliderShow"></div>
       <div class="detdetail-slider-title">
         <div class="detdetail-slider-title-line"></div>
         <div class="detdetail-slider-title-h">检测区域详情</div>
@@ -595,6 +595,8 @@ export default {
       this.getDetStat()
     },
 
+    
+
     // 提交处理异常
     submitDialogDeal() {
       let param = {
@@ -617,6 +619,19 @@ export default {
 
       })
 
+    },
+
+    // 关闭侧滑
+    closeSliderShow() {
+      // 更新数据
+      // 获取实时状态
+      this.getRealList()
+      // 历史记录
+      this.getHistoryList()
+      // 统计
+      this.getDetStat()
+      this.dialogDeal = false
+      this.sliderShow = false
     },
 
   },

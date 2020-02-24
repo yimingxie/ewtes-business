@@ -50,7 +50,7 @@
                   </td> -->
                   <td><span class="tie">所属单位：</span><span>{{ getStaffInfo.corpName }}</span></td>
                   <td><span class="tie">所属部门：</span>
-                    <span v-if="getStaffInfo.departmentName">{{ getStaffInfo.departmentName }}部</span>
+                    <span v-if="getStaffInfo.departmentName">{{ getStaffInfo.departmentName }}</span>
                     <span v-else>--</span>
                   </td>
                 </tr>
@@ -248,7 +248,6 @@
               <template slot-scope="scope">
                <span v-if="scope.row.valid" style="color: #FF652C;">有</span>
                <span v-else>无</span>
-
               </template>
             </el-table-column>
             <!-- <el-table-column prop="areaName" label="检测状态">
