@@ -2,7 +2,7 @@
 <div class="main-wrap" id="account">
    
   <div class="pageTitle">账号管理</div>
-  <div class="wrapper" style="">
+  <div class="wrapper" :style="{'min-height':tabPeriod == 1 ? '805px':''}">
     <div class=" " style="position: absolute;">
       <div class="panel panelLeft" :style="{'height':tabPeriod == 1 ? '756px':''}">
         <tab-radio :items="tabPeriods" :value.sync="tabPeriod" style="padding: 33px 0 32px 32px;border-bottom:1px solid #d8dddf;width: 100%;">
@@ -130,7 +130,7 @@
       <div class="row" >
 
         <!-- <div class="panel scdPanel" :style="{height:tabPeriod == 0?'594px':'804px'}"> -->
-        <div class="panel scdPanel" style="height:791px">
+        <div class="panel scdPanel" style="min-height:791px">
           
           <!-- 表格 Start -->
           <div style="position:relative;;display:flex;">
@@ -269,7 +269,7 @@
     <el-form :model="addAccountForm" :label-width="formLabelWidth" :rules="addAccountRules" ref="addForm" label-position="top">
       
           <el-form-item label="名称" prop="name">
-            <el-input v-model="addAccountForm.name" placeholder="请输入名称" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input v-model="addAccountForm.name" placeholder="请输入名称" auto-complete="off" clearable size="small"></el-input>
           </el-form-item>
         
           <el-form-item label="登录账号" prop="username">
@@ -277,7 +277,7 @@
           </el-form-item>
 
           <el-form-item label="初始密码" prop="password" >
-            <el-input v-model="addAccountForm.password" placeholder="请输入数字和字母组合6位以上的密码" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input v-model="addAccountForm.password" placeholder="请输入数字和字母组合6位以上的密码" auto-complete="off" clearable size="small" ></el-input>
           </el-form-item>
         
           <el-form-item label="账号角色" prop="roleId" >
@@ -440,11 +440,11 @@
     <el-form :model="addRoleForm" :label-width="formLabelWidth" :rules="addRoleFormRule" ref="addRoleForm" label-position="top">
       
           <el-form-item label="角色名称" prop="name">
-            <el-input v-model="addRoleForm.name" placeholder="请输入角色名称" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input v-model="addRoleForm.name" placeholder="请输入角色名称" auto-complete="off" clearable size="small"></el-input>
           </el-form-item>
         
           <el-form-item label="角色描述" prop="description">
-            <el-input v-model="addRoleForm.description" placeholder="请填写角色描述" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input v-model="addRoleForm.description" placeholder="请填写角色描述" auto-complete="off" clearable size="small"></el-input>
           </el-form-item>
 
           <el-form-item label="功能权限" prop="ids">
@@ -738,7 +738,7 @@ export default {
       addRoleFormRule: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' },
-          { max: 20, message: '名称字符长度过长，请控制在20位字符以内', trigger: 'blur' },
+          // { max: 20, message: '名称字符长度过长，请控制在20位字符以内', trigger: 'blur' },
         ],
       
       },
@@ -1129,10 +1129,16 @@ export default {
     deleteStaff(){
       api.accountApi.deleteAccount({ids:this.multipleSelection}).then((res) => {
         if (res.data.code === 200) {
-          this.$message.success('删除成功！');
           this.getAllAccountData()
           this.dialogDelete = false
+
+          if(res.data.message == 'success') {
+            this.$message.success('删除成功！');
+          } else {
+            this.$message.error(res.data.message);
+          }
         } else {
+          this.getAllAccountData()
           this.$message.error(res.data.message);
         }
       }).catch((res) => {
@@ -1526,11 +1532,10 @@ export default {
   .wrapper
     overflow: hidden;
     position relative
-    height: 987px;
+    min-height: 987px;
   .panelLeft
     width: 290px;
-    height: 987px; 
-    
+    height: 962px; 
     box-shadow: 8px 0 14px 2px rgba(196,203,239,0.39)
     border-radius: 8px 0px 0px 8px;
     // margin-bottom: -9999px;

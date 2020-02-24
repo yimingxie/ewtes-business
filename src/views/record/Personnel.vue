@@ -102,7 +102,7 @@
                     </div>
                     <!-- <div class="stf_p stf_phone">{{account.username}}</div> -->
                     <div class="stf_p stf_area">{{account.corpName}}</div>
-                    <div class="stf_p stf_liftnum">{{account.departmentName ? account.departmentName : '--'}} </div>
+                    <div class="stf_p stf_liftnum">{{account.departmentId ? account.departmentId : '--'}} </div>
                   </span>
                   <span class="stf_active" :class="{'activeFree' : 1 == account.warnStatus}">
                     <i></i><span v-text="account.warnStatus == 0 ? '正常' : '异常'"></span>
@@ -485,6 +485,7 @@ export default {
         }
       })
     },
+
     // 获取公司
     getCorps(){
       api.person.getCorps().then((res) => {
@@ -493,6 +494,7 @@ export default {
         }
       })
     },
+
     // 查询防疫区域
     getEpidemicArea(){
       api.person.getEpidemicList().then((res) => {
@@ -555,16 +557,16 @@ export default {
           this.getAllAccountJson = res.data.data.records
           this.getAllAccountJson.forEach(item =>{
             
-            if(item.avatar && item.avatar != '' && item.avatar != null){
+            if(item.avatar && item.avatar != '' && item.avatar != null) {
               // var url = "http://192.168.100.7:8080/domino/view/image?filename=" + item.avatar
               var url = api.accountApi.viewPic(item.avatar)
-
               Vue.set(item, 'url', url)
             }
-            if(item.areaCode && item.areaCode != '' && item.areaCode != null){
-              var areaName = newArea.getAreaName(item.areaCode).join('   ')
-              Vue.set(item, 'areaName', areaName)
-            }
+
+            // if(item.areaCode && item.areaCode != '' && item.areaCode != null){
+            //   var areaName = newArea.getAreaName(item.areaCode).join('   ')
+            //   Vue.set(item, 'areaName', areaName)
+            // }
             
 
           })
