@@ -61,15 +61,15 @@ const router = new Router({
       },
       component: (resolve) => require(['./views/settings/Account.2.vue'], resolve)
     },
-    {
-      path: "/role",
-      name: "role",
-      meta: {
-        title: "账号管理",
-        auto: false // 是否需要权限
-      },
-      component: (resolve) => require(['./views/settings/Role.vue'], resolve)
-    },
+    // {
+    //   path: "/role",
+    //   name: "role",
+    //   meta: {
+    //     title: "账号管理",
+    //     auto: false // 是否需要权限
+    //   },
+    //   component: (resolve) => require(['./views/settings/Role.vue'], resolve)
+    // },
     {
       path: "/staff",
       name: "staff",

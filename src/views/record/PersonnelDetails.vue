@@ -34,7 +34,7 @@
               <table>
                 <tr>
                   <!-- <td><span class="tie" style="font-size: 38px;color: #3572FF;">36.8<span style="font-size: 16px;color: color: #173000;">℃</span></span></td> -->
-                  <td><span class="tie">手机号码：</span><span >{{getStaffInfo.phone}}</span></td>
+                  <td><span class="tie">手机号码：</span><span >{{getStaffInfo.phone ? getStaffInfo.phone:'--'}}</span></td>
                   <td><span class="tie">出生日期：</span>
                     <span v-if="getStaffInfo.birthday">{{ getStaffInfo.birthday.substring(0,4)+'-'+getStaffInfo.birthday.substring(4,6)+'-'+getStaffInfo.birthday.substring(6,8)}}</span>
                     <span v-else>--</span>
@@ -369,9 +369,9 @@ export default {
       // 上面详情
       this.detailsList = row
       this.staffMLiftParam.epedId = row.epedId
-      this.staffMLiftParam.pointId = row.epedId
+      this.staffMLiftParam.pointId = row.pointId
       this.staffMLiftParam.date = row.time
-      this.staffMLiftParam.pointName = row.pointName
+      // this.staffMLiftParam.pointName = row.pointName
       this.getStaffManageLift()
       this.checkDetailsDialog = true
 
@@ -417,6 +417,11 @@ export default {
         if(res.data.code === 200 && res.data.message === 'success') {
           this.getStaffInfo = res.data.data
           // 头像
+          if(this.getStaffInfo.avatar && this.getStaffInfo.avatar != '' && this.getStaffInfo.avatar != null) {
+            // var url = "http://192.168.100.7:8080/domino/view/image?filename=" + item.avatar
+            // var url = api.accountApi.viewPic(item.avatar)
+            this.url = api.accountApi.viewPic(this.getStaffInfo.avatar)
+          }
           // this.url = api.accountApi.viewPic(this.getStaffInfo.avatar)
 
           // var areaName1 = newArea.getAreaName(this.getStaffInfo.areaCode.join(",")).join('  ')
