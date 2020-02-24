@@ -184,7 +184,8 @@
 
           <div class="det-deal-left">
             <div class="det-deal-avator">
-              <img :src="diaDealInfo.url" alt="">
+              <img v-if="diaDealInfo.url" :src="diaDealInfo.url" alt="">
+              <img v-else src="../../assets/images/xym/avatar.png" alt="">
             </div>
             <div class="det-deal-temper">
               <div class="det-deal-temper-h">体温</div>
@@ -228,7 +229,7 @@
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">处理描述</div>
               <div class="ddeal-desc" v-if="diaDealState == 'put'">
-                <textarea class="ddeal-desc-textarea" v-model="dealDesc"></textarea>
+                <textarea class="ddeal-desc-textarea" maxlength="200" v-model="dealDesc"></textarea>
               </div>
               <div class="det-deal-mid-box-p" style="line-height: 24px;" v-else>{{diaDealInfo.description}}</div>
             </div>

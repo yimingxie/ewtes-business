@@ -128,7 +128,9 @@
 
           </div>
 
+
           <div class="x-no-data" style="margin-top: 100px;" v-if="historyList.length === 0">暂无数据</div>
+          
 
           <div class="det-history-table" v-else>
             <div class="det-history-thead">
@@ -157,7 +159,8 @@
               <div class="det-history-tr clearfix" v-for="(item, i) in historyList" :key="i">
                 <div class="det-history-td">
                   <div class="det-history-avatar">
-                    <img :src="item.url ? item.url : '/static/avatar.png'" alt="">
+                    <img v-if="item.url" :src="item.url" alt="">
+                    <img v-else src="../../assets/images/xym/avatar.png" alt="">
                   </div>
                 </div>
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
@@ -257,7 +260,8 @@
 
           <div class="det-deal-left">
             <div class="det-deal-avator">
-              <img :src="diaDealInfo.url" alt="">
+              <img v-if="diaDealInfo.url" :src="diaDealInfo.url" alt="">
+              <img v-else src="../../assets/images/xym/avatar.png" alt="">
             </div>
             <div class="det-deal-temper">
               <div class="det-deal-temper-h">体温</div>
@@ -301,7 +305,7 @@
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">处理描述</div>
               <div class="ddeal-desc" v-if="diaDealState == 'put'">
-                <textarea class="ddeal-desc-textarea" v-model="dealDesc"></textarea>
+                <textarea class="ddeal-desc-textarea" maxlength="200" v-model="dealDesc"></textarea>
               </div>
               <div class="det-deal-mid-box-p" style="line-height: 24px;" v-else>{{diaDealInfo.description}}</div>
             </div>
@@ -351,11 +355,11 @@ export default {
       historyList: [],
       historyParams: {
         epedId: "",
-        valid: -1, // -1 -全部 0 -正常 1 -异常
+        valid: "", // -1 -全部 0 -正常 1 -异常
         pointId: ""
       },
       statusOptions: [
-        {label: '全部', value: -1},
+        // {label: '全部', value: -1},
         {label: '异常', value: 0},
         {label: '正常', value: 1},
       ],

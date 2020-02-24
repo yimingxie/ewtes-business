@@ -524,4 +524,21 @@ export default {
 
 }
 
+@media screen and (max-width: 1600px) {
+  #DiagnosisList{
+    .xddetail-list-item-p{
+      max-width: 210px;
+      padding-right: 30px;
+    }
+  }
+}
+@media screen and (max-width: 1400px) {
+  #DiagnosisList{
+    .xddetail-list-item-p{
+      max-width: 180px;
+      padding-right: 30px;
+    }
+  }
+}
+
 </style>
