@@ -59,6 +59,15 @@
         </div>
         <div class="ios" style="color:#999">ios</div>
       </div> -->
+      <!-- <el-popover
+        placement="right"
+        width="400"
+        trigger="click">
+        <div class="kuang">
+          扫描二维码下载
+        </div>
+        <el-button slot="reference">click 激活</el-button>
+      </el-popover> -->
       
 
       <div class="ant-layout" :style="{'padding-left': layout === 'admin'? '120px':0,'min-height': layout !== 'admin' ?'calc(100vh)' :''}">
