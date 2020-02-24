@@ -15,7 +15,7 @@
         </div>
 
         <div class="digital-detail-tabTop-a clearfix">
-          <div class="digital-detail-tabTop-anav" @click="goObserveList">观察任务管理</div>
+          <div class="digital-detail-tabTop-anav" @click="goObserveList">检测任务管理</div>
           <div class="digital-detail-tabTop-anav-span">|</div>
           <div class="digital-detail-tabTop-anav" @click="goDiagnList">监测应用管理</div>
         </div>
@@ -158,7 +158,7 @@
                 <div class="llt-thead">
                   <div class="llt-tr clearfix">
                     <div class="llt-th">检测区域名称</div>
-                    <div class="llt-th">已关联观察任务数</div>
+                    <div class="llt-th">已关联检测任务数</div>
                     <div class="llt-th">操作</div>
                   </div>
                 </div>
@@ -289,7 +289,7 @@
 
             <!-- TODO -->
             <div class="dia-citem" v-if="checkPointDetailState != 'put'">
-              <div class="dia-citem-label"><span class="dia-citem-label-must" v-if="checkPointDetailState == 'put'">*</span>已关联观察任务</div>
+              <div class="dia-citem-label"><span class="dia-citem-label-must" v-if="checkPointDetailState == 'put'">*</span>已关联检测任务</div>
               <div class="cpd-pp">{{ruleFormCheckPointDetail.observeName !== '' ? ruleFormCheckPointDetail.observeName : '--'}}</div>
             </div>
 
@@ -643,7 +643,7 @@ export default {
       let moniInfo = item
       if (moniInfo.relatedNum !== undefined && moniInfo.relatedNum !== 0) {
         
-        return this.$message.error('有绑定观察任务，不允许删除')
+        return this.$message.error('有绑定检测任务，不允许删除')
       }
       if (moniInfo.pointId) {
         this.deletingMonitorIdArr.push(moniInfo.pointId)
@@ -920,7 +920,7 @@ export default {
       })
     },
 
-    // 跳转到观察任务
+    // 跳转到检测任务
     goObserveList() {
       this.$router.push({
         path: '/observe-list',

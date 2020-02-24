@@ -65,22 +65,22 @@ export default {
   },
 
 
-  // 获取观察任务列表
+  // 获取检测任务列表
   getObserveList(params) {
     return http.post(`${url1}/ewtes/business/epidemic/observed/list`, params)
   },
 
-  // 查看观察任务
+  // 查看检测任务
   getObserveDetail(observedId) {
     return http.get(`${url1}/ewtes/business/epidemic/observed?observedId=${observedId}`)
   },
 
-  // 添加观察任务
+  // 添加检测任务
   addObserve(params) {
     return http.post(`${url1}/ewtes/business/epidemic/observed`, params)
   },
 
-  // 编辑观察任务
+  // 编辑检测任务
   editObserve(params) {
     return http.put(`${url1}/ewtes/business/epidemic/observed`, params)
   },
@@ -116,7 +116,7 @@ export default {
     return http.delete(`${url1}/ewtes/business/diagnosis`, params)
   },
 
-  // 未绑定监测应用观察任务列表
+  // 未绑定监测应用检测任务列表
   getUnusedTask(epId) {
     return http.get(`${url1}/ewtes/business/diagnosis/unused/task/list?epId=${epId}`)
   },

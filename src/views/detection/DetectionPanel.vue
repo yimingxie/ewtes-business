@@ -144,7 +144,7 @@
             </div>
 
             <div class="det-history-tbody">
-              <!-- <div class="det-history-tr clearfix">
+              <!-- <div class="det-history-tr warn clearfix">
                 <div class="det-history-td">
                   <div class="det-history-avatar">
                     <img src="../../assets/images/xym/avatar.png" alt="">
@@ -156,10 +156,10 @@
                 <div class="det-history-td">10分钟前</div>
               </div> -->
 
-              <div class="det-history-tr clearfix" v-for="(item, i) in historyList" :key="i">
+              <div class="det-history-tr clearfix" :class="item.valid === 0 ? 'warn' : ''" v-for="(item, i) in historyList" :key="i">
                 <div class="det-history-td">
                   <div class="det-history-avatar">
-                    <img v-if="item.url" :src="item.url" alt="">
+                    <img v-if="item.url" :src="item.imgUrl" alt="">
                     <img v-else src="../../assets/images/xym/avatar.png" alt="">
                   </div>
                 </div>
@@ -260,7 +260,7 @@
 
           <div class="det-deal-left">
             <div class="det-deal-avator">
-              <img v-if="diaDealInfo.url" :src="diaDealInfo.url" alt="">
+              <img v-if="diaDealInfo.url" :src="diaDealInfo.imgUrl" alt="">
               <img v-else src="../../assets/images/xym/avatar.png" alt="">
             </div>
             <div class="det-deal-temper">
@@ -407,8 +407,10 @@ export default {
   },
   
   mounted() {
+    // 获取防疫点下拉
     this.getEpedIdOptions()
 
+    // 获取监测区域下拉
     this.getMoniList()
 
     // 获取实时状态
@@ -516,6 +518,14 @@ export default {
       api.detection.getHistoryList(this.historyParams).then(res => {
         console.log('历史记录', res.data)
         this.historyList = res.data.data || []
+        this.historyList.forEach(item => {
+          if (item.url && item.url !== '') {
+            item.imgUrl = api.accountApi.viewPic(item.url)
+          }
+        })
+        console.log('this.historyList', this.historyList)
+
+        
       })
     },
 
@@ -560,6 +570,8 @@ export default {
         console.log('告警信息详情', res.data)
         this.dialogDeal = true
         this.diaDealInfo = res.data.data
+        this.diaDealInfo.imgUrl = api.accountApi.viewPic(this.diaDealInfo.url)
+
         // 未处理
         if (this.diaDealInfo.result == 1) {
           this.diaDealState = 'put'
@@ -575,6 +587,12 @@ export default {
     closeDialogDeal() {
       this.currentWarnId = ''
       this.dialogDeal = false
+      // 获取实时状态
+      this.getRealList()
+      // 历史记录
+      this.getHistoryList()
+      // 统计
+      this.getDetStat()
     },
 
     // 提交处理异常
@@ -587,6 +605,13 @@ export default {
       api.detection.dealWarn(param).then(res => {
         console.log('处理异常', res.data)
         this.$message.success('提交成功')
+        // 更新数据
+        // 获取实时状态
+        this.getRealList()
+        // 历史记录
+        this.getHistoryList()
+        // 统计
+        this.getDetStat()
         this.dialogDeal = false
         this.sliderShow = false
 
@@ -650,7 +675,7 @@ export default {
 #DetectionPanel{
   padding-bottom: 30px;
   .det-history-table{
-    height: calc(100vh - 350px);
+    height: calc(100vh - 340px);
     overflow: auto;    
   }
 
@@ -664,6 +689,10 @@ export default {
   .x-digital-detail{
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+  }
+
+  .det-history-tbody{
+    padding-bottom: 20px;
   }
 
 
