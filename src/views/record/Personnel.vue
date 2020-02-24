@@ -40,7 +40,7 @@
             <li>{{ props.text }}</li>
           </template> -->
         </radio-group>
-        <search-input v-model.trim="searchKey" placeholderValue="搜索人员姓名/手机号" @search="searchAccount()" @cancel="searchAccount()" >
+        <search-input v-model.trim="searchKey" placeholderValue="搜索人员姓名/手机号/身份证号码" @search="searchAccount()" @cancel="searchAccount()" >
         </search-input>
       </div>
     </div>
@@ -98,7 +98,7 @@
                     <div class="stf_department">{{account.phone}}</div>
                     <div class="stf_wendu">
                       <span style="margin-right:20px">{{account.lastTemperature ? account.lastTemperature : '--'}}℃</span>
-                      <span>{{account.epedName ? account.epedName : '--'}}</span>
+                      <span style="max-width: 70px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: inline-block;vertical-align: middle;">{{account.epedName ? account.epedName : '--'}}</span>
                     </div>
                     <!-- <div class="stf_p stf_phone">{{account.username}}</div> -->
                     <div class="stf_p stf_area">{{account.corpName}}</div>
