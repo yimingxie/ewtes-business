@@ -123,8 +123,11 @@ export default {
     // 查询账户详情
     getAllAccountData(){
       api.accountApi.getAccountDetail().then((res) => {
-
-        this.getAccountJson = res.data.data || []
+        if(res.data.code == 200){
+          this.getAccountJson = res.data.data || []
+        } else {
+          this.$message.error(res.data.message)
+        }
         
       }).catch((res) => {
         

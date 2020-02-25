@@ -755,6 +755,8 @@ export default {
       api.accountApi.getStaffDeps().then((res) => {
         if(res.data.code == 200) {
           this.depLists = res.data.data || []
+        } else {
+          this.$message.error(res.data.message);
         }
       })
     },
@@ -853,8 +855,8 @@ export default {
           this.dialogBatchResult = true
           this.getAllAccountData()
         } else {
-          this.$message.error(res.data.message)
           this.diaLoading = false
+          this.$message.error(res.data.message)
         }
         
 
@@ -924,11 +926,10 @@ export default {
         if(res.data.code === 200 && res.data.message === 'success'){
           this.getAllAccountJson = res.data.data.records
           this.totalPageSize = res.data.data.total
-          
-          
 
         } else {
           this.getAllAccountJson = []
+          this.$message.error(res.data.message);
         }
         
         // console.log("res.data.code" + res.data.data.records[0])s
@@ -1010,6 +1011,8 @@ export default {
               this.Edit1AccountForm.idCardAfter = this.Edit1AccountForm.idCard.substring(12,18)
             }
             console.log("this.Edit1AccountForm====111==" + JSON.stringify(row))
+         } else {
+            this.$message.error(res.data.message);
          }
 
       })
@@ -1112,7 +1115,7 @@ export default {
         this.getAllAccountData()
 
       }).catch((res) => {
-        
+        this.$message.error(res.data.message);
       })
       
     },
@@ -1145,9 +1148,11 @@ export default {
             roleType.value = item.id
             this.periods.push(roleType)
           })
+        } else {
+          this.$message.error(res.data.message);
         }
       }).catch((res) => {
-        
+        this.$message.error(res.data.message);
       })
     },
 

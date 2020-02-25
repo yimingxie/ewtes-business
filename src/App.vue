@@ -52,7 +52,7 @@
      
       </el-menu>
       <!-- 维保 end -->
-      <div class="codeDiv">
+      <div class="codeDiv" v-if="layout === 'admin'">
         <div class="anzhuo">
           <div class="kuang">
             扫描二维码下载
@@ -527,7 +527,7 @@
     position fixed
     bottom 0
     left 0
-    z-index: 99999;
+    z-index: 999;
   .anzhuo,.ios
     height 60px
     text-align: center;

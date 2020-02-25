@@ -893,6 +893,8 @@ export default {
           // this.getCorModuleList.forEach(item =>{
             // this.checkMoudel.push(item.id)
           // })
+        } else {
+          this.$message.error(res.data.message);
         }
       }).catch((res) => {
         
@@ -903,19 +905,7 @@ export default {
       this.dialogRoleName = row.name
       this.checkRole = row
       this.getRoleMo(this.activeM)
-      // this.value4 = []
-      // api.roleApi.getMoRe(row.id).then((res) => {
-
-      //   if (res.data.code === 200) {
-      //     this.morelist = res.data.data
-      //     this.morelist.forEach(item =>{
-      //       this.value4.push(item.id)
-      //       // res.data.data.map(Number)
-      //     })
-      //     this.value4.map(Number)
-      //     console.log("this.value4" + this.value4)
-      //   }
-      // })
+      
 
       
     },
@@ -925,6 +915,8 @@ export default {
       api.accountApi.getCorModules().then((res) => {
         if (res.data.code === 200) {
           this.getCorModuleList = res.data.data || []
+        } else {
+          this.$message.error(res.data.message);
         }
       }).catch((res) => {
         
@@ -1019,6 +1011,8 @@ export default {
           // this.loadNode1(this.currentNode, this.resolve)
           this.refreshNode(this.currentData.id)
           this.$message.success("添加成功")
+        } else {
+          this.$message.error(res.data.message);
         }
       })
       // let id = Math.ceil(Math.random() * 100);
@@ -1040,8 +1034,7 @@ export default {
           this.refreshNode(this.currentData.parentId)
           this.deleteDepDialog = false
           this.$message.success("删除组织成功")
-        }
-        else {
+        } else {
           this.deleteDepDialog = false
           this.$message.error(res.data.message);
         }
@@ -1155,6 +1148,7 @@ export default {
 
         } else {
           this.getAllDepJson = []
+          this.$message.error(res.data.message)
         }
         
         // console.log("res.data.code" + res.data.data.records[0])s
@@ -1277,6 +1271,7 @@ export default {
 
         } else {
           this.getAllAccountJson = []
+          this.$message.error(res.data.message)
         }
         
         // console.log("res.data.code" + res.data.data.records[0])s

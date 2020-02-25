@@ -97,7 +97,7 @@
                     
                     <div class="stf_department">{{account.phone}}</div>
                     <div class="stf_wendu" style="width: 100%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: inline-block;vertical-align: middle;">
-                      <span style="margin-right:20px">{{account.lastTemperature ? account.lastTemperature : '--'}}℃</span>
+                      <span style="margin-right:20px">{{account.lastTemperature ? account.lastTemperature.toFixed(1) : '--'}}℃</span>
                       <span style="">{{account.epedName ? account.epedName : '--'}}</span>
                     </div>
                     <!-- <div class="stf_p stf_phone">{{account.username}}</div> -->
@@ -418,10 +418,12 @@ export default {
   },
   mounted() {
     
-    // 所有员工列表
+    // 人员防疫记录列表
     this.getAllAccountData()
+
     // 获取员工部门
     this.getStaffDeps()
+
     // 获取单位列表
     this.getCorps()
   },
@@ -431,6 +433,8 @@ export default {
       api.accountApi.getStaffDeps().then((res) => {
         if(res.data.code == 200) {
           this.depLists = res.data.data || []
+        } else {
+          this.$message.error(res.data.message);
         }
       })
     },
@@ -470,6 +474,7 @@ export default {
         } else {
           this.getAllDepJson = []
           resolve([])
+          this.$message.error(res.data.message);
         }
         
       }).catch((res) => {
@@ -482,6 +487,8 @@ export default {
       api.person.getEpidemicArea().then((res) => {
         if(res.data.code == 200) {
           this.getAllDotJson = res.data.data || []
+        } else {
+          this.$message.error(res.data.message);
         }
       })
     },
@@ -491,16 +498,18 @@ export default {
       api.person.getCorps().then((res) => {
         if(res.data.code == 200) {
           this.corpLists = res.data.data || []
+        } else {
+          this.$message.error(res.data.message);
         }
       })
     },
 
     // 查询防疫区域
-    getEpidemicArea(){
-      api.person.getEpidemicList().then((res) => {
+    // getEpidemicArea(){
+    //   api.person.getEpidemicList().then((res) => {
 
-      })
-    },
+    //   })
+    // },
     // 筛选单位（公司）
     corpSelectChange(){
 
@@ -550,7 +559,7 @@ export default {
     //   this.checkAll = checkedCount === this.getAllAccountJson.length;
     //   this.isIndeterminate = checkedCount > 0 && checkedCount < this.getAllAccountJson.length;
     // },
-    // 查询所有员工账户
+    // 人员防疫记录列表
     getAllAccountData(){
       api.person.getEpidemicList(this.queryParam).then((res) => {
         if(res.data.code === 200 && res.data.message === 'success'){
@@ -585,11 +594,12 @@ export default {
         } else {
           this.getAllAccountJson = []
           this.checkedAllStaff = []
+          this.$message.error(res.data.message);
         }
         
         // console.log("res.data.code" + res.data.data.records[0])s
       }).catch((res) => {
-        
+        this.$message.error(res.data.message);
       })
      
     },
@@ -617,6 +627,8 @@ export default {
             this.$message.success('重置密码成功！');
             this.getAllAccountData()
             this.dialogReset = false
+          } else {
+            this.$message.error(res.data.message);
           }
         }).catch((res) => {
           this.$message.error(res.data.message);
@@ -651,6 +663,8 @@ export default {
               this.$message.success('修改成功！');
               this.getAllAccountData()
               this.edit_dialogFormVisible = false
+            } else {
+              this.$message.error(res.data.message);
             }
           }).catch((res) => {
             this.$message.error(res.data.message);
@@ -711,18 +725,18 @@ export default {
     },
   
     // 改变账号状态
-    changeStatus(event,account){
-      var enable = false
+    // changeStatus(event,account){
+    //   var enable = false
       
-      if(event == 1){
-        enable = true
-      }
+    //   if(event == 1){
+    //     enable = true
+    //   }
 
-      api.accountApi.enableStaff({"userId":account.id,"enable": enable}).then((res) => {
-      }).catch((res) => {
-      })
+    //   api.accountApi.enableStaff({"userId":account.id,"enable": enable}).then((res) => {
+    //   }).catch((res) => {
+    //   })
 
-    },
+    // },
 
     // 每页条数变化
     handleSizeChange(val) {
@@ -752,6 +766,8 @@ export default {
           //   roleType.value = item.id
           //   this.periods.push(roleType)
           // })
+        } else {
+          this.$message.error(res.data.message);
         }
       }).catch((res) => {
         

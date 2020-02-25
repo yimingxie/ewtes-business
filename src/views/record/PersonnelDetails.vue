@@ -228,9 +228,9 @@
 
             <el-table-column label="姓名">
               <template slot-scope="scope">
-                <span @click.native.prevent="personDetails(scope.row)" style="color: #3572FF;">
+                <router-link :to="{path:'/person-detail',query:{idCard: scope.row.idCard, epedId:scope.row.epedId}}" style="color: #3572FF;">
                   {{scope.row.name}}
-                </span>
+                </router-link>
               </template>
             </el-table-column>
         
@@ -338,7 +338,8 @@ export default {
       staffMLiftParam:{
         epedId: '',
         pointId: '',
-        date: ''
+        date: '',
+        idCard:''
       },
       dialogRelease: false,
       checkDetailsDialog: false,
@@ -370,7 +371,7 @@ export default {
       this.staffMLiftParam.epedId = row.epedId
       this.staffMLiftParam.pointId = row.pointId
       this.staffMLiftParam.date = row.time
-      // this.staffMLiftParam.pointName = row.pointName
+      this.staffMLiftParam.idCard = row.idCard
       this.getStaffManageLift()
       this.checkDetailsDialog = true
 
@@ -384,7 +385,7 @@ export default {
           this.dialogRelease = false
           this.getAllAccountData()
         } else {
-          this.$message.console.error(res.data.message);
+          this.$message.error(res.data.message);
         }
       })
       
@@ -453,6 +454,7 @@ export default {
 
         } else {
           this.getStaffInfo = []
+          this.$message.error(res.data.message);
         }
         
         // console.log("res.data.code" + res.data.data.records[0])s
@@ -471,6 +473,7 @@ export default {
          
         } else {
           this.elevatorList = []
+          this.$message.error(res.data.message);
         }
         
       })
@@ -482,12 +485,12 @@ export default {
     // 展开
     // open(){
       // 作业记录
-    getStaffTaskList(){
-      api.accountApi.staffTaskList(this.taskListParams).then((res) => {
-        this.jobRecord = res.data.data.records || []
-        this.totalPageSize2 = res.data.data.total
-      })
-    },
+    // getStaffTaskList(){
+    //   api.accountApi.staffTaskList(this.taskListParams).then((res) => {
+    //     this.jobRecord = res.data.data.records || []
+    //     this.totalPageSize2 = res.data.data.total
+    //   })
+    // },
     // },
     // 每页条数变化
     handleSizeChange(val) {
@@ -503,18 +506,18 @@ export default {
       this.getStaffManageLift()
     },
     // 每页条数变化
-    handleSizeChange2(val) {
-      this.taskListParams.limit = val
-      // console.log(`每页 ${val} 条`);
-      this.getStaffTaskList()
-    },
+    // handleSizeChange2(val) {
+    //   this.taskListParams.limit = val
+    //   // console.log(`每页 ${val} 条`);
+    //   this.getStaffTaskList()
+    // },
 
-    // 当前页变化
-    handleCurrentChange2(val) {
-      this.taskListParams.offset = val
-      // console.log(`当前页: ${val}`);
-      this.getStaffTaskList()
-    },
+    // // 当前页变化
+    // handleCurrentChange2(val) {
+    //   this.taskListParams.offset = val
+    //   // console.log(`当前页: ${val}`);
+    //   this.getStaffTaskList()
+    // },
     
 
   },
