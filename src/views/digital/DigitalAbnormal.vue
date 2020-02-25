@@ -148,7 +148,7 @@
               <div class="det-history-tr clearfix" :class="item.result == 1 ? 'warn' : ''" v-for="(item, i) in detailWarnList" :key="i" @click="openDialogDeal(item.id)">
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.celsius ? item.celsius : '--'}}℃</div>
-                <div class="det-history-td">{{item.time | dateFormat}}</div>
+                <div class="det-history-td">{{item.time | dateFormatNoSecond}}</div>
                 <div class="det-history-td">{{item.result | returnWarnResult}}</div>
               </div>
         
@@ -210,7 +210,7 @@
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">时间</div>
-              <div class="det-deal-mid-box-p">{{diaDealInfo.time | dateFormat}}</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.time | dateFormatNoSecond}}</div>
             </div>
           </div>
 
@@ -458,6 +458,9 @@ export default {
         this.closedCount = abInfo.closedCount
 
         this.detailWarnList = abInfo.data.records
+        // 分页
+        this.currentPageDetail = abInfo.data.current
+        this.totalPageDetail = abInfo.data.total
       })
     },
 
@@ -575,10 +578,10 @@ export default {
       width 23%;
     }
     .det-history-thead .det-history-th:nth-child(3),.det-history-tbody .det-history-td:nth-child(3){
-      width 25%;
+      width 34%;
     }
     .det-history-thead .det-history-th:nth-child(4),.det-history-tbody .det-history-td:nth-child(4){
-      width 30%;
+      width 20%;
     }
 
   }

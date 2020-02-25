@@ -188,6 +188,38 @@ export default {
 
     // 全部单位下拉
     this.getUseDepartmentOptions()
+
+//     function timeDiff2(d1) {//di作为一个变量传进来
+//   //如果时间格式是正确的，那下面这一步转化时间格式就可以不用了
+//   let tt = d1
+//   if (typeof d1 == 'number') {
+//     var dateObj = new Date(d1)
+//     var year = dateObj.getFullYear(),
+//       month = ("0" + (dateObj.getMonth() + 1)).slice(-2),
+//       date = ("0" + dateObj.getDate()).slice(-2),
+//       hour = ("0" + dateObj.getHours()).slice(-2),
+//       minute = ("0" + dateObj.getMinutes()).slice(-2),
+//       second = ("0" + dateObj.getSeconds()).slice(-2);
+
+//     tt = year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
+//   }
+
+//   var b = Date.parse(tt);
+//   var e = Date.now()
+
+//   var minutes = Math.floor((e - b) / 60 / 1000);
+
+
+
+//   if (minutes < 30) {
+//     return (minutes + 1) + '分钟内'
+//   } else {
+//     console.log('tttt', tt.substring(11, 19))
+//     return tt.substring(11, 19)
+//   }
+// }
+
+// console.log('gggg', timeDiff2('2020-02-25 19:34:00'))
     
 
   },
