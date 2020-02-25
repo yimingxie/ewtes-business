@@ -52,7 +52,7 @@
      
       </el-menu>
       <!-- 维保 end -->
-      <div class="codeDiv">
+      <div class="codeDiv" v-if="layout === 'admin'">
         <div class="anzhuo">
           <div class="kuang">
             扫描二维码下载

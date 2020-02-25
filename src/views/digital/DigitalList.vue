@@ -71,7 +71,7 @@
                 <div class="llt-td">{{item.address}}</div>
                 <div class="llt-td">{{item.useDepartment ? item.useDepartment : '--'}}</div>
                 <div class="llt-td">{{item.monitorNum}}</div>
-                <div class="llt-td">{{item.lastTime ? item.lastTime : '--'}}</div>
+                <div class="llt-td">{{item.lastTime | judgeYear}}</div>
                 <!-- <div class="llt-td">
                   <div class="ll-table-switch">
                     <el-switch v-model="item.status" active-color="#E2E6E8" inactive-color="#E3E7E9" :active-value="1" :inactive-value="0" :width=28 @change="switchChange($event, item.id)"></el-switch>
@@ -188,21 +188,7 @@ export default {
 
     // 全部单位下拉
     this.getUseDepartmentOptions()
-
-    // 2020-02-24 20:20:20
-    // function judgeDay(time) {
-    //   if (time === '') return '--'
-    //   let currentDay = xymFun.dateFormat(Date.now()).substring(0, 10) // 当天日期 2020-02-24
-    //   console.log('currentDay', currentDay)
-    //   if (time.substring(0, 10) == currentDay) {
-    //     // 当天则返回02-24 20:20
-    //     return time.substring(5, 16)
-    //   } else {
-    //     time.substring(2, 16)
-    //   }
-    // }
-    // console.log('ceceshi', judgeDay())
-    // judgeDay()
+    
 
   },
   methods: {
@@ -378,6 +364,26 @@ export default {
     },
 
   },
+  filters: {
+    // 年过滤器，当年则不显示年份，非当年则需要
+    'judgeYear': function (time) {
+      let timeStr = time
+      if (time === '') return '--'
+      if (typeof time == 'number') {
+        timeStr = xymFun.dateFormat(time)
+      }
+      let currentYear = xymFun.dateFormat(Date.now()).substring(0, 4) // 当天日期 2020-02-24
+      if (timeStr.substring(0, 4) == currentYear) {
+        // 今年则返回02-24 20:20
+        return timeStr.substring(5, 16)
+      } else {
+        // 非今年返回xx-02-24 20:20
+        return timeStr.substring(2, 16)
+      }
+    }
+
+  },
+
   components: {
     'city-choose2': CityChoose2,
     'search-input': SearchInput,
