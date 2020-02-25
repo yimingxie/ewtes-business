@@ -19,7 +19,8 @@
           <!-- <el-avatar shape="square" :size="210" :fit="fits" :src="url" class="s_pic" style=""></el-avatar> -->
           <div class="s_pic" style="">
             <img v-if="url" :src="url"  alt="" width="190" height="190"/>
-            <img v-else src="../../assets/images/hs/header.png"  alt="" width="190" height="190"/>
+            <img v-else-if="getStaffInfo.warnStatus == 0" src="../../assets/images/hs/header.png"  alt="" width="190" height="190"/>
+            <img v-else src="../../assets/images/hs/staffErrorHeader.png"  alt="" width="190" height="190"/>
           </div>
           <div class="s_contain">
             <!-- <router-link :to="{ name: 'editStaff', params: { staffId: this.$route.params.staffId }}"><span class="s_de_edit" ></span></router-link> -->

@@ -84,7 +84,8 @@
                 <div class="stf_content">
                   <span class="stf_pic">
                     <img v-if="account.url" :src="account.url" alt="" width="88" height="88"/>
-                    <img v-else src="../../assets/images/hs/header.png"  alt="" width="88" height="88"/>
+                    <img v-else-if="account.warnStatus == 0" src="../../assets/images/hs/header.png"  alt="" width="88" height="88"/>
+                    <img v-else src="../../assets/images/hs/staffErrorHeader.png"  alt="" width="88" height="88"/>
                   </span>
                   <span class="stf_info">
                     <span class="stf_name">

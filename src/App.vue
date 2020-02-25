@@ -426,15 +426,14 @@
     .bg
       // background url('assets/imagesPark/hs/logo2.png') no-repeat center #2E3138!important;
       // background url('assets/imagesPark/hs/logo44.png') no-repeat center #2E3138!important;
-
       background-size: 200px auto!important;
-  .collapseImg
-    background url('assets/images/hs/sliderCo.png') no-repeat center;
-    size 64px 64px
-    display inline-block
-    cursor pointer
-  .unCollapseImg
-    background url('assets/images/hs/sliderUnco.png') no-repeat center;
+  // .collapseImg
+  //   background url('assets/images/hs/sliderCo.png') no-repeat center;
+  //   size 64px 64px
+  //   display inline-block
+  //   cursor pointer
+  // .unCollapseImg
+  //   background url('assets/images/hs/sliderUnco.png') no-repeat center;
   .el-menu-vertical-demo
     .el-menu-item,.el-submenu__title
       .menu_icon

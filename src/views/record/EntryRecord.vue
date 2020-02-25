@@ -6,12 +6,12 @@
     <div class="panel topSelect">
        <div class="subSelect">
         <el-date-picker
-          v-model="queryParam.date"
+          v-model="triggeTime"
           class="datePicker"
           type="date"
           placeholder="选择日期"
           value-format="yyyy-MM-dd HH:mm:ss"
-          @change="getAllAccountData()"
+          @change="changeTriggeTime()"
           :picker-options="pickerOptions"
           >
         </el-date-picker>
@@ -146,7 +146,7 @@ export default {
       getAllDepJson:[],
       value1:'',
       corpLists:[],
-
+      triggeTime:''
     }
   },
   components: {
@@ -173,6 +173,16 @@ export default {
     this.getCorps()
   },
   methods: {
+    changeTriggeTime(){
+      if(this.triggeTime){
+        this.queryParam.date = this.triggeTime
+      } else {
+        this.queryParam.date = ''
+      }
+      console.log("time===---" + this.queryParam.date)
+
+      this.getAllAccountData()
+    },
     // 获取公司
     getCorps(){
       api.person.getCorps().then((res) => {
