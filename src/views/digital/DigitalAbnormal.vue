@@ -36,7 +36,7 @@
             <div class="llt-tr clearfix">
               <div class="llt-th">检测区域名称</div>
               <div class="llt-th">日期</div>
-              <div class="llt-th">异常总数</div>
+              <div class="llt-th">告警总数</div>
               <div class="llt-th" @click="getDetDetail">操作</div>
             </div>
           </div>
@@ -92,7 +92,7 @@
         </div>
         <div class="detdetail-info-data clearfix">
           <div class="detdetail-info-data-box" style="width: 25%">
-            <div class="detdetail-info-data-box-h">异常总数</div>
+            <div class="detdetail-info-data-box-h">告警总数</div>
             <div class="detdetail-info-data-box-p" style="color: #F56B25;">
               <span>{{abnormalCount}}</span>人
             </div>

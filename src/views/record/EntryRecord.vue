@@ -178,6 +178,8 @@ export default {
       api.person.getCorps().then((res) => {
         if(res.data.code == 200) {
           this.corpLists = res.data.data || []
+        } else {
+          this.$message.error(res.data.message);
         }
       })
     },
@@ -223,6 +225,7 @@ export default {
 
         } else {
           this.getAllAccountJson = []
+          this.$message.error(res.data.message);
         }
         
         // console.log("res.data.code" + res.data.data.records[0])s
