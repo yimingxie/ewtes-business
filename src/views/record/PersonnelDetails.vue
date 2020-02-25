@@ -423,42 +423,12 @@ export default {
             // var url = api.accountApi.viewPic(item.avatar)
             this.url = api.accountApi.viewPic(this.getStaffInfo.avatar)
           }
-          // this.url = api.accountApi.viewPic(this.getStaffInfo.avatar)
-
-          // var areaName1 = newArea.getAreaName(this.getStaffInfo.areaCode.join(",")).join('  ')
-          // Vue.set(this.getStaffInfo, 'areaName', areaName1)
-          // console.log("areaName1===" + areaName1)
-
-          // this.departmentName = res.data.data.depName
-          // this.elevatorTotal = res.data.data.elevatorTotal
-          // this.birthdayFrom = moment(moment(this.getStaffInfo.birthday).format('YYYYMMDD'),'YYYYMMDD').fromNow().replace("前","").replace("内","")
-          // this.entryTimeFrom = moment(moment(this.getStaffInfo.entryTime).format('YYYYMMDD'),'YYYYMMDD').fromNow().replace("前","").replace("内","")
-          // this.empTimeFrom = moment(moment(this.getStaffInfo.empTime).format('YYYYMMDD'),'YYYYMMDD').fromNow().replace("前","").replace("内","")
-          // console.log("this.birthdayFrom---" + this.birthdayFrom)
-
-          
-          // this.totalPageSize = res.data.data.elevatorTotal
-          // this.url = "http://192.168.100.7:8080/domino/view/image?filename=" + this.getStaffInfo.avatarUrl
-          
-          
-          // this.elevatorList.forEach(item =>{
-          //   var areaName = newArea.getAreaName(item.areaCode).join('')
-          //   Vue.set(item, 'areaName', areaName)
-          // })
-          
-          // 获取头像
-          
-          // this.jobRecord = res.data.data.jobRecord
-          // this.jobRecord = res.data.data.jobRecord
-
-          // this.totalPageSize = res.data.data.total
 
         } else {
           this.getStaffInfo = []
           this.$message.error(res.data.message);
         }
         
-        // console.log("res.data.code" + res.data.data.records[0])s
       }).catch((res) => {
         
       })

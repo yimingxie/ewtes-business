@@ -340,7 +340,7 @@
         <el-dropdown :hide-on-click="false" trigger="click" class="treeDep">
           <span class="el-dropdown-link" >
             <span v-if="EditAccountForm.departmentId !== ''">{{checkDepName1}}</span>
-            <span v-else style="color:#C2C7CC;">请选择所属部门</span>
+            <span v-else style="color:#C2C7CC;">请选择所属组织</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown" class="depTreeDropdown">
