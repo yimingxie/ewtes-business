@@ -166,7 +166,7 @@
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.value}}℃</div>
                 <div class="det-history-td">{{item.pointName}}</div>
-                <div class="det-history-td">{{item.time | timeDiff}}</div>
+                <div class="det-history-td">{{item.time | timeDiff2}}</div>
               </div>
             </div>
           </div>
@@ -238,7 +238,7 @@
               <div class="det-history-tr clearfix" :class="item.result == 1 ? 'warn' : ''" v-for="(item, i) in detailWarnList" :key="i" @click="openDialogDeal(item.id)">
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.celsius ? item.celsius : '--'}}℃</div>
-                <div class="det-history-td">{{item.time | dateFormat}}</div>
+                <div class="det-history-td">{{item.time | dateFormatNoSecond}}</div>
                 <div class="det-history-td">{{item.result | returnWarnResult}}</div>
               </div>
         
@@ -751,10 +751,10 @@ export default {
       width 23%;
     }
     .det-history-thead .det-history-th:nth-child(3),.det-history-tbody .det-history-td:nth-child(3){
-      width 25%;
+      width 30%;
     }
     .det-history-thead .det-history-th:nth-child(4),.det-history-tbody .det-history-td:nth-child(4){
-      width 30%;
+      width 24%;
     }
 
   }

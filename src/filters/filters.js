@@ -16,7 +16,7 @@ export function formatDate (date) {
 /**
  * 格式化时间戳
  * @param {number} timestamp 时间戳
- * @return {string} "2019-4-16 15:50:30"
+ * @return {string} "2019-04-16 15:50:30"
  */
 export function dateFormat(timestamp) {
   // str.slice(-2) 从字符串的倒数第二个字符开始截取 "abcd" -> "cd"
@@ -56,6 +56,22 @@ export function dateFormat3(timestamp) {
     second = ("0" + dateObj.getSeconds()).slice(-2);
 
   var result = year + '-' + month + '-' + date
+  return result;
+}
+
+// 格式化时间戳，不保留秒
+export function dateFormatNoSecond(timestamp) {
+  // str.slice(-2) 从字符串的倒数第二个字符开始截取 "abcd" -> "cd"
+  if (typeof timestamp != 'number') return timestamp.substring(0, 16)
+  var dateObj = new Date(timestamp)
+  var year = dateObj.getFullYear(),
+    month = ("0" + (dateObj.getMonth() + 1)).slice(-2),
+    date = ("0" + dateObj.getDate()).slice(-2),
+    hour = ("0" + dateObj.getHours()).slice(-2),
+    minute = ("0" + dateObj.getMinutes()).slice(-2),
+    second = ("0" + dateObj.getSeconds()).slice(-2);
+
+  var result = year + '-' + month + '-' + date + ' ' + hour + ':' + minute;
   return result;
 }
 
@@ -199,6 +215,37 @@ export function timeDiff(d1) {//di作为一个变量传进来
 
   if (minutes < 30) {
     return (minutes + 1) + '分钟内'
+  } else {
+    console.log('tttt', tt.substring(11, 19))
+    return tt.substring(11, 19)
+  }
+}
+
+
+export function timeDiff2(d1) {//di作为一个变量传进来
+  //如果时间格式是正确的，那下面这一步转化时间格式就可以不用了
+  let tt = d1
+  if (typeof d1 == 'number') {
+    var dateObj = new Date(d1)
+    var year = dateObj.getFullYear(),
+      month = ("0" + (dateObj.getMonth() + 1)).slice(-2),
+      date = ("0" + dateObj.getDate()).slice(-2),
+      hour = ("0" + dateObj.getHours()).slice(-2),
+      minute = ("0" + dateObj.getMinutes()).slice(-2),
+      second = ("0" + dateObj.getSeconds()).slice(-2);
+
+    tt = year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
+  }
+
+  var b = Date.parse(tt);
+  var e = Date.now()
+
+  var minutes = Math.floor((e - b) / 60 / 1000);
+
+
+
+  if (minutes < 30) {
+    return (minutes + 1 ) + '分钟内'
   } else {
     console.log('tttt', tt.substring(11, 19))
     return tt.substring(11, 19)
