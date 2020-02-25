@@ -238,7 +238,7 @@
               <div class="det-history-tr clearfix" :class="item.result == 1 ? 'warn' : ''" v-for="(item, i) in detailWarnList" :key="i" @click="openDialogDeal(item.id)">
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.celsius ? item.celsius : '--'}}℃</div>
-                <div class="det-history-td">{{item.time | splitFormatDate}}</div>
+                <div class="det-history-td">{{item.time | dateFormat}}</div>
                 <div class="det-history-td">{{item.result | returnWarnResult}}</div>
               </div>
         
@@ -286,7 +286,7 @@
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">时间</div>
-              <div class="det-deal-mid-box-p">{{diaDealInfo.time}}</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.time | dateFormat}}</div>
             </div>
           </div>
 
@@ -439,7 +439,9 @@ export default {
       if (that.timer) clearInterval(that.timer)
       this.timer = setInterval(() => {
         that.getRealList()
-      }, 3000) // 10秒TODO
+        that.getDetStat()
+        that.getHistoryList()
+      }, 10000) // 10秒TODO
     },
 
     // 获取实时状态
@@ -472,7 +474,7 @@ export default {
       })
     },
 
-    // 获取监测区域下拉
+    // 筛选-获取监测区域下拉
     getMoniList() {
       api.digital.getEpidemicMonitorList(this.parentCode).then(res => {
         console.log('监测区域下拉', res.data)

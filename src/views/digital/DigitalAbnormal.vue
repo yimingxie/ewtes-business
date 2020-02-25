@@ -36,7 +36,7 @@
             <div class="llt-tr clearfix">
               <div class="llt-th">检测区域名称</div>
               <div class="llt-th">日期</div>
-              <div class="llt-th">异常总数</div>
+              <div class="llt-th">告警总数</div>
               <div class="llt-th" @click="getDetDetail">操作</div>
             </div>
           </div>
@@ -92,7 +92,7 @@
         </div>
         <div class="detdetail-info-data clearfix">
           <div class="detdetail-info-data-box" style="width: 25%">
-            <div class="detdetail-info-data-box-h">异常总数</div>
+            <div class="detdetail-info-data-box-h">告警总数</div>
             <div class="detdetail-info-data-box-p" style="color: #F56B25;">
               <span>{{abnormalCount}}</span>人
             </div>
@@ -148,7 +148,7 @@
               <div class="det-history-tr clearfix" :class="item.result == 1 ? 'warn' : ''" v-for="(item, i) in detailWarnList" :key="i" @click="openDialogDeal(item.id)">
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.celsius ? item.celsius : '--'}}℃</div>
-                <div class="det-history-td">{{item.time | splitFormatDate}}</div>
+                <div class="det-history-td">{{item.time | dateFormat}}</div>
                 <div class="det-history-td">{{item.result | returnWarnResult}}</div>
               </div>
         
@@ -210,7 +210,7 @@
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">时间</div>
-              <div class="det-deal-mid-box-p">{{diaDealInfo.time}}</div>
+              <div class="det-deal-mid-box-p">{{diaDealInfo.time | dateFormat}}</div>
             </div>
           </div>
 

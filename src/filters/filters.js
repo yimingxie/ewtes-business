@@ -200,6 +200,7 @@ export function timeDiff(d1) {//di作为一个变量传进来
   if (minutes < 30) {
     return (minutes + 1) + '分钟内'
   } else {
-    return d1.substring(11, 19)
+    console.log('tttt', tt.substring(11, 19))
+    return tt.substring(11, 19)
   }
 }

@@ -113,9 +113,9 @@
           <div class="dia-clist">
             <div class="dia-citem">
               <el-form-item prop="observedName">
-                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>任务名称：</div>
+                <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测任务名称：</div>
                 <div class="dia-citem-ib">
-                  <el-input v-model="ruleFormAddObserve.observedName" size="small" placeholder="请输入任务名称"></el-input>
+                  <el-input v-model="ruleFormAddObserve.observedName" size="small" placeholder="请输入检测任务名称"></el-input>
                 </div>
               </el-form-item>
             </div>
