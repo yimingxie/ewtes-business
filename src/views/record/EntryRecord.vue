@@ -180,7 +180,7 @@ export default {
         this.queryParam.date = ''
       }
       console.log("time===---" + this.queryParam.date)
-
+      this.queryParam.offset = 1
       this.getAllAccountData()
     },
     // 获取公司
