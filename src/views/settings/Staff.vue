@@ -159,7 +159,7 @@
       <el-row :gutter="78">
         <el-col :span="12">
           <el-form-item label="手机号" prop="phone">
-            <el-input type="number" v-model="addAccountForm.phone" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input @keyup.native="numberCheck" v-model="addAccountForm.phone" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
         </el-col>
 
@@ -307,7 +307,7 @@
       <el-row :gutter="78">
         <el-col :span="12">
           <el-form-item label="手机号" prop="phone">
-            <el-input type="number" v-model="Edit1AccountForm.phone" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input @keyup.native="numberCheck" v-model="Edit1AccountForm.phone" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
         </el-col>
 
@@ -752,6 +752,10 @@ export default {
     this.getStaffDeps()
   },
   methods: {
+    numberCheck(){
+      this.addAccountForm.phone = this.addAccountForm.phone.replace(/[^\.\d]/g,'');
+      this.Edit1AccountForm.phone = this.Edit1AccountForm.phone.replace(/[^\.\d]/g,'');
+    },
     // 获取员工部门
     getStaffDeps(){
       api.accountApi.getStaffDeps().then((res) => {

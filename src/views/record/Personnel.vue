@@ -922,7 +922,7 @@ export default {
   .stf_active
     color: #3572FF;
     font-size: 14px;
-    absolute top 1px right 0
+    absolute top 5px right 0
     i 
       border: 1px solid rgba(53,114,255,0.43);
       border-radius: 50%;
