@@ -167,13 +167,13 @@ const router = new Router({
     },
 
     // {
-    //   path: "/opbackend",
-    //   name: "LoginAdmin",
+    //   path: "/TreeEg",
+    //   name: "TreeEg",
     //   meta: {
     //     title: "防疫防控客户运营后台",
     //     auto: false // 是否需要权限
     //   },
-    //   component: (resolve) => require(['./views/common/LoginAdmin.vue'], resolve)
+    //   component: (resolve) => require(['./views/settings/TreeEg.vue'], resolve)
     // },
     
   ]

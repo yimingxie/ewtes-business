@@ -74,55 +74,52 @@
       <!-- 列表 Start -->
       <el-row>
         <el-col :lg="8" :xl="6" :xs='8' :sm='8' :md='8' class="" v-for="(account, index) in getAllAccountJson" :key="index">
-          <div class="staff-grid-content bg-purple " :class="{'highlightDiv staff_highlight' : account.warnStatus == 1}">
-              <!-- <div class="grid_checkbox">
-                <el-checkbox-group v-model="checkedStaffs" @change="handleCheckedStaffsChange">
-                  <el-checkbox :label="account.id" :key="index" class="checkbox16">{{nonetext}}</el-checkbox>
-                </el-checkbox-group>
-              </div> -->
-              <div class="grid_content">
-                <div class="stf_content">
-                  <span class="stf_pic">
-                    <img v-if="account.url" :src="account.url" alt="" width="88" height="88"/>
-                    <img v-else-if="account.warnStatus == 0" src="../../assets/images/hs/header.png"  alt="" width="88" height="88"/>
-                    <img v-else src="../../assets/images/hs/staffErrorHeader.png"  alt="" width="88" height="88"/>
-                  </span>
-                  <span class="stf_info">
-                    <span class="stf_name">
-                      <!-- <router-link :to="{ name: 'personnelDetails', params: { staffId: account.id }}"><span>{{account.name}}</span></router-link> -->
-                      <router-link :to="{path:'/person-detail',query:{idCard: account.idCard, epedId:account.lastEpedId}}"><span>{{account.name}}</span></router-link>
-                      <!-- <router-link :to="{ name: 'parkDetails', params: { staffId: account.id }}"><span>{{account.name}}</span></router-link> -->
-                      <span v-if="account.sex == 0"><img src="../../assets/images/hs/female.png"  alt="" /></span>
-                      <span v-else><img src="../../assets/images/hs/male.png"  alt="" /></span>
+          
+            <div class="staff-grid-content bg-purple " :class="{'highlightDiv staff_highlight' : account.warnStatus == 1}">
+               <router-link :to="{path:'/person-detail',query:{idCard: account.idCard, epedId:account.lastEpedId}}">
+                <div class="grid_content">
+                  <div class="stf_content">
+                    <span class="stf_pic">
+                      <img v-if="account.url" :src="account.url" alt="" width="88" height="88"/>
+                      <img v-else-if="account.warnStatus == 0" src="../../assets/images/hs/header.png"  alt="" width="88" height="88"/>
+                      <img v-else src="../../assets/images/hs/staffErrorHeader.png"  alt="" width="88" height="88"/>
                     </span>
-                    
-                    <div class="stf_department">{{account.phone}}</div>
-                    <div class="stf_wendu" style="width: 100%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: inline-block;vertical-align: middle;">
-                      <span style="margin-right:20px">{{account.lastTemperature ? account.lastTemperature.toFixed(1) : '--'}}℃</span>
-                      <span style="">{{account.epedName ? account.epedName : '--'}}</span>
-                    </div>
-                    <!-- <div class="stf_p stf_phone">{{account.username}}</div> -->
-                    <div class="stf_p stf_area">{{account.corpName}}</div>
-                    <div class="stf_p stf_liftnum">{{account.departmentName ? account.departmentName : '--'}} </div>
-                  </span>
-                  <span class="stf_active" :class="{'activeFree' : 1 == account.warnStatus}">
-                    <i></i><span v-text="account.warnStatus == 0 ? '正常' : '异常'"></span>
-                  </span>
+                    <span class="stf_info">
+                      <span class="stf_name">
+                        <!-- <router-link :to="{ name: 'personnelDetails', params: { staffId: account.id }}"><span>{{account.name}}</span></router-link> -->
+                        <span>{{account.name}}</span>
+                        <!-- <router-link :to="{ name: 'parkDetails', params: { staffId: account.id }}"><span>{{account.name}}</span></router-link> -->
+                        <span v-if="account.sex == 0"><img src="../../assets/images/hs/female.png"  alt="" /></span>
+                        <span v-else><img src="../../assets/images/hs/male.png"  alt="" /></span>
+                      </span>
+                      
+                      <div class="stf_department">{{account.phone}}</div>
+                      <div class="stf_wendu" style="width: 100%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display: inline-block;vertical-align: middle;">
+                        <span style="margin-right:20px">{{account.lastTemperature ? account.lastTemperature.toFixed(1) : '--'}}℃</span>
+                        <span style="">{{account.epedName ? account.epedName : '--'}}</span>
+                      </div>
+                      <!-- <div class="stf_p stf_phone">{{account.username}}</div> -->
+                      <div class="stf_p stf_area">{{account.corpName}}</div>
+                      <div class="stf_p stf_liftnum">{{account.departmentName ? account.departmentName : '--'}} </div>
+                    </span>
+                    <span class="stf_active" :class="{'activeFree' : 1 == account.warnStatus}">
+                      <i></i><span v-text="account.warnStatus == 0 ? '正常' : '异常'"></span>
+                    </span>
+                  </div>
+                  
                 </div>
-                
-              </div>
-              <!-- <div class="stf_status">
-                <el-switch
-                  v-model="account.valid"
-                  :active-value="1"
-                  :inactive-value="0"
-                  :width=28
-                  @change='changeStatus($event,account)'
-                >
-                </el-switch>
-              </div> -->
-            
-          </div>
+                <!-- <div class="stf_status">
+                  <el-switch
+                    v-model="account.valid"
+                    :active-value="1"
+                    :inactive-value="0"
+                    :width=28
+                    @change='changeStatus($event,account)'
+                  >
+                  </el-switch>
+                </div> -->
+              </router-link>
+            </div>
         </el-col>
       </el-row>
       <!-- 列表 End -->

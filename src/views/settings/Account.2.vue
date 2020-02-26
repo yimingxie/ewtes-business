@@ -273,7 +273,7 @@
           </el-form-item>
         
           <el-form-item label="登录账号" prop="username">
-            <el-input v-model="addAccountForm.username" placeholder="请输入11位手机号" @blur="accountBlur()" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input v-model="addAccountForm.username" type="number" placeholder="请输入11位手机号" @blur="accountBlur()" auto-complete="off" clearable size="small" @change="numberInput" maxlength="11"></el-input>
           </el-form-item>
 
           <el-form-item label="初始密码" prop="password" >
@@ -310,7 +310,7 @@
       </el-form-item>
 
       <el-form-item label="登录账号：" prop="username">
-        <el-input v-model="EditAccountForm.username" placeholder="请输入登录账号，即手机号" auto-complete="off" clearable size="small" maxlength="11"></el-input>
+        <el-input v-model="EditAccountForm.username" type="number" placeholder="请输入登录账号，即手机号" auto-complete="off" clearable size="small" maxlength="11"></el-input>
       </el-form-item>
       
      
@@ -837,6 +837,9 @@ export default {
     
   },
   methods: {
+    numberInput(){
+      if(this.addAccountForm.username.length>11)this.addAccountForm.username=this.addAccountForm.username.slice(0,11)
+    },
     // 添加员工
     handleAddtclick(data, node) {
       console.log("data" + JSON.stringify(data))

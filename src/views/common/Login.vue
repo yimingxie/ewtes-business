@@ -142,7 +142,9 @@
 
 
           } else {
-            this.warningTip = res.data.message
+            // this.warningTip = res.data.message
+            this.$message.error(res.data.message);
+            
           }
 
         })
@@ -214,7 +216,8 @@
             //   this.$message.error('暂无权限，请联系管理员');
             // }
           } else {
-            this.warningTip = res.data.message
+            // this.warningTip = res.data.message
+            this.$message.error(res.data.message);
           }
           
         }).catch((res) => {
