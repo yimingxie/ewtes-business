@@ -132,7 +132,7 @@ export function returnPointDataCN(value) {
  */
 export function returnWarnResult(value) {
   if (value == 1) {
-    return '未处理'
+    return '去处理'
   } else if (value == 2) {
     return '已处理'
   } else if (value == 3) {
@@ -214,7 +214,7 @@ export function timeDiff(d1) {//di作为一个变量传进来
   //   , hours + "计算出小时数", minutes + "计算相差分钟数", seconds + "计算相差秒数");
 
   if (minutes < 30) {
-    return (minutes + 1) + '分钟内'
+    return (minutes + 1) + '分钟前'
   } else {
     console.log('tttt', tt.substring(11, 19))
     return tt.substring(11, 19)
@@ -245,7 +245,7 @@ export function timeDiff2(d1) {//di作为一个变量传进来
 
 
   if (minutes < 30) {
-    return (minutes + 1 ) + '分钟内'
+    return (minutes + 1 ) + '分钟前'
   } else {
     console.log('tttt', tt.substring(11, 19))
     return tt.substring(11, 19)

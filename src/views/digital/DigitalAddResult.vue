@@ -27,26 +27,26 @@
             <div class="digital-detail-basic-content">
               <div class="lar-con clearfix">
                 <el-form-item prop="epedName" class="lar-box clearfix">
-                  <div class="lar-box-h4">防疫点名称<i class="must-fill-icon"></i></div>
+                  <div class="lar-box-h4"><span class="dia-citem-label-must">*</span>防疫点名称</div>
                   <div class="lar-box-el-input">
                     <el-input v-model="ruleForm.epedName" maxlength="100" placeholder="请输入防疫点名称" size="small"></el-input>
                   </div>
                 </el-form-item>
                 <el-form-item prop="inNum" class="lar-box">
-                  <div class="lar-box-h4">内部编号<i class="must-fill-icon"></i></div>
+                  <div class="lar-box-h4"><span class="dia-citem-label-must">*</span>内部编号</div>
                   <div class="lar-box-el-input">
                     <el-input v-model="ruleForm.inNum" maxlength="100" placeholder="请输入防疫点内部编号" size="small"></el-input>
                   </div>
                 </el-form-item>
                 <!-- 省市区街道级联 -->
                 <el-form-item prop="areaCode" class="lar-box">
-                  <div class="lar-box-h4">区域<i class="must-fill-icon"></i></div>
+                  <div class="lar-box-h4"><span class="dia-citem-label-must">*</span>区域</div>
                   <div class="lar-box-el-input">
                     <city-choose ref="cityChooseRef" @childVal="getCity" :selectCity="special.areaCode"></city-choose>
                   </div>
                 </el-form-item>
                 <el-form-item prop="address" class="lar-box">
-                  <div class="lar-box-h4">详细地址<i class="must-fill-icon"></i></div>
+                  <div class="lar-box-h4"><span class="dia-citem-label-must">*</span>详细地址</div>
                   <div class="lar-box-el-input">
                     <el-input v-model="ruleForm.address" maxlength="100" size="small" id="address" placeholder="请输入详细地址"></el-input>
                   </div>

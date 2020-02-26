@@ -496,11 +496,12 @@ export default {
         this.diaDealInfo.imgUrl = api.accountApi.viewPic(this.diaDealInfo.url)
 
         // 未处理
-        if (this.diaDealInfo.result == 1) {
-          this.diaDealState = 'put'
-        } else {
-          this.diaDealState = ''
-        }
+        this.diaDealState = ''
+        // if (this.diaDealInfo.result == 1) {
+        //   this.diaDealState = 'put'
+        // } else {
+        //   this.diaDealState = ''
+        // }
       })
       
 

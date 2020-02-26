@@ -35,52 +35,58 @@
             <div class="digital-detail-basic-content">
               <div class="lar-con clearfix">
                 <el-form-item prop="epedName" class="lar-box clearfix">
-                  <div class="lar-box-h4">防疫点名称<i class="must-fill-icon"></i></div>
+                  <div class="lar-box-h4"><span class="dia-citem-label-must" v-if="submitState == 'put'">*</span>防疫点名称</div>
                   <div class="lar-box-el-input" v-if="submitState == 'put'">
                     <el-input v-model="ruleForm.epedName" maxlength="100" placeholder="请输入防疫点名称" size="small"></el-input>
                   </div>
                   <div class="show-pp" v-else>{{ruleForm.epedName !== '' ? ruleForm.epedName : '--'}}</div>
                 </el-form-item>
                 <el-form-item prop="inNum" class="lar-box">
-                  <div class="lar-box-h4">内部编号<i class="must-fill-icon"></i></div>
+                  <div class="lar-box-h4"><span class="dia-citem-label-must" v-if="submitState == 'put'">*</span>内部编号</div>
                   <div class="lar-box-el-input" v-if="submitState == 'put'">
                     <el-input v-model="ruleForm.inNum" maxlength="100" placeholder="请输入防疫点内部编号" size="small"></el-input>
                   </div>
                   <div class="show-pp" v-else>{{ruleForm.inNum !== '' ? ruleForm.inNum : '--'}}</div>
                 </el-form-item>
 
-                <!-- TODO -->
-                <el-form-item class="lar-box" v-if="submitState != 'put'">
-                  <div class="lar-box-h4">所属上级</div>
-                  <!-- <div class="lar-box-el-input" v-if="submitState == 'put'">
-                    <el-select v-model="ruleForm.parentId" placeholder="请选择所属上级" size="small" style="width: 100%;">
-                      <el-option v-for="item in parentIdOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                    </el-select>
-                  </div> -->
-                  <div class="show-pp">{{ruleForm.parentName && ruleForm.parentName !== '' ? ruleForm.parentName : '--'}}</div>
-                </el-form-item>
+                
 
 
                 <!-- 省市区街道级联 -->
                 <el-form-item prop="areaCode" class="lar-box">
-                  <div class="lar-box-h4">区域<i class="must-fill-icon"></i></div>
+                  <div class="lar-box-h4"><span class="dia-citem-label-must" v-if="submitState == 'put'">*</span>区域</div>
                   <div class="lar-box-el-input" v-if="submitState == 'put'">
                     <city-choose ref="cityChooseRef" @childVal="getCity" :selectCity="special.areaCode"></city-choose>
                   </div>
                   <div class="show-pp" v-else>{{ruleForm.localArea !== '' ? ruleForm.localArea : '--'}}</div>
                 </el-form-item>
+
+
                 <el-form-item prop="address" class="lar-box">
-                  <div class="lar-box-h4">详细地址<i class="must-fill-icon"></i></div>
-                  <div class="lar-box-el-input" v-if="submitState == 'put'">
-                    <el-input v-model="ruleForm.address" maxlength="100" size="small" id="address" placeholder="请输入详细地址"></el-input>
+                  <div class="lar-box-h4"><span class="dia-citem-label-must" v-if="submitState == 'put'">*</span>详细地址</div>
+                  <div class="special-address-box">
+                    <div class="lar-box-el-input lar-box-el-input-address" :class="submitState == 'put' ? 'special-address-opacity' : ''">
+                      <el-input v-model="ruleForm.address" maxlength="100" size="small" id="address" placeholder="请输入详细地址"></el-input>
+                    </div>
+                    <div class="show-pp" :class="submitState == 'put' ? '' : 'special-address-opacity'">{{ruleForm.address !== '' ? ruleForm.address : '--'}}</div>
                   </div>
-                  <div class="show-pp" v-else>{{ruleForm.address !== '' ? ruleForm.address : '--'}}</div>
+                  
                 </el-form-item>
 
               </div>
 
               <div class="map-box">
                 <div id="map-container"></div>
+              </div>
+
+              <div class="lar-box clearfix" style="float: none; width: 100%;" v-if="submitState != 'put'">
+                <div class="lar-box-h4" style="padding-right: 42px; width: 7.2%;">所属上级</div>
+                <!-- <div class="lar-box-el-input" v-if="submitState == 'put'">
+                  <el-select v-model="ruleForm.parentId" placeholder="请选择所属上级" size="small" style="width: 100%;">
+                    <el-option v-for="item in parentIdOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                </div> -->
+                <div class="show-pp show-pp-parentname">{{ruleForm.parentName && ruleForm.parentName !== '' ? ruleForm.parentName : '--'}}</div>
               </div>  
 
             </div>
@@ -558,6 +564,9 @@ export default {
       var auto = new AMap.Autocomplete({
         input: "address"
       });
+
+
+
       AMap.event.addListener(auto, 'select', function(e){
         console.log('e', e)
         map.clearMap()
@@ -579,8 +588,9 @@ export default {
           that.$refs.laForm.clearValidate('areaCode')
         }, 100)
 
-
       })
+
+
 
       // 点击添加点
       if (this.submitState == 'put') {

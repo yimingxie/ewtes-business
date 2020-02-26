@@ -164,7 +164,7 @@ export default {
     //   , hours + "计算出小时数", minutes + "计算相差分钟数", seconds + "计算相差秒数");
 
     if (minutes < 30) {
-      return (minutes + 1) + '分钟内'
+      return (minutes + 1) + '分钟前'
     } else {
       console.log('tttt', tt.substring(11, 19))
       return tt.substring(11, 19)

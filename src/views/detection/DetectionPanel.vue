@@ -169,6 +169,21 @@
                 <div class="det-history-td">{{item.time | timeDiff2}}</div>
               </div>
             </div>
+
+            <!-- 分页 -->
+            <div class="list-page panel-page" style="padding-bottom: 20px;margin-top: 0px;">
+              <el-pagination
+                @size-change="pageSizeChangeDetail"
+                @current-change="currentPageChangeDetail"
+                :current-page="currentPageDetail"
+                :page-sizes="[10, 20, 30]"
+                :page-size="pageSizeDetail"
+                layout="prev, pager, next, sizes, jumper"
+                :total="totalPageDetail">
+              </el-pagination>
+            </div>
+
+
           </div>
 
         </div>
@@ -243,6 +258,20 @@
               </div>
         
             </div>
+
+            <!-- 分页 -->
+            <div class="list-page panel-page" style="padding-bottom: 20px;margin-top: 0px;">
+              <el-pagination
+                @size-change="pageSizeChange"
+                @current-change="currentPageChange"
+                :current-page="currentPageInfo"
+                :page-sizes="[10, 20, 30]"
+                :page-size="pageSizeInfo"
+                layout="prev, pager, next, sizes, jumper"
+                :total="totalPageInfo">
+              </el-pagination>
+            </div>
+
           </div>
         </div>
 
@@ -356,8 +385,13 @@ export default {
       historyParams: {
         epedId: "",
         valid: "", // -1 -全部 0 -正常 1 -异常
-        pointId: ""
+        pointId: "",
+        limit: 10,
+        offset: 1
       },
+      currentPageDetail: 1,
+      totalPageDetail: 1,
+      pageSizeDetail: 10,
       statusOptions: [
         // {label: '全部', value: -1},
         {label: '异常', value: 0},
@@ -366,6 +400,7 @@ export default {
       monitorOptions: [],
 
       // --检测区域详情侧滑--
+      currentInfo: '',
       sliderShow: false,
       abnormalCount: 0,
       processCount: 0,
@@ -378,6 +413,14 @@ export default {
         today: '',
         abnormalCount: ''
       },
+      detDetailInfoParams: {
+        "pointId": "",
+        "limit": 10,
+        "offset": 1
+      },
+      currentPageInfo: 1,
+      totalPageInfo: 1,
+      pageSizeInfo: 10,
 
 
       // --告警处理弹窗--
@@ -519,42 +562,62 @@ export default {
       this.historyParams.epedId = this.parentCode
       api.detection.getHistoryList(this.historyParams).then(res => {
         console.log('历史记录', res.data)
-        this.historyList = res.data.data || []
+        this.historyList = res.data.data.records || []
         this.historyList.forEach(item => {
           if (item.url && item.url !== '') {
             item.imgUrl = api.accountApi.viewPic(item.url)
           }
         })
+
+        // 分页
+        this.currentPageDetail = res.data.data.current
+        this.totalPageDetail = res.data.data.total
         console.log('this.historyList', this.historyList)
 
         
       })
     },
 
+    // 历史记录当前分页改变
+    currentPageChangeDetail(current) {
+      this.historyParams.offset = current
+      this.getHistoryList()
+    },
+
+    // 历史记录分页大小改变
+    pageSizeChangeDetail(size) {
+      this.historyParams.limit = size
+      this.getHistoryList()
+    },
+
     // 筛选历史记录状态
     historyStatusChange() {
+      this.historyParams.offset = 1
       this.getHistoryList()
     },
 
     // 筛选历史记录检测区域
     historyMoniChange() {
+      this.historyParams.offset = 1
       this.getHistoryList()
     },
 
     // 获取检测区域详情
     getDetDetail(item) {
       let info = item
+      this.currentInfo = item
       this.sliderShow = true
-      let param = {
-        "pointId": info.pointId,
-        "limit": 10000,
-        "offset": 1
-      }
+      // let param = {
+      //   "pointId": info.pointId,
+      //   "limit": 10000,
+      //   "offset": 1
+      // }
+      this.detDetailInfoParams.pointId = info.pointId
       this.detDetailInfo.pointName = info.pointName
       this.detDetailInfo.today = info.today
       this.detDetailInfo.abnormalCount = info.abnormalCount
 
-      api.detection.getAbnormalDetail(param).then(res => {
+      api.detection.getAbnormalDetail(this.detDetailInfoParams).then(res => {
         console.log('检测区域详情', res.data)
         let abInfo = res.data.data
         this.abnormalCount = abInfo.abnormalCount
@@ -563,7 +626,21 @@ export default {
         this.closedCount = abInfo.closedCount
 
         this.detailWarnList = abInfo.data.records
+        this.currentPageInfo = abInfo.data.current
+        this.totalPageInfo = abInfo.data.total
       })
+    },
+
+    // 当前分页改变
+    currentPageChange(current) {
+      this.detDetailInfoParams.offset = current
+      this.getDetDetail(this.currentInfo)
+    },
+
+    // 分页大小改变
+    pageSizeChange(size) {
+      this.detDetailInfoParams.limit = size
+      this.getDetDetail(this.currentInfo)
     },
 
     // 打开异常处理弹窗
@@ -611,13 +688,15 @@ export default {
         this.$message.success('提交成功')
         // 更新数据
         // 获取实时状态
-        this.getRealList()
-        // 历史记录
-        this.getHistoryList()
-        // 统计
-        this.getDetStat()
-        this.dialogDeal = false
-        this.sliderShow = false
+        // this.getRealList()
+        // // 历史记录
+        // this.getHistoryList()
+        // // 统计
+        // this.getDetStat()
+        // this.dialogDeal = false
+        // this.sliderShow = false
+
+        this.closeSliderShow()
 
       })
 
@@ -625,6 +704,12 @@ export default {
 
     // 关闭侧滑
     closeSliderShow() {
+      // reset
+      this.detDetailInfoParams = {
+        "pointId": "",
+        "limit": 10,
+        "offset": 1
+      }
       // 更新数据
       // 获取实时状态
       this.getRealList()
@@ -667,6 +752,9 @@ export default {
 .x-select-box .el-input__inner{
   text-align: center;
 }
+.panel-page .el-pagination__jump{
+  margin-left: 0 !important;
+}
 
 @media screen and (max-width: 1600px) {
   .x-select-box-status{
@@ -691,17 +779,29 @@ export default {
 <style lang="stylus" scoped>
 #DetectionPanel{
   padding-bottom: 30px;
+
+  // 新增
+  .x-digital-detail{
+    height: 120px;
+  }
+  .xddetail-name-p{
+    margin-top: 30px;
+  }
+  .xddetail-list{
+    margin-left: 30px;
+  }
+
+
   .det-history-table{
     height: calc(100vh - 340px);
     overflow: auto;    
   }
 
   .xddetail-name{
-    width: 232px;
+    width: 226px;
+    padding: 0;
   }
-  .xddetail-list{
-    padding-left: 252px;
-  }
+ 
 
   .x-digital-detail{
     border-top-left-radius: 0;
@@ -771,6 +871,12 @@ export default {
     }
     .detection-history-choose{
       right: 0 !important;
+    }
+    .stat-head-box{
+      margin-left: 100px;
+    }
+    .xddetail-list .stat-head-box:first-child{
+      margin-left: 0;
     }
     
     
