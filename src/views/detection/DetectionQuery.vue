@@ -151,12 +151,23 @@ export default {
 #DetectionQuery{
   padding-bottom: 30px;
 
-  .xddetail-name{
-    width: 170px;
+  // 新增
+  .x-digital-detail{
+    height: 120px;
+  }
+  .xddetail-name-p{
+    margin-top: 30px;
   }
   .xddetail-list{
-    padding-left: 252px;
+    margin-left: 30px;
   }
+
+
+  .xddetail-name{
+    width: 170px;
+    padding: 0;
+  }
+  
 
   .x-digital-detail{
     border-top-left-radius: 0;

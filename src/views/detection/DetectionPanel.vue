@@ -171,7 +171,7 @@
             </div>
 
             <!-- 分页 -->
-            <div class="list-page" style="padding-bottom: 20px;margin-top: 0px;">
+            <div class="list-page panel-page" style="padding-bottom: 20px;margin-top: 0px;">
               <el-pagination
                 @size-change="pageSizeChangeDetail"
                 @current-change="currentPageChangeDetail"
@@ -260,7 +260,7 @@
             </div>
 
             <!-- 分页 -->
-            <div class="list-page" style="padding-bottom: 20px;margin-top: 0px;">
+            <div class="list-page panel-page" style="padding-bottom: 20px;margin-top: 0px;">
               <el-pagination
                 @size-change="pageSizeChange"
                 @current-change="currentPageChange"
@@ -752,6 +752,9 @@ export default {
 .x-select-box .el-input__inner{
   text-align: center;
 }
+.panel-page .el-pagination__jump{
+  margin-left: 0 !important;
+}
 
 @media screen and (max-width: 1600px) {
   .x-select-box-status{
@@ -776,17 +779,29 @@ export default {
 <style lang="stylus" scoped>
 #DetectionPanel{
   padding-bottom: 30px;
+
+  // 新增
+  .x-digital-detail{
+    height: 120px;
+  }
+  .xddetail-name-p{
+    margin-top: 30px;
+  }
+  .xddetail-list{
+    margin-left: 30px;
+  }
+
+
   .det-history-table{
     height: calc(100vh - 340px);
     overflow: auto;    
   }
 
   .xddetail-name{
-    width: 232px;
+    width: 226px;
+    padding: 0;
   }
-  .xddetail-list{
-    padding-left: 252px;
-  }
+ 
 
   .x-digital-detail{
     border-top-left-radius: 0;
@@ -856,6 +871,12 @@ export default {
     }
     .detection-history-choose{
       right: 0 !important;
+    }
+    .stat-head-box{
+      margin-left: 100px;
+    }
+    .xddetail-list .stat-head-box:first-child{
+      margin-left: 0;
     }
     
     

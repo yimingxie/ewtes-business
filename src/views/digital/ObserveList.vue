@@ -7,27 +7,36 @@
     </div>
 
     <div class="x-container">
-      <div class="x-digital-detail">
+      <div class="x-digital-detail clearfix">
         <div class="xddetail-name">
-          <div class="xddetail-name-p">{{epedName}}</div>
+          <div class="xddetail-name-p">{{epedName | splitEpedName}}</div>
+          <div class="xddetail-name-p-full" v-if="epedName.length >= 10">{{epedName}}</div>
         </div>
         <div class="xddetail-list clearfix">
-          <div class="xddetail-list-item clearfix" style="width: 100%">
-            <div class="xddetail-list-item-title">内部编号</div>
-            <div class="xddetail-list-item-p">{{inNum}}</div>
+          <div class="xddetail-list-item-first clearfix">
+            <div class="xddetail-list-item clearfix" style="width: 100%">
+              <div class="xddetail-list-item-title">内部编号</div>
+              <div class="xddetail-list-item-p">{{inNum}}</div>
+            </div>
+
           </div>
-          <div class="xddetail-list-item clearfix">
-            <div class="xddetail-list-item-title">区域</div>
-            <div class="xddetail-list-item-p">{{localArea}}</div>
+          <div class="xddetail-list-item-second clearfix">
+            <div class="xddetail-list-item clearfix">
+              <div class="xddetail-list-item-title">区域</div>
+              <div class="xddetail-list-item-p">{{localArea}}</div>
+            </div>
+            <div class="xddetail-list-item clearfix">
+              <div class="xddetail-list-item-title">详细地址</div>
+              <div class="xddetail-list-item-p" style="padding-right: 0;">{{address}}</div>
+            </div>
           </div>
-          <div class="xddetail-list-item clearfix">
-            <div class="xddetail-list-item-title">详细地址</div>
-            <div class="xddetail-list-item-p">{{address}}</div>
+          <div class="xddetail-list-item-third clearfix">
+            <div class="xddetail-list-item clearfix">
+              <div class="xddetail-list-item-title">所属上级</div>
+              <div class="xddetail-list-item-p" style="padding-right: 0;">{{parentName ? parentName : '--'}}</div>
+            </div>
           </div>
-          <div class="xddetail-list-item clearfix">
-            <div class="xddetail-list-item-title">所属上级</div>
-            <div class="xddetail-list-item-p" style="padding-right: 0;">{{parentName ? parentName : '--'}}</div>
-          </div>
+          
         </div>
 
       </div>
@@ -115,7 +124,7 @@
               <el-form-item prop="observedName">
                 <div class="dia-citem-label"><span class="dia-citem-label-must">*</span>检测任务名称：</div>
                 <div class="dia-citem-ib">
-                  <el-input v-model="ruleFormAddObserve.observedName" size="small" placeholder="请输入检测任务名称"></el-input>
+                  <el-input v-model="ruleFormAddObserve.observedName" maxlength="50" size="small" placeholder="请输入检测任务名称"></el-input>
                 </div>
               </el-form-item>
             </div>
@@ -493,6 +502,16 @@ export default {
 
 
   },
+  filters: {
+    // 超出长度10，显示省略号
+    splitEpedName: function (str) {
+      if (typeof str == 'string' && str.length >= 10) {
+        return str.substring(0, 8) + '...'
+      } else {
+        return str
+      }
+    }
+  },
   components: {
     'city-choose2': CityChoose2,
     'search-input': SearchInput,
@@ -504,6 +523,9 @@ export default {
 
 <style lang="stylus" scoped>
 #ObserveList{
+  .xddetail-name{
+    min-width: 160px;
+  }
   .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
     width 4%;
     text-align center;
@@ -525,17 +547,23 @@ export default {
 }
 
 @media screen and (max-width: 1600px) {
-  #DiagnosisList{
-    .xddetail-list-item-p{
-      max-width: 210px;
+  #ObserveList{
+    .xddetail-list{
+      width 63%;
+    }
+    .xddetail-list-item-second .xddetail-list-item-p{
+      max-width: 250px;
       padding-right: 30px;
     }
   }
 }
 @media screen and (max-width: 1400px) {
-  #DiagnosisList{
-    .xddetail-list-item-p{
-      max-width: 180px;
+  #ObserveList{
+    .xddetail-list{
+      width 60%;
+    }
+    .xddetail-list-item-second .xddetail-list-item-p{
+      max-width: 216px;
       padding-right: 30px;
     }
   }
