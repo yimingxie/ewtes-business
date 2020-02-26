@@ -263,7 +263,7 @@
       <el-row :gutter="18">
         <el-col :span="12">
           <el-form-item label="身份证号" prop="idCard" >
-            <span class="formShowContent" v-if="EditAccountForm.birthday && EditAccountForm.idCard.length == 18">{{EditAccountForm.idCard.substring(0,6) + EditAccountForm.birthday.substring(0,6) + EditAccountForm.idCard.substring(12,17)}}</span>
+            <span class="formShowContent" v-if="EditAccountForm.birthday && EditAccountForm.idCard.length == 18">{{EditAccountForm.idCard.substring(0,6) + EditAccountForm.birthday.substring(0,6) + EditAccountForm.idCard.substring(12,18)}}</span>
             <span class="formShowContent" v-else>{{EditAccountForm.idCard}}</span>
           </el-form-item>
         </el-col>
