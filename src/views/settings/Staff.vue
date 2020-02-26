@@ -159,13 +159,13 @@
       <el-row :gutter="78">
         <el-col :span="12">
           <el-form-item label="手机号" prop="phone">
-            <el-input v-model="addAccountForm.phone" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input type="number" v-model="addAccountForm.phone" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="12">
           <el-form-item label="所属部门" prop="departmentName" >
-            <el-input v-model="addAccountForm.departmentName" placeholder="请输入所属部门" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input v-model="addAccountForm.departmentName" placeholder="请输入所属部门" auto-complete="off" clearable size="small" ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -255,7 +255,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="身份证类型" prop="idType" >
-            <span class="formShowContent">{{EditAccountForm.idType == 1 ? '完整': '简要'}}</span>
+            <span class="formShowContent">{{EditAccountForm.birthday ? '完整': '简要'}}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -263,13 +263,15 @@
       <el-row :gutter="18">
         <el-col :span="12">
           <el-form-item label="身份证号" prop="idCard" >
-            <span class="formShowContent">{{EditAccountForm.idCard}}</span>
+            <span class="formShowContent" v-if="EditAccountForm.birthday && EditAccountForm.idCard.length == 18">{{EditAccountForm.idCard.substring(0,6) + EditAccountForm.birthday.substring(0,6) + EditAccountForm.idCard.substring(12,17)}}</span>
+            <span class="formShowContent" v-else>{{EditAccountForm.idCard}}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="出生日期" prop="birthday">
             <span class="formShowContent">
-              {{EditAccountForm.birthday}}&nbsp;&nbsp;&nbsp;&nbsp;{{EditAccountForm.age}}
+              {{EditAccountForm.birthday && EditAccountForm.birthday !== '' && EditAccountForm.birthday !== null ? (EditAccountForm.birthday).substring(0,4) + '-' + (EditAccountForm.birthday).substring(4,6) + '-' + (EditAccountForm.birthday).substring(6,8) : '--'}}
+              &nbsp;&nbsp;&nbsp;&nbsp;{{EditAccountForm.age}}
             </span>
           </el-form-item>
         </el-col>
@@ -305,13 +307,13 @@
       <el-row :gutter="78">
         <el-col :span="12">
           <el-form-item label="手机号" prop="phone">
-            <el-input v-model="Edit1AccountForm.phone" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input type="number" v-model="Edit1AccountForm.phone" placeholder="请输入手机号" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="12">
           <el-form-item label="所属部门" prop="departmentName" >
-            <el-input v-model="Edit1AccountForm.departmentName" placeholder="请输入所属部门" auto-complete="off" clearable size="small"  maxlength="11"></el-input>
+            <el-input v-model="Edit1AccountForm.departmentName" placeholder="请输入所属部门" auto-complete="off" clearable size="small"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -997,7 +999,7 @@ export default {
             // this.EditAccountForm.departmentName = row.departmentName || '--'
             // this.EditAccountForm.sex = row.sex  == 1 ? '男':"女"
             // this.EditAccountForm.idType = row.idType == 1 ? '完整': '简要'
-            this.EditAccountForm.birthday = row.birthday ? row.birthday.substring(0, 4)+'-' + row.birthday.substring(4, 6)+'-' +row.birthday.substring(6, 8): '--'
+            // this.EditAccountForm.birthday = row.birthday ? row.birthday.substring(0, 4)+'-' + row.birthday.substring(4, 6)+'-' +row.birthday.substring(6, 8): '--'
             this.EditAccountForm.age = row.age ? row.age + '岁' : '--'
             if(this.EditAccountForm.idCard !== '' ){
               this.EditAccountForm.idCardPre = this.EditAccountForm.idCard.substring(0,6)
@@ -1006,9 +1008,16 @@ export default {
 
             // 编辑
             this.Edit1AccountForm = res.data.data
+            
             if(this.Edit1AccountForm.idCard !== '' ) {
               this.Edit1AccountForm.idCardPre = this.Edit1AccountForm.idCard.substring(0,6)
               this.Edit1AccountForm.idCardAfter = this.Edit1AccountForm.idCard.substring(12,18)
+              if(this.Edit1AccountForm.birthday && this.Edit1AccountForm.birthday !== '' && this.Edit1AccountForm.birthday !== null && this.Edit1AccountForm.idCard.length == 18){
+                this.Edit1AccountForm.idType = 1
+                this.Edit1AccountForm.idCard = this.Edit1AccountForm.idCard.substring(0,6) + this.Edit1AccountForm.birthday.substring(0,6) + this.Edit1AccountForm.idCard.substring(12,18)
+              } else {
+                this.Edit1AccountForm.idType = 2
+              }
             }
             console.log("this.Edit1AccountForm====111==" + JSON.stringify(row))
          } else {
