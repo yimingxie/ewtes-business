@@ -282,6 +282,13 @@ export default  {
     return http.get(
       `${url2}/staff/department/list`
     )
+  },
+
+  // 根据corpId获取部门列表
+  getCorpDeps(params){
+    return http.get(
+      `${url2}/corp/department/list`, params
+    )
   }
 }
 

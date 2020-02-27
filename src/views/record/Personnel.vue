@@ -6,7 +6,7 @@
     <div class="panel topSelect">
       <div class="subSelect">
      
-        <el-select @change="corpSelectChange()" clearable v-model="queryParam.depId" placeholder="全部单位" class="regionPicker">
+        <el-select @change="corpSelectChange()" clearable v-model="queryParam.corpId" placeholder="全部单位" class="regionPicker">
           <el-option
             v-for="item in corpLists"
             :key="item.id"
@@ -320,7 +320,8 @@ export default {
         departmentName : "",        // 部门ID 
         epedId : "",   //防疫点ID
         search : "",   //名字或手机号
-        warnStatus:""      //状态
+        warnStatus:"",      //状态
+        corpId:''
       },
       getAllAccountJson: [],
       roleQueryParam:{
@@ -419,18 +420,19 @@ export default {
     // 人员防疫记录列表
     this.getAllAccountData()
 
-    // 获取员工部门
-    this.getStaffDeps()
+    
 
     // 获取单位列表
     this.getCorps()
   },
   methods: {
     // 获取员工部门
-    getStaffDeps(){
-      api.accountApi.getStaffDeps().then((res) => {
+    getCorpDeps(){
+      api.accountApi.getCorpDeps({corpId:this.queryParam.corpId}).then((res) => {
         if(res.data.code == 200) {
+
           this.depLists = res.data.data || []
+
         } else {
           this.$message.error(res.data.message);
         }
@@ -495,7 +497,16 @@ export default {
     getCorps(){
       api.person.getCorps().then((res) => {
         if(res.data.code == 200) {
-          this.corpLists = res.data.data || []
+          var all = [{id: "", name: "全部单位"}]
+          if(res.data.data){
+            this.corpLists = all.concat(res.data.data)
+          } else {
+            this.corpLists = [{id: "", name: "全部单位"}]
+          }
+
+          // 获取员工部门
+          this.getCorpDeps()
+
         } else {
           this.$message.error(res.data.message);
         }
@@ -510,17 +521,19 @@ export default {
     // },
     // 筛选单位（公司）
     corpSelectChange(){
-
-    },
-    // 筛选防疫点
-    dotSelectChange(){
-      if(this.queryParam.epedId !== '') {
+      if(this.queryParam.corpId !== '') {
         this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
+      } else {
+        this.queryParam.departmentName = '' 
       }
+      
       // 筛选时默认跳到第一页
       this.queryParam.offset = 0
 
       this.getAllAccountData()
+
+      // 获取员工部门
+      this.getCorpDeps()
     },
     // 根据部门筛选
     depSelectChange() {
@@ -532,6 +545,17 @@ export default {
 
       this.getAllAccountData()
     },
+    // 筛选防疫点
+    // dotSelectChange(){
+    //   if(this.queryParam.epedId !== '') {
+    //     this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
+    //   }
+    //   // 筛选时默认跳到第一页
+    //   this.queryParam.offset = 0
+
+    //   this.getAllAccountData()
+    // },
+    
  
     // 区域筛选
     // selectCity(cityArr, cnName) {
@@ -809,8 +833,8 @@ export default {
       this.period = ""// 账号状态
       this.period1 = "" // 作业状态
       this.selectArea = []
-      this.queryParam.areaCode = "" // 区域
-      this.queryParam.depId = "" // 部门ID
+      this.queryParam.corpId = "" // 区域
+      this.queryParam.departmentName = "" // 部门ID
 
       this.queryParam.search = this.searchKey
       // this.queryParam.phone = this.searchKey

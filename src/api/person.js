@@ -33,10 +33,10 @@ export default  {
       `${url2}/epidemic/userinfo`,params
     )
   },
-  // 查询单位
+  // 查询单位列表
   getCorps(){
     return http.get(
-      `${url2}/corp/queryList`
+      `${url2}/epidemic/useDepartment`
     )
   },
   // 人员防疫记录列表

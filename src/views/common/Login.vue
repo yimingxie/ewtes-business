@@ -175,7 +175,7 @@
             // }
             // var roleType = window.localStorage.getItem("type")
             // var func = res.data.data.func
-            console.log("func1111===" + func)
+            // console.log("func1111===" + func)
             // console.log("" +func instanceof Array)
             var flag = false
             // if(func.length > 0){
@@ -186,7 +186,7 @@
             }
             // }
             
-            console.log("flag==" + flag)
+            // console.log("flag==" + flag)
 
             if(res.data.data.admin || flag) {
               this.$router.push('/digital-list')
