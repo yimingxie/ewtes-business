@@ -98,7 +98,7 @@
                   </div>
                 </div>
                 <div class="llt-td">
-                  <span class="llt-td-a" @click="openDialogEditDiagn(item.id)">编辑</span>
+                  <span class="llt-td-a" @click="openDialogEditDiagn(item.id, item.observeTaskId, item.taskName)">编辑</span>
                 </div>
               </div>
             </div>
@@ -325,23 +325,23 @@ export default {
       })
     },
 
-    // 获取下拉
+    // 获取未绑定的观察任务下拉
     getObservTaskOptions() {
-      let observeParams = {
-        "observedName": "",
-        "epedId": this.parentCode,
-        "limit": 1000, 
-        "offset": 1      
-      }
-      api.digital.getObserveList(observeParams).then(res => {
+      // let observeParams = {
+      //   "observedName": "",
+      //   "epedId": this.parentCode,
+      //   "limit": 1000, 
+      //   "offset": 1      
+      // }
+      api.digital.getUnusedTask(this.parentCode).then(res => {
         console.log('检测任务下拉', res.data)
-        let detail = res.data.data.records || []
+        let detail = res.data.data || []
         this.observTaskOptions = []
         if (detail.length === 0) return
         detail.forEach(item => {
           this.observTaskOptions.push({
-            label: item.observedName,
-            value: item.observedId
+            label: item.name,
+            value: item.id
           })
         })
       })
@@ -449,25 +449,55 @@ export default {
     },
 
     // 打开编辑监测应用弹窗
-    openDialogEditDiagn(id) {
-      this.getObservTaskOptions()
+    openDialogEditDiagn(id, currentObId, currentTaskName) {
+      // this.getObservTaskOptions()
 
-      api.digital.getDiagnosis(id).then(res => {
-        console.log('res查看', res.data)
-        let diagnInfo = res.data.data
-        this.dialogAddDiagn = true
-
-        this.currentDiagnId = diagnInfo.id
-        this.dialogAddDiagnTitle = '编辑监测应用'
-        this.ruleFormAddDiagn = {
-          "name": diagnInfo.name,
-          "epId": this.parentCode, 
-          "observTaskId": diagnInfo.observeTaskId,
-          "operator": parseInt(diagnInfo.operator),
-          "value": diagnInfo.value,
-          "error": diagnInfo.errValue
+      // 更新重组观察任务下拉
+      api.digital.getUnusedTask(this.parentCode).then(res => {
+        console.log('检测任务下拉', res.data)
+        let detail = res.data.data || []
+        if (currentObId) {
+          this.observTaskOptions = [{
+            label: currentTaskName,
+            value: currentObId
+          }]
+        } else {
+          this.observTaskOptions = []
         }
+        
+        // if (detail.length === 0) return
+        detail.forEach(item => {
+          this.observTaskOptions.push({
+            label: item.name,
+            value: item.id
+          })
+        })
+        console.log('observTaskOptions', this.observTaskOptions)
+
+        api.digital.getDiagnosis(id).then(res => {
+          console.log('res查看', res.data)
+          let diagnInfo = res.data.data
+          this.dialogAddDiagn = true
+
+          this.currentDiagnId = diagnInfo.id
+          this.dialogAddDiagnTitle = '编辑监测应用'
+          this.ruleFormAddDiagn = {
+            "name": diagnInfo.name,
+            "epId": this.parentCode, 
+            "observTaskId": diagnInfo.observeTaskId,
+            "operator": parseInt(diagnInfo.operator),
+            "value": diagnInfo.value,
+            "error": diagnInfo.errValue
+          }
+
+        })
+
+
       })
+
+
+
+      
     },
 
     // 提交编辑监测应用

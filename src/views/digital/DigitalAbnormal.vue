@@ -224,7 +224,7 @@
                   <el-radio v-model="dealRadioValue" :label="3">解除告警</el-radio>
                 <!-- </el-radio-group> -->
               </div>
-              <div class="det-deal-mid-box-p" v-else>{{diaDealInfo.result | returnWarnResult}}</div>
+              <div class="det-deal-mid-box-p" v-else>{{diaDealInfo.result | returnWarnResult2}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">处理描述</div>
