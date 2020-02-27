@@ -309,7 +309,7 @@
         <el-input v-model="EditAccountForm.name" placeholder="请输入名称" auto-complete="off" clearable size="small"></el-input>
       </el-form-item>
 
-      <el-form-item label="登录账号：" prop="username">
+      <el-form-item label="登录账号" prop="username">
         <el-input @keyup.native="numberCheck2" v-model="EditAccountForm.username" placeholder="请输入登录账号，即手机号" auto-complete="off" clearable size="small" maxlength="11"></el-input>
       </el-form-item>
       
@@ -843,8 +843,6 @@ export default {
       // this.EditAccountForm.username = this.EditAccountForm.username.replace(/[^\.\d]/g,'');
     },
     numberCheck2(){
-      // console.log("this.addAccountForm.username==" + this.addAccountForm.username)
-      // this.addAccountForm.username = this.addAccountForm.username.replace(/[^\.\d]/g,'');
       this.EditAccountForm.username = this.EditAccountForm.username.replace(/[^\.\d]/g,'');
     },
     // numberInput(){
