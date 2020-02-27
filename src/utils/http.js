@@ -130,8 +130,11 @@ axios.interceptors.response.use(response => {
         }
         
         // 清除token
-        window.localStorage.removeItem('accessToken');
-        window.localStorage.removeItem('refreshToken');
+      
+        window.localStorage.removeItem('accessToken')
+        window.localStorage.removeItem('refreshToken')
+        window.localStorage.removeItem('func')
+        window.localStorage.removeItem('roleType')
         router.push('/');
       }
 
