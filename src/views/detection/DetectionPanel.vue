@@ -793,7 +793,8 @@ export default {
 
 
   .det-history-table{
-    height: calc(100vh - 340px);
+    // height: calc(100vh - 340px);
+    height: calc(100vh - 310px);
     overflow: auto;    
   }
 

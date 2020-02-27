@@ -85,7 +85,10 @@
                   </el-checkbox-group>
                 </div>
                 <div class="llt-td">{{item.name}}</div>
-                <div class="llt-td">{{item.taskName}}({{item.observeTaskId}})</div>
+                <div class="llt-td">
+                  <div v-if="item.observeTaskId">{{item.taskName}}({{item.observeTaskId}})</div>
+                  <div v-else>--</div>
+                </div>
                 <div class="llt-td">{{item.operator | returnOperatorCN}}</div>
                 <div class="llt-td">{{item.value}}</div>
                 <div class="llt-td">{{item.errValue}}</div>
@@ -324,15 +327,21 @@ export default {
 
     // 获取下拉
     getObservTaskOptions() {
-      api.digital.getUnusedTask(this.parentCode).then(res => {
+      let observeParams = {
+        "observedName": "",
+        "epedId": this.parentCode,
+        "limit": 1000, 
+        "offset": 1      
+      }
+      api.digital.getObserveList(observeParams).then(res => {
         console.log('检测任务下拉', res.data)
-        let detail = res.data.data || []
+        let detail = res.data.data.records || []
         this.observTaskOptions = []
         if (detail.length === 0) return
         detail.forEach(item => {
           this.observTaskOptions.push({
-            label: item.name,
-            value: item.id
+            label: item.observedName,
+            value: item.observedId
           })
         })
       })

@@ -149,7 +149,7 @@
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.celsius ? item.celsius : '--'}}℃</div>
                 <div class="det-history-td">{{item.time | dateFormatNoSecond}}</div>
-                <div class="det-history-td">{{item.result | returnWarnResult}}</div>
+                <div class="det-history-td">{{item.result | returnWarnResult2}}</div>
               </div>
         
             </div>
