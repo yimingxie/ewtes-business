@@ -673,8 +673,16 @@ export default {
 
     // 打开弹窗
     openDialogAddCheckPoint() {
-      this.clearRuleFormCheckPoint()
-      this.dialogAddCheckPoint = true
+      // 曾经的弹窗，先注释
+      // this.clearRuleFormCheckPoint()
+      // this.dialogAddCheckPoint = true
+
+      let ruleFormCheckPoint = {
+        pointName: '',
+        pointData: [], // 存的是多选值
+        pointDataCN: '' // 转化出的中文
+      }
+      this.checkPoint.push(ruleFormCheckPoint)
     },
 
     // 关闭弹窗
@@ -807,6 +815,19 @@ export default {
 
 
           console.log('ruleForm', this.ruleForm)
+          console.log('checkPointttttttt', this.checkPoint)
+
+          // 简易校验监测区域
+          let pointNameResult = this.checkPoint.some(item => {
+            return item.pointName === ''
+          })
+          if (pointNameResult) return this.$message.error('监测区域名称不能为空')
+
+          let pointDataResult = this.checkPoint.some(item => {
+            return item.pointData.length === 0
+          })
+          if (pointDataResult) return this.$message.error('可监测数据不能为空')
+
 
           
           let param = {

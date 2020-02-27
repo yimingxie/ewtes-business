@@ -131,6 +131,7 @@ export default {
   // border: 1px solid rgba(255,255,255,0.10)!important;
   border: 1px solid rgba(0,0,0,0.2)!important;
   padding: 0 10px!important
+  cursor pointer;
 }
 .year-month-picker.on{
   background: #3f6aff !important;
@@ -147,6 +148,7 @@ export default {
 .YearMonthPicker{
 
   .year-month-picker{
+    cursor pointer;
     float left;
     width 116px;
     position relative;
