@@ -130,8 +130,11 @@ axios.interceptors.response.use(response => {
         }
         
         // 清除token
-        window.localStorage.removeItem('accessToken');
-        window.localStorage.removeItem('refreshToken');
+      
+        window.localStorage.removeItem('accessToken')
+        window.localStorage.removeItem('refreshToken')
+        window.localStorage.removeItem('func')
+        window.localStorage.removeItem('roleType')
         router.push('/');
       }
 
@@ -217,7 +220,7 @@ if (process.env.NODE_ENV == 'development') {
   // localURL = `${protocol}//192.168.100.3`
   localURL = `${protocol}//192.168.100.8:8080`
   // localURL = `${protocol}//192.168.100.89:8080`
-  localURL = `${protocol}//lorns.gidomino.com`
+  // localURL = `${protocol}//lorns.gidomino.com`
 } else if (process.env.NODE_ENV == 'production') {
   //  localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//192.168.100.3`
   // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//iot.gidomino.com`

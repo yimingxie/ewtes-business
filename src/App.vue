@@ -12,18 +12,18 @@
       <!-- Start: 菜单栏 -->
       
       <!-- 维保 -->
-      <el-menu v-if="layout === 'admin'" @select="routerSelect" router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+      <el-menu v-if="layout === 'admin'"  router :default-active="$route.path" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
         <div class="logoCollapse">
         </div>
        
-        <el-menu-item  index="/digital-list" route="/digital-list"> 
+        <el-menu-item  index="/digital-list" route="/digital-list" :disabled="ifDisabled('数字防疫点')" > 
           <i class="menu_icon icon-prevent"></i>
-          <span slot="title">数字防疫点</span>
+          <span slot="title" @click="menuClick('数字防疫点')">数字防疫点</span>
         </el-menu-item>
         
-        <el-menu-item  index="/detection-query" route="/detection-query" >
+        <el-menu-item  index="/detection-query" route="/detection-query" :disabled="ifDisabled('检测诊断')">
           <i class="menu_icon icon-diagnosis"></i>
-          <span slot="title">检测诊断</span>
+          <span slot="title" @click="menuClick('检测诊断')">检测诊断</span>
         </el-menu-item>
      
         <el-submenu index="1" >
@@ -32,9 +32,13 @@
             <span slot="title">防疫记录</span>
           </template>
 
-          <el-menu-item index="/personnel" route="/personnel" >人员防疫记录</el-menu-item>
+          <el-menu-item index="/personnel" route="/personnel" :disabled="ifDisabled('防疫记录')" >
+            <span @click="menuClick('防疫记录')">人员防疫记录</span>
+          </el-menu-item>
 
-          <el-menu-item index="/entryRecord" route="/entryRecord">防疫点出入记录</el-menu-item>
+          <el-menu-item index="/entryRecord" route="/entryRecord" :disabled="ifDisabled('防疫记录')" >
+            <span @click="menuClick('防疫记录')">防疫点出入记录</span>
+          </el-menu-item>
           
         </el-submenu>
 
@@ -44,9 +48,13 @@
             <span slot="title">系统</span>
           </template>
 
-          <el-menu-item index="/account" route="/account" >账号管理</el-menu-item>
+          <el-menu-item index="/account" route="/account" :disabled="ifDisabled('账号管理')" >
+            <span @click="menuClick('账号管理')">账号管理</span>
+          </el-menu-item>
 
-          <el-menu-item index="/staff" route="/staff">员工管理</el-menu-item>
+          <el-menu-item index="/staff" route="/staff" :disabled="ifDisabled('员工管理')" >
+            <span @click="menuClick('员工管理')">员工管理</span>
+          </el-menu-item>
 
         </el-submenu>
      
@@ -128,8 +136,8 @@
         title:'电梯行业监管战情室',
         // showMenu: true,
         isCollapse: false,
-        modulesJson: window.localStorage.getItem("modules"),
-        type: window.localStorage.getItem("type"),
+        func: window.localStorage.getItem("func"),
+        roleType: window.localStorage.getItem("roleType"),
         getAccountDetail:[],
         theme: "",
         corpType:'',
@@ -165,11 +173,8 @@
         if(to.name=='Login' || to.name=='LoginAdmin'){
           window.localStorage.removeItem('accessToken')
           window.localStorage.removeItem('refreshToken')
-          window.localStorage.removeItem('corpType')
-          window.localStorage.removeItem('corpId')
-          window.localStorage.removeItem('type')
-          window.localStorage.removeItem('auth')
-          window.localStorage.removeItem('theme')
+          window.localStorage.removeItem('func')
+          window.localStorage.removeItem('roleType')
         }
 
       },
@@ -181,9 +186,9 @@
         if (this.layout === 'admin') {
           
           // 重新获取用户的权限信息
-          this.type = window.localStorage.getItem('type')
-          this.corpType = window.localStorage.getItem('corpType')
-          this.modulesJson = window.localStorage.getItem('modules')
+          this.roleType = window.localStorage.getItem('roleType')
+          this.func = window.localStorage.getItem('func')
+
           if(window.localStorage.getItem('auth') && JSON.stringify(window.localStorage.getItem('auth')) !== '{}'){
             var uiJson = JSON.parse(window.localStorage.getItem('auth'))
             this.auth = uiJson.wb || {} // 维保页面json
@@ -209,6 +214,12 @@
     },
 
     methods: {
+      menuClick(title){
+        // console.log("func +" + this.func)
+        if(this.ifDisabled(title)){
+          this.$message.error('当前账号无权限')
+        }
+      },
       // 打开侧边栏
       openSidebar(){
         this.isCollapse = false
@@ -217,11 +228,11 @@
       },
       // 切换路由
       routerSelect(index){
-        // console.log("index===" + index)
+        console.log("index===" + index)
         var routerName = index.replace('/','')
-        // console.log("routerName===" + routerName)
-        let flag = this.auth[routerName] && this.auth[routerName].show && this.auth[routerName].show == true
-        if(flag || index == '') {
+        console.log("fuc===" + this.func[2])
+
+        if(index == '') {
           this.$message.error("正式版开放使用");
           return
         }
@@ -260,23 +271,24 @@
 
       // 判断菜单是否可用
       ifDisabled(title) {
-        var flag = false
-        if(this.type.indexOf("administrator") > -1){
-          flag = true
+        var flag = true
+        
+        // 管理员 拥有全部权限
+        if(this.roleType == 'admin') {
+          flag = false
         }
-        // 通用管理员与维保超管拥有全部权限
-        // if(this.type.indexOf("domino") > -1 || this.type.indexOf("administrator") > -1) {
-        //   flag = false
-        // }
-        // else {
-        //   var modulesJson = JSON.parse(this.modulesJson)
-        //   for(var i = 0; i < modulesJson.length ; i++) {
-        //     // if( modulesJson[i].name.indexOf(title) !== -1 || modulesJson[i].name.indexOf('通用') !== -1 || modulesJson[i].name.indexOf('管理员专用') !== -1){
-        //     if( modulesJson[i].name.indexOf(title) !== -1) {
-        //       flag = false
-        //     }
-        //   }
-        // }
+        //非管理员
+        else {
+          var func = this.func
+          if(func.length > 0){
+            // for(var i = 0; i < func.length ; i++) {
+              if( func.indexOf(title) !== -1) {
+                flag = false
+              // }
+            }
+          }
+          
+        }
         return flag 
         
       },
@@ -298,11 +310,11 @@
       quit () {
         window.localStorage.removeItem('accessToken')
         window.localStorage.removeItem('refreshToken')
-        window.localStorage.removeItem('corpType')
-        window.localStorage.removeItem('corpId')
-        window.localStorage.removeItem('type')
-        window.localStorage.removeItem('auth')
-        window.localStorage.removeItem('theme')
+        window.localStorage.removeItem('func')
+        window.localStorage.removeItem('roleType')
+        // window.localStorage.removeItem('type')
+        // window.localStorage.removeItem('auth')
+        // window.localStorage.removeItem('theme')
     
         this.$message.info('您已退出登录');
         this.$router.push('/')

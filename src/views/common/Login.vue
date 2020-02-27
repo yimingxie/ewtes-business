@@ -154,29 +154,48 @@
         api.log.login(this.loginForm).then((res) => {
           if(res.data.code === 200){
             
-            // 存储token,modules,corpId,theme
             window.localStorage.setItem('accessToken', res.data.data.token)
             window.localStorage.setItem('refreshToken', res.data.data.refreshToken)
-            // window.localStorage.setItem('type', res.data.data.type)
-            // 企业类型
-            // if(res.data.data.corpType){
-            //   window.localStorage.setItem('corpType', res.data.data.corpType)
-            // }
-            // 页面json
-            // if(res.data.data.ui){
-            //   window.localStorage.setItem('auth', res.data.data.ui)
-            // }
-            // let theme = res.data.data.description && res.data.data.description.indexOf('深色') > -1 ? 'theme2' : 'theme1'
-            
 
-            // if(res.data.data.modules){
-            //   window.localStorage.setItem('modules', JSON.stringify(res.data.data.modules))
+            if(res.data.data.func){
+              window.localStorage.setItem('func', JSON.stringify(res.data.data.func))
+            }
+            // console.log("res.data.data.admin==" + res.data.data.admin)
+            // 角色类型
+            // if(res.data.data.admin && res.data.data.admin !== undefined){
+            window.localStorage.setItem('roleType', res.data.data.admin ? 'admin':'')
             // }
-            // if(res.data.data.corpId){
-            //   window.localStorage.setItem('corpId', res.data.data.corpId)
+           
+           
+            
+            var func = res.data.data.func || []
+            // console.log(func instanceof Array)
+            // if(func instanceof Array){
+            //   func.join()
             // }
-            // 设置记住密码
-            // console.log('this.rememberPwd===' + this.rememberPwd)
+            // var roleType = window.localStorage.getItem("type")
+            // var func = res.data.data.func
+            console.log("func1111===" + func)
+            // console.log("" +func instanceof Array)
+            var flag = false
+            // if(func.length > 0){
+            for(var i = 0; i < func.length ; i++) {
+              if( func[i].indexOf('数字防疫点') !== -1) {
+                flag = true
+              }
+            }
+            // }
+            
+            console.log("flag==" + flag)
+
+            if(res.data.data.admin || flag) {
+              this.$router.push('/digital-list')
+            } else {
+              this.$router.push('/center')
+            }
+            
+            this.$message.success('登录成功！');
+
             if (this.rememberPwd) {
               this.setCookie('rememberPwd', true)
               // 加密
@@ -188,33 +207,7 @@
               this.delCookie('username')
               this.delCookie('password')
             }
-            // 获取用户权限,并跳转页面
-            // if(res.data.data.type == 'admin' || res.data.data.type.indexOf('manager') > -1 || res.data.data.type.indexOf('staff') > -1) { // GI管理员
-            //   this.$message.success('登录成功！');
-            //   this.$router.push('/map')
-            // } else if(res.data.data.type == 'administrator') { // 通用超级管理员
-            //   this.$message.success('登录成功！');
-            //   this.$router.push('/corpApi')
-            // } else if(!res.data.data.modules){
-            //   this.$message.error('暂无权限，请联系管理员');
-            // }
 
-            // if(res.data.data.type == 'admin' || res.data.data.type.indexOf('manager') > -1 || res.data.data.type.indexOf('staff') > -1) { // 维保管理员
-              this.$message.success('登录成功！');
-                // 维保
-              // if(res.data.data.corpType == "维保"){
-                // window.localStorage.setItem('theme', 'theme1')
-                this.$router.push('/digital-list')
-              // } else {
-              //   // 物业
-              //   window.localStorage.setItem('theme', 'theme2')
-              //   this.$router.push('/parkMap')
-              // }
-              
-
-            // } else {
-            //   this.$message.error('暂无权限，请联系管理员');
-            // }
           } else {
             // this.warningTip = res.data.message
             this.$message.error(res.data.message);
