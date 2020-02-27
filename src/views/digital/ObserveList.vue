@@ -490,8 +490,13 @@ export default {
     deleteObserve() {
       let param = this.checkedLifts.join(',')
       api.digital.deleteObserve(param).then(res => {
-        console.log('删除成功', res.data)
-        this.$message.success('删除成功')
+        if (res.data.code == 200) {
+          console.log('删除成功', res.data)
+          this.$message.success('删除成功')
+        } else {
+          this.$message.error(res.data.message)
+        }
+        
         this.dialogDeleteObserve = false
         this.checkedLifts = []
         this.checkedAll = false

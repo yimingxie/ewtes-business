@@ -149,7 +149,7 @@ export default {
 
 <style lang="stylus" scoped>
 #DetectionQuery{
-  padding-bottom: 30px;
+  padding-bottom: 0px;
 
   // 新增
   .x-digital-detail{

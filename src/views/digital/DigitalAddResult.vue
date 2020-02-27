@@ -435,8 +435,18 @@ export default {
 
     // 打开弹窗
     openDialogAddCheckPoint() {
-      this.clearRuleFormCheckPoint()
-      this.dialogAddCheckPoint = true
+      // 曾经的弹窗，先注释
+      // this.clearRuleFormCheckPoint()
+      // this.dialogAddCheckPoint = true
+
+      // 临时增加
+      let ruleFormCheckPoint = {
+        pointName: '',
+        pointData: [], // 存的是多选值
+        pointDataCN: '' // 转化出的中文
+      }
+      this.checkPoint.push(ruleFormCheckPoint)
+
     },
 
     // 关闭弹窗

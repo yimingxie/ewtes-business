@@ -143,6 +143,22 @@ export function returnWarnResult(value) {
 }
 
 /**
+ * 异常档案-返回处理状态
+ * @param {number} value 
+ */
+export function returnWarnResult2(value) {
+  if (value == 1) {
+    return '未处理'
+  } else if (value == 2) {
+    return '已处理'
+  } else if (value == 3) {
+    return '解除警告'
+  } else {
+    return '--'
+  }
+}
+
+/**
  * 返回阈值
  * 0 - == 等于, 1 - > 大于, 2 - < 小于, 3 - >= 大于等于, 4 - <= 小于等于, 5 - != 不等于
  * @param {number} value 

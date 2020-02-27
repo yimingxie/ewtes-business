@@ -149,7 +149,7 @@
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.celsius ? item.celsius : '--'}}℃</div>
                 <div class="det-history-td">{{item.time | dateFormatNoSecond}}</div>
-                <div class="det-history-td">{{item.result | returnWarnResult}}</div>
+                <div class="det-history-td">{{item.result | returnWarnResult2}}</div>
               </div>
         
             </div>
@@ -224,7 +224,7 @@
                   <el-radio v-model="dealRadioValue" :label="3">解除告警</el-radio>
                 <!-- </el-radio-group> -->
               </div>
-              <div class="det-deal-mid-box-p" v-else>{{diaDealInfo.result | returnWarnResult}}</div>
+              <div class="det-deal-mid-box-p" v-else>{{diaDealInfo.result | returnWarnResult2}}</div>
             </div>
             <div class="det-deal-mid-box">
               <div class="det-deal-mid-box-h">处理描述</div>
