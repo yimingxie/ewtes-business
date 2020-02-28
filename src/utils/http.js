@@ -135,6 +135,8 @@ axios.interceptors.response.use(response => {
         window.localStorage.removeItem('refreshToken')
         window.localStorage.removeItem('func')
         window.localStorage.removeItem('roleType')
+        window.localStorage.removeItem('facility')
+        window.localStorage.removeItem('partPoint')
         router.push('/');
       }
 
@@ -214,7 +216,6 @@ if (process.env.NODE_ENV == 'development') {
   devURL = `${protocol}//192.168.100.2`
   xiaohuURL = `${protocol}//192.168.100.89:8080`
   shupingURL = `${protocol}//192.168.100.8:8080`
-  localURL = `${protocol}//192.168.100.8:8080`
   localURL = `${protocol}//192.168.100.17:8081`
   // localURL = `${protocol}//iot.gidomino.com`
   // localURL = `${protocol}//192.168.100.3`

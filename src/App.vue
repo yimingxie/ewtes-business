@@ -175,6 +175,8 @@
           window.localStorage.removeItem('refreshToken')
           window.localStorage.removeItem('func')
           window.localStorage.removeItem('roleType')
+          window.localStorage.removeItem('facility')
+          window.localStorage.removeItem('partPoint')
         }
 
       },
@@ -312,6 +314,8 @@
         window.localStorage.removeItem('refreshToken')
         window.localStorage.removeItem('func')
         window.localStorage.removeItem('roleType')
+        window.localStorage.removeItem('facility')
+        window.localStorage.removeItem('parkPoint')
         // window.localStorage.removeItem('type')
         // window.localStorage.removeItem('auth')
         // window.localStorage.removeItem('theme')

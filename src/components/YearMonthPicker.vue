@@ -5,7 +5,7 @@
       <div class="cal-icon"></div>
       <el-date-picker v-model="valueYear" format="yyyy全年" value-format="yyyy" type="year" placeholder="选择年份" @change="yearChange" :clearable="false"></el-date-picker>
     </div>
-    <div class="year-month-picker" :class=" !valueYear && valueMonth && !valueDay ? 'on' : ''">
+    <div class="year-month-picker" :class=" !valueYear && valueMonth && !valueDay ? 'on' : ''" style="border-radius: none;">
       <div class="cal-icon"></div>
       <el-date-picker v-model="valueMonth" type="month" placeholder="选择月份" value-format="yyyy-MM" @change="monthChange" :clearable="false" :disabled="monthDisabled"></el-date-picker>
     </div>
@@ -100,7 +100,6 @@ export default {
   height: 22px !important;
   // background: rgb(26,27,31) !important;
   margin-top: 1px !important;
-  
 }
 .year-month-picker .el-input__prefix{
   display none !important;
@@ -132,6 +131,15 @@ export default {
   border: 1px solid rgba(0,0,0,0.2)!important;
   padding: 0 10px!important
   cursor pointer;
+  border-radius 0 !important;
+}
+.YearMonthPicker .year-month-picker:first-child .el-input__inner{
+  border-top-left-radius 4px !important;
+  border-bottom-left-radius 4px !important;
+}
+.YearMonthPicker .year-month-picker:last-child .el-input__inner{
+  border-top-right-radius 4px !important;
+  border-bottom-right-radius 4px !important;
 }
 .year-month-picker.on{
   background: #3f6aff !important;
@@ -154,7 +162,6 @@ export default {
     position relative;
     line-height 20px;
     height 22px;
-    border-radius: 2px
   }
   .cal-icon{
     position absolute;

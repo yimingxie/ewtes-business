@@ -210,6 +210,10 @@ import CityChoose from '../../components/CityChoose'
 export default {
   data() {
     return {
+      // --全局状态--
+      facility: '',
+      partPoint: '',
+
       // --表单元素--
       ruleForm: {
         "epedName": "",
@@ -262,6 +266,11 @@ export default {
 
 
     }
+  },
+  created() {
+    // 当不存在，是无限加还是不给加？
+    this.facility = localStorage.getItem('facility') ? parseInt(localStorage.getItem('facility')) : 100
+    this.partPoint = localStorage.getItem('partPoint') ? parseInt(localStorage.getItem('partPoint')) : 100
   },
   mounted() {
 
@@ -440,6 +449,8 @@ export default {
       // this.dialogAddCheckPoint = true
 
       // 临时增加
+      if (this.checkPoint.length >= this.partPoint) return this.$message.error('剩余可添加检测区域0')
+
       let ruleFormCheckPoint = {
         pointName: '',
         pointData: [], // 存的是多选值
@@ -458,6 +469,7 @@ export default {
     // 添加检测区域
     saveCheckPoint() {
       let that = this
+
       if (this.checkPointDataArr.length === 0 || this.ruleFormCheckPoint.pointName === '') return this.$message.error('检测区域请填写完整')
       this.checkPoint.push(this.ruleFormCheckPoint)
       this.closeDialogAddCheckPoint()

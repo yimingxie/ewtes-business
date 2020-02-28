@@ -332,6 +332,8 @@ export default {
       // --全局状态--
       parentCode: '',
       submitState: '',
+      facility: '',
+      partPoint: '',
 
       // --表单元素--
       ruleForm: {
@@ -399,6 +401,10 @@ export default {
   created() { 
     this.parentCode = this.$route.query.epedId
     this.submitState = this.$route.query.submitState
+
+    // 当不存在，是无限加还是不给加？
+    this.facility = localStorage.getItem('facility') ? parseInt(localStorage.getItem('facility')) : 100
+    this.partPoint = localStorage.getItem('partPoint') ? parseInt(localStorage.getItem('partPoint')) : 100
 
 
   },
@@ -677,6 +683,8 @@ export default {
       // this.clearRuleFormCheckPoint()
       // this.dialogAddCheckPoint = true
 
+      // 临时增加
+      if (this.checkPoint.length >= this.partPoint) return this.$message.error('剩余可添加检测区域0')
       let ruleFormCheckPoint = {
         pointName: '',
         pointData: [], // 存的是多选值
@@ -828,6 +836,29 @@ export default {
           })
           if (pointDataResult) return this.$message.error('可监测数据不能为空')
 
+          // 校验是否pointName重名
+          function judgeRepeatName(arr){
+            var repeatResult = false // false则没有重复，true则有重复
+            var obj = {};
+            for(var i=0; i < arr.length; i++){
+              if (!obj[arr[i].pointName]) {
+                obj[arr[i].pointName] = 1
+              } else {
+                obj[arr[i].pointName] ++
+              }
+            }
+
+            for(var key in obj) {
+              if (obj[key] > 1) {
+                repeatResult = true
+              }
+            }
+            return repeatResult
+          }
+
+          if (judgeRepeatName(this.checkPoint)) return this.$message.error('监测区域名重复')
+
+          
 
           
           let param = {

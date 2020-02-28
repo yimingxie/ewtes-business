@@ -157,6 +157,13 @@
             window.localStorage.setItem('accessToken', res.data.data.token)
             window.localStorage.setItem('refreshToken', res.data.data.refreshToken)
 
+            if (res.data.data.facility) {
+              window.localStorage.setItem('facility', res.data.data.facility)
+            }
+            if (res.data.data.part) {
+              window.localStorage.setItem('partPoint', res.data.data.part)
+            }
+
             if(res.data.data.func){
               window.localStorage.setItem('func', JSON.stringify(res.data.data.func))
             }
