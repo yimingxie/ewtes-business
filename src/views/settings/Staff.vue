@@ -459,9 +459,10 @@
           <div class="dia-citem clearfix">
             <div class="dia-citem-label">下载模板</div>
             <div class="dia-citem-ib">
-              <a class="dia-download-link" href="http://lorns.gidomino.com/template/batch-import-template-complete.xlsx" target="_blank">《完整模板.excel》</a>
+              <a class="dia-download-link" href="http://lorns.gidomino.com/template/完整模板.xlsx" target="_blank">《完整模板.excel》</a>
               <span style="color: #D8D8D8;margin:0 10px">|</span>
-              <a class="dia-download-link" href="http://lorns.gidomino.com/template/batch-import-template-brief.xlsx" target="_blank">《简要模板.excel》</a>
+              <!-- <a class="dia-download-link" href="http://lorns.gidomino.com/template/batch-import-template-brief.xlsx" target="_blank">《简要模板.excel》</a> -->
+              <a class="dia-download-link" href="http://lorns.gidomino.com/template/简要模板.xlsx" target="_blank">《简要模板.excel》</a>
             </div>
           </div>
           <div class="dia-citem clearfix" style="margin-top: 24px;">
