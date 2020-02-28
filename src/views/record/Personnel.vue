@@ -523,9 +523,10 @@ export default {
     corpSelectChange(){
       if(this.queryParam.corpId !== '') {
         this.searchKey = this.queryParam.search = '' // 筛选时清空搜索
-      } else {
-        this.queryParam.departmentName = '' 
       }
+      //else {
+      this.queryParam.departmentName = '' 
+      // }
       
       // 筛选时默认跳到第一页
       this.queryParam.offset = 0
