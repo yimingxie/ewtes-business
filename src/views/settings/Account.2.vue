@@ -82,7 +82,7 @@
               <!-- // 编辑 -->
               <span v-show="data.isEdit">
 
-                <el-input class="slot-t-input" size="mini" autofocus maxlength="15"
+                <el-input class="slot-t-input" size="mini" autofocus
 
                   v-model="data.name"
 

@@ -560,6 +560,10 @@
         display block
       }
     }
+    .kuang
+      background url('assets/images/hs/iosTest.png') no-repeat center 13px #FFFFFF;
+      background-size 100px
+    
   .kuang
     box-shadow: 0 2px 4px 0 rgba(129,144,213,0.28);
     width 160px
