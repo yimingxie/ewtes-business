@@ -79,8 +79,8 @@
                 <div id="map-container"></div>
               </div>
 
-              <div class="lar-box clearfix" style="float: none; width: 100%;" v-if="submitState != 'put'">
-                <div class="lar-box-h4" style="padding-right: 42px; width: 7.2%;">所属上级</div>
+              <div class="lar-box lar-box-parent clearfix" style="float: none; width: 100%;" v-if="submitState != 'put'">
+                <div class="lar-box-h4" style="padding-right: 0; width: 92px; text-align: left;">所属上级</div>
                 <!-- <div class="lar-box-el-input" v-if="submitState == 'put'">
                   <el-select v-model="ruleForm.parentId" placeholder="请选择所属上级" size="small" style="width: 100%;">
                     <el-option v-for="item in parentIdOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -1071,6 +1071,12 @@ export default {
   #DigitalDetail{
     .lar-box-h4{
       padding-right: 14px !important;
+    }
+    .lar-con .lar-box:first-child .lar-box-h4{
+      width: 30%;
+    }
+    .lar-box-parent .lar-box-h4{
+      width: 7% !important;
     }
   }
 }

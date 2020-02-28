@@ -623,6 +623,10 @@ export default {
     .lar-box-h4{
       padding-right: 14px !important;
     }
+    .lar-con .lar-box:first-child .lar-box-h4{
+      width: 30%;
+    }
+    
   }
 }
 

@@ -542,7 +542,7 @@
     position fixed
     bottom 0
     left 0
-    z-index: 999;
+    z-index: 1000;
   .anzhuo,.ios
     height 60px
     text-align: center;
@@ -580,7 +580,7 @@
       width 100px
       height 100px
       display inline-block
-      background rgba(0,0,0,0.90);
+      background rgba(0,0,0,0.60);
       position absolute
       top: 13px;
       left: 31px; 

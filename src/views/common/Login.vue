@@ -302,18 +302,19 @@
     .title1
       color: #FFFFFF;
       line-height 75px
-      font-weight: 400;
+      font-weight: 200;
       font-size: 34px;
     .title2
       font-size: 24px;
       color: #FFFFFF;
-      font-weight: 400;
+      font-weight: 200;
   .makeLoginCenter
     vertical-align middle
     // border 1px solid red
     position relative
     overflow: hidden;
     width 75%
+    margin-top: -83px;
   .loginFormWrap
     size  424px 336px
     border-radius: 15px;

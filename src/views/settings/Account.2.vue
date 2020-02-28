@@ -142,13 +142,13 @@
                 width="55">
               </el-table-column>
 
-              <el-table-column prop="name" label="名称">
+              <el-table-column prop="name" label="名称" :show-overflow-tooltip="true">
               </el-table-column>
 
-              <el-table-column prop="username" label="账号">
+              <el-table-column prop="username" label="账号" :show-overflow-tooltip="true">
               </el-table-column>
           
-              <el-table-column  label="角色">
+              <el-table-column  label="角色" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                   <span v-if="scope.row.roleName" v-html="scope.row.roleName" ></span>
                   <!-- <span v-if="scope.row.type == 'administrator'" >超级管理员</span> -->
@@ -160,15 +160,15 @@
                   <span v-text="scope.row.isValid== 1? '启用':'停用'"></span>
               </el-table-column> -->
 
-               <el-table-column label="创建人">
+               <el-table-column label="创建人" :show-overflow-tooltip="true">
                  <template slot-scope="scope" >
                   {{scope.row.createUser ? scope.row.createUser : '系统创建'}}
                 </template>
               </el-table-column>
 
-              <el-table-column label="创建时间">
+              <el-table-column label="创建时间" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                  {{scope.row.createTime ? scope.row.createTime : '--'}}
+                  {{scope.row.createTime ? scope.row.createTime.substring(0,10) : '--'}}
                 </template>
 
               </el-table-column>
@@ -801,7 +801,6 @@ export default {
       count:1,
       clickName:'',
       checkDepName1:'',
-
     }
   },
   components: {
@@ -982,6 +981,7 @@ export default {
       this.queryParam.departmentId = Node.level == 1 ? '': data.id
       // this.queryParam.departmentId = Node.level == 1 ? '': data.id
       this.addAccountForm.departmentId = Node.level == 1 ? '': data.id
+      // 初始名字
       this.clickName = data.name
       this.getAllAccountData()
     },
@@ -1063,6 +1063,8 @@ export default {
     editNode() {
       // debugger
       if (!this.currentData.isEdit) {
+        // console.log("this.currentData===" + JSON.stringify(this.currentData))
+
         this.$set(this.currentData, "isEdit", true);
 
         this.$nextTick(() => {
@@ -1087,14 +1089,16 @@ export default {
         return false;
       } else {
         if (data.isEdit) {
-          api.accountApi.editDepartment({id:this.currentData.id,name:data.name}).then((res) => {
+          api.accountApi.editDepartment({id:this.currentData.id, name:data.name}).then((res) => {
             if(res.data.code === 200 && res.data.message === 'success'){
 
-              this.$set(data, "isEdit", false);
               this.$message.success("编辑成功")
             } else{
+
+              this.currentData.name = this.clickName
               this.$message.error(res.data.message)
             }
+            this.$set(data, "isEdit", false);
           })
           
 
