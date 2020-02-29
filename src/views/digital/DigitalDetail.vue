@@ -79,8 +79,8 @@
                 <div id="map-container"></div>
               </div>
 
-              <div class="lar-box clearfix" style="float: none; width: 100%;" v-if="submitState != 'put'">
-                <div class="lar-box-h4" style="padding-right: 42px; width: 7.2%;">所属上级</div>
+              <div class="lar-box lar-box-parent clearfix" style="float: none; width: 100%;" v-if="submitState != 'put'">
+                <div class="lar-box-h4" style="padding-right: 0; width: 92px; text-align: left;">所属上级</div>
                 <!-- <div class="lar-box-el-input" v-if="submitState == 'put'">
                   <el-select v-model="ruleForm.parentId" placeholder="请选择所属上级" size="small" style="width: 100%;">
                     <el-option v-for="item in parentIdOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -332,6 +332,8 @@ export default {
       // --全局状态--
       parentCode: '',
       submitState: '',
+      facility: '',
+      partPoint: '',
 
       // --表单元素--
       ruleForm: {
@@ -399,6 +401,10 @@ export default {
   created() { 
     this.parentCode = this.$route.query.epedId
     this.submitState = this.$route.query.submitState
+
+    // 当不存在，是无限加还是不给加？
+    this.facility = localStorage.getItem('facility') ? parseInt(localStorage.getItem('facility')) : 100
+    this.partPoint = localStorage.getItem('partPoint') ? parseInt(localStorage.getItem('partPoint')) : 100
 
 
   },
@@ -677,6 +683,8 @@ export default {
       // this.clearRuleFormCheckPoint()
       // this.dialogAddCheckPoint = true
 
+      // 临时增加
+      if (this.checkPoint.length >= this.partPoint) return this.$message.error('剩余可添加检测区域0')
       let ruleFormCheckPoint = {
         pointName: '',
         pointData: [], // 存的是多选值
@@ -828,6 +836,29 @@ export default {
           })
           if (pointDataResult) return this.$message.error('可监测数据不能为空')
 
+          // 校验是否pointName重名
+          function judgeRepeatName(arr){
+            var repeatResult = false // false则没有重复，true则有重复
+            var obj = {};
+            for(var i=0; i < arr.length; i++){
+              if (!obj[arr[i].pointName]) {
+                obj[arr[i].pointName] = 1
+              } else {
+                obj[arr[i].pointName] ++
+              }
+            }
+
+            for(var key in obj) {
+              if (obj[key] > 1) {
+                repeatResult = true
+              }
+            }
+            return repeatResult
+          }
+
+          if (judgeRepeatName(this.checkPoint)) return this.$message.error('监测区域名重复')
+
+          
 
           
           let param = {
@@ -1040,6 +1071,12 @@ export default {
   #DigitalDetail{
     .lar-box-h4{
       padding-right: 14px !important;
+    }
+    .lar-con .lar-box:first-child .lar-box-h4{
+      width: 30%;
+    }
+    .lar-box-parent .lar-box-h4{
+      width: 7% !important;
     }
   }
 }

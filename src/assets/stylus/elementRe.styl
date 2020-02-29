@@ -180,11 +180,10 @@
 
 
 // -----------------按钮---------------------------
-// .el-button
-//   padding: 10px 1px!important;
+.el-button
+  padding: 11px 20px!important;
 .el-button--primary
   background-color: #4272FF!important;
-  // border-color: #4272FF!important;
   border: none!important;
 
 .el-transfer__button.is-disabled{
@@ -205,7 +204,7 @@
   background-image: linear-gradient(-137deg, #3572FF 0%, #3596FF 100%)!important;
   box-shadow: 0 2px 4px 0 rgba(152,152,152,0.50)!important;
   border-radius: 18px!important;
-  width: 120px!important;
+  width: 140px!important;
 .dialogCancel+.dialogSure
   margin-left: 45px!important
 // -----------------按钮  end---------------------------
@@ -722,4 +721,20 @@
   font-weight: 600;
   line-height: 13px;
   vertical-align: 4px;
+}
+.el-tooltip__popper.is-dark{
+  // position: absolute!important
+  top: 84px;
+  left 246px;
+  box-shadow: 0 2px 4px 0 rgba(129,144,213,0.28);
+  font-size: 14px!important
+  color: #333!important
+  padding: 10px 20px!important
+  // z-index 9!important
+  background: #fff!important
+  white-space: nowrap!important
+  margin: -13px!important
+  .popper__arrow{
+    display: none!important
+  }
 }

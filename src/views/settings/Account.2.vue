@@ -20,7 +20,7 @@
          
         </ul>
          <!-- 分页 -->
-        <div class="pagination_block" v-if="totalPage > 0 && tabPeriod == 1">
+        <!-- <div class="pagination_block" v-if="totalPage > 0 && tabPeriod == 1">
           <el-pagination
             @size-change="pageSizeChange"
             @current-change="currentPageChange"
@@ -30,9 +30,9 @@
             layout="prev, pager, next"
             :total="totalPage">
           </el-pagination>
-        </div>
+        </div> -->
         <!-- 分页 end-->
-        <button class="btn blueBtn" @click="addRoleDialog" v-if="tabPeriod == 1" style="margin: 10px 0 0 81px;">添加角色</button>
+        <button class="btn blueBtn" @click="addRoleDialog" v-if="tabPeriod == 1" style="margin: 37px 0 0 65px;border-radius: 10px;width: 160px;" :class="{'fixAddroleBtn':rolesJson.length > 8}">添加角色</button>
         
 
         <!-- 组织列表 -->
@@ -142,7 +142,7 @@
                 width="55">
               </el-table-column>
 
-              <el-table-column prop="name" label="名称" :show-overflow-tooltip="true">
+              <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" placement="right-end">
               </el-table-column>
 
               <el-table-column prop="username" label="账号" :show-overflow-tooltip="true">
@@ -421,7 +421,8 @@
           <!-- <img src="../../assets/images/xym/dia-warn.png" alt=""> -->
         </div>
         <div class="dia-con-p">
-          <div class="confirDialogText1">是否确认删除所选账号，删除后不可复原，请谨慎操作</div>
+          <div class="confirDialogText1">是否确认删除所选账号</div>
+          <div class="confirDialogText2">删除后不可复原，请谨慎操作</div>
         </div>
       </div>
     
@@ -463,7 +464,8 @@
           <!-- <img src="../../assets/images/xym/dia-warn.png" alt=""> -->
         </div>
         <div class="dia-con-p">
-          <div class="confirDialogText1">是否确认删除所选角色，删除后不可复原，请谨慎操作</div>
+          <div class="confirDialogText1">是否确认删除所选角色</div>
+          <div class="confirDialogText2">删除后不可复原，请谨慎操作</div>
         </div>
       </div>
     
@@ -540,6 +542,25 @@
     </div>
   </el-dialog>
   <!--编辑角色  弹窗 End -->
+
+  <!-- 添加下级  弹窗  Start -->
+  <el-dialog width="500px" title="添加下级" :visible.sync="addNextLevel_dialog">
+    <el-form :model="addlevel" :label-width="formLabelWidth" :rules="addNextLevel_rule" ref="addlevelRef" label-position="top">
+      
+      <el-form-item label="名称" prop="name">
+        <el-input v-model="addlevel.name" placeholder="请输入名称" auto-complete="off" clearable size="small"></el-input>
+      </el-form-item>
+
+    </el-form>
+
+    <div slot="footer"  class="dialog-footer tar">
+      <span @click="addNextLevel_dialog = false" class="dialogCancel">取 消</span>
+      <el-button type="primary" @click="addNextLevelFuc()" class="dialogSure">确 认</el-button>
+
+    </div>
+  </el-dialog>
+  <!--添加下级  弹窗 End -->
+
 </div>
 </template>
 
@@ -555,69 +576,22 @@ import Tree from "../../components/Tree";
 export default {
   data() {
     return {
+      addlevel:{
+        name:'',
+        parentId: ""
+      },
+      // createDep:{
+      //   name: "",
+       
+      // },
+      addNextLevel_dialog: false,
+      addNextLevel_rule: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' },
+        ],
+      },
+
       addRole_dialog:false,
-      // 组织树形数据格式
-      treeData: [
-        {
-          id: 1,
-
-          label: "通用互联科技有限公司1111",
-
-          isEdit: false,
-
-          children: [
-            {
-              id: 4,
-
-              label: "产品部",
-
-              isEdit: false,
-
-              children: [
-                {
-                  id: 9,
-
-                  label: "UI",
-
-                  isEdit: false
-                },
-                {
-                  id: 10,
-
-                  label: "原型",
-
-                  isEdit: false
-                }
-              ]
-            },
-            {
-              id: 5,
-
-              label: "研发部",
-
-              isEdit: false,
-              children: [
-                {
-                  id: 6,
-
-                  label: "前端开发",
-
-                  isEdit: false
-                },
-                {
-                  id: 17,
-
-                  label: "后台开发",
-
-                  isEdit: false
-                }
-              ]
-            }
-          ]
-        },
-        
-      ],
-
       tabPeriods: [
         { label: '组织/账号', value: 0 },
         { label: '角色', value: 1},
@@ -663,7 +637,7 @@ export default {
       },
       getAllAccountJson: [],
       roleQueryParam: {
-        limit: 8,
+        limit: 100,
         offset:1,
         search: "",
         // queryStr: ""
@@ -764,10 +738,7 @@ export default {
 
       queryDepartParam:'corp',
       getAllDepJson:[],
-      createDep:{
-        name: "",
-        parentId: ""
-      },
+      
       resolve:'',
       getCorModuleList:[],
       addRoleForm:{
@@ -827,15 +798,62 @@ export default {
   },
   mounted() {
     // this.queryParam.corpId = window.localStorage.getItem('corpId')
-    this.getAllRoleData()
+    // 账号列表
     this.getAllAccountData()
-    this.getCorpMo()
+    // 角色列表
+    this.getAllRoleData()
+
+    
     // this.getAllDepartmentData()
     // this.getAllDepartmentData()
 
     
   },
   methods: {
+    // 确认添加
+    addNextLevelFuc(){
+
+      if (this.currentNode.level >= 5) {
+        this.$message.error("最多只支持五级！");
+
+        return false;
+      }
+
+      this.addlevel.parentId = this.currentData.id
+
+      api.accountApi.createDepartments(this.addlevel).then((res) => {
+        if(res.data.code === 200 && res.data.message === 'success'){
+          this.addNextLevel_dialog = false
+          this.currentNode.childNodes = [] // 这里把子节点清空，是因为再次调用 loadNode 的时候会往 childNodes 里 push 节点，所以会有节点重复的情况。
+          // this.loadNode1(this.currentNode, this.resolve)
+          this.refreshNode(this.currentData.id)
+          this.$message.success("添加成功")
+         
+        } else {
+          this.$message.error(res.data.message);
+        }
+      })
+
+    },
+    // 增加下级
+    addChildNode() {
+      console.log(this.currentData);
+
+      console.log(this.currentNode);
+      this.addNextLevel_dialog = true
+      // 重置
+      this.$nextTick(()=>{
+        this.$refs['addlevelRef'].resetFields();
+      })
+
+      
+      // this.count++
+      // this.createDep.name = '部门'+ this.count
+      
+      // let id = Math.ceil(Math.random() * 100);
+      
+      // var data = { id: id, name: "新增节点" };
+    },
     numberCheck(){
       // console.log("this.addAccountForm.username==" + this.addAccountForm.username)
       this.addAccountForm.username = this.addAccountForm.username.replace(/[^\.\d]/g,'');
@@ -939,6 +957,7 @@ export default {
       // 重置
       this.$nextTick(()=>{
         this.$refs['addRoleForm'].resetFields();
+        this.getCorpMo()
       })
     },
 
@@ -1000,36 +1019,7 @@ export default {
       console.log("currentNode==" + this.currentNode)
     },
 
-    // 增加下级
-    addChildNode() {
-      console.log(this.currentData);
-
-      console.log(this.currentNode);
-
-      if (this.currentNode.level >= 5) {
-        this.$message.error("最多只支持五级！");
-
-        return false;
-      }
-      // let id = Math.ceil(Math.random() * 100);
-      this.count++
-      this.createDep.name = '部门'+ this.count
-      this.createDep.parentId = this.currentData.id
-      api.accountApi.createDepartments(this.createDep).then((res) => {
-        if(res.data.code === 200 && res.data.message === 'success'){
-
-          this.currentNode.childNodes = [] // 这里把子节点清空，是因为再次调用 loadNode 的时候会往 childNodes 里 push 节点，所以会有节点重复的情况。
-          // this.loadNode1(this.currentNode, this.resolve)
-          this.refreshNode(this.currentData.id)
-          this.$message.success("添加成功")
-        } else {
-          this.$message.error(res.data.message);
-        }
-      })
-      // let id = Math.ceil(Math.random() * 100);
-      
-      // var data = { id: id, name: "新增节点" };
-    },
+    
     // deleteDialog(){
     //   this.deleteDialog = true
     // },
@@ -1635,6 +1625,8 @@ export default {
     background-size: 21px;
   .roleList
     font-size: 16px;
+    max-height: 589px;
+    overflow: auto;
     li 
       padding 13px 0 13px 22px
       margin 17px 0 0px;
@@ -1744,6 +1736,9 @@ export default {
       color: #c0c4cc!important;
       height: 32px!important;
       line-height: 29px!important;
+  .fixAddroleBtn
+    position: absolute;
+    bottom: 32px;
 .depTreeDropdown
   width 436px
   .search1 .search_input

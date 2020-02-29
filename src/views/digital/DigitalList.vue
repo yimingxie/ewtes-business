@@ -29,7 +29,7 @@
 
         <div class="xlist-operator">
           <div class="xlist-operator-content clearfix">
-            <div class="xop-btn-submit" @click="$router.push('/digital-add-result')">添加防疫点</div>
+            <div class="xop-btn-submit" @click="goAdd">添加防疫点</div>
             <div class="xop-btn-delete" @click="openDialogDeleteCheckPoint">删除防疫点</div>
           </div>
         </div>
@@ -171,6 +171,8 @@ export default {
         "limit": 10,
         "offset": 1
       },
+      facility: '',
+      partPoint: '',
 
       currentPage: 1,
       totalPage: 1,
@@ -180,6 +182,11 @@ export default {
       dialogDeleteCheckPoint: false,
 
     }
+  },
+  created() {
+    // 当不存在，是无限加还是不给加？
+    this.facility = localStorage.getItem('facility') ? parseInt(localStorage.getItem('facility')) : 100
+
   },
   mounted() {
 
@@ -330,7 +337,7 @@ export default {
           this.checkedLifts = []
           this.getDigitalList()
         } else {
-          that.$message.error('删除失败')
+          that.$message.error(res.data.message)
         }
       })
     },
@@ -363,6 +370,17 @@ export default {
           'epedId': epedId
         }
       })
+    },
+
+    // 添加防疫点
+    goAdd() {
+      this.$router.push('/digital-add-result')
+
+      // if (this.totalPage < this.facility) {
+      //   this.$router.push('/digital-add-result')
+      // } else {
+      //   this.$message.error('剩余可添加防疫点0')
+      // }
     },
 
   },
