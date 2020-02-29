@@ -374,11 +374,13 @@ export default {
 
     // 添加防疫点
     goAdd() {
-      if (this.totalPage < this.facility) {
-        this.$router.push('/digital-add-result')
-      } else {
-        this.$message.error('剩余可添加防疫点0')
-      }
+      this.$router.push('/digital-add-result')
+
+      // if (this.totalPage < this.facility) {
+      //   this.$router.push('/digital-add-result')
+      // } else {
+      //   this.$message.error('剩余可添加防疫点0')
+      // }
     },
 
   },
