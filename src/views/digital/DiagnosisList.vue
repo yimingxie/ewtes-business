@@ -33,7 +33,10 @@
           <div class="xddetail-list-item-third clearfix">
             <div class="xddetail-list-item clearfix">
               <div class="xddetail-list-item-title">所属上级</div>
-              <div class="xddetail-list-item-p" style="padding-right: 0;">{{parentName ? parentName : '--'}}</div>
+              <div class="xddetail-list-item-p xddetail-list-item-p-parent" ref="parentRef" style="padding-right: 0;">
+                {{parentName ? parentName : '--'}}
+                <div class="xddetail-name-p-full" v-if="parentNameShow">{{parentName}}</div>
+              </div>
             </div>
           </div>
           
@@ -234,6 +237,8 @@ export default {
       localArea: "",         
       address: "",
       parentName: "",  
+      parentNameShow: '',  
+
 
       // --列表--
       diagnList: [],
@@ -304,6 +309,15 @@ export default {
     this.getDigitalDetail()
 
     this.getObservTaskOptions()
+
+    // 展示长度，临时
+    const el = this.$refs.parentRef
+    setTimeout(() => {
+      this.parentNameShow = el.clientWidth < el.scrollWidth
+    }, 300)
+    window.addEventListener('resize', () => {
+      this.parentNameShow = el.clientWidth < el.scrollWidth
+    })
     
   },
   methods: {

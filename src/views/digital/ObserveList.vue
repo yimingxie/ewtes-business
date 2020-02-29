@@ -33,7 +33,10 @@
           <div class="xddetail-list-item-third clearfix">
             <div class="xddetail-list-item clearfix">
               <div class="xddetail-list-item-title">所属上级</div>
-              <div class="xddetail-list-item-p" style="padding-right: 0;">{{parentName ? parentName : '--'}}</div>
+              <div class="xddetail-list-item-p xddetail-list-item-p-parent" ref="parentRef" style="padding-right: 0;">
+                {{parentName ? parentName : '--'}}
+                <div class="xddetail-name-p-full" v-if="parentNameShow">{{parentName}}</div>
+              </div>
             </div>
           </div>
           
@@ -211,7 +214,8 @@ export default {
       inNum: "",         
       localArea: "",         
       address: "",  
-      parentName: "",  
+      parentName: "",
+      parentNameShow: '',  
 
       // --列表--
       observeList: [],
@@ -267,6 +271,16 @@ export default {
 
     // 获取下拉
     this.getObservePointOptions()
+
+    
+    // 展示长度，临时
+    const el = this.$refs.parentRef
+    setTimeout(() => {
+      this.parentNameShow = el.clientWidth < el.scrollWidth
+    }, 300)
+    window.addEventListener('resize', () => {
+      this.parentNameShow = el.clientWidth < el.scrollWidth
+    })
 
   },
   methods: {
@@ -528,6 +542,10 @@ export default {
 
 <style lang="stylus" scoped>
 #ObserveList{
+  .xddetail-list-item-p-parent{
+    width: calc(100% - 200px) !important;
+    padding-right: 0 !important;
+  }
   .xddetail-name{
     min-width: 160px;
   }
