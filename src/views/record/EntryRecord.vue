@@ -187,7 +187,13 @@ export default {
     getCorps(){
       api.person.getCorps().then((res) => {
         if(res.data.code == 200) {
-          this.corpLists = res.data.data || []
+          // this.corpLists = res.data.data || []
+          var all = [{id: "", name: "全部单位"}]
+          if(res.data.data){
+            this.corpLists = all.concat(res.data.data)
+          } else {
+            this.corpLists = [{id: "", name: "全部单位"}]
+          }
         } else {
           this.$message.error(res.data.message);
         }

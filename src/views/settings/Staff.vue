@@ -429,7 +429,8 @@
           <!-- <img src="../../assets/images/xym/dia-warn.png" alt=""> -->
         </div>
         <div class="dia-con-p">
-          <div class="confirDialogText1">是否确认删除所选员工，删除后不可复原，请谨慎操作</div>
+          <div class="confirDialogText1">是否确认删除所选员工</div>
+          <div class="confirDialogText2">删除后不可复原，请谨慎操作</div>
         </div>
       </div>
       <!-- <ul class="dia-ul clearfix">

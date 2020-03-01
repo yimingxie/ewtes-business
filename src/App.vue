@@ -219,7 +219,7 @@
       menuClick(title){
         // console.log("func +" + this.func)
         if(this.ifDisabled(title)){
-          this.$message.error('当前账号无权限')
+          this.$message.error('当前账号无该功能权限，无法操作')
         }
       },
       // 打开侧边栏
