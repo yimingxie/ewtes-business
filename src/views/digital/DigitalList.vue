@@ -59,13 +59,20 @@
             <div class="list-no-data" v-show="digitalList.length == 0">暂无数据</div>
 
             <div class="llt-tr clearfix" :class="item.status ? '' : 'offline'" v-for="(item, i) in digitalList" :key="i">
+
+
               <div class="llt-tr-container clearfix">
                 <div class="llt-td">
                   <el-checkbox-group v-model="checkedLifts" @change="checkedLiftsChange">
                     <el-checkbox :label="item.epedId" :key="i">{{test}}</el-checkbox>
                   </el-checkbox-group>
                 </div>
-                <div class="llt-td">{{item.epedName}}</div>
+                <div class="llt-td" :id="item.epedId" style="position: static;overflow: visible;text-overflow: clip;white-space: normal;">
+                  <div style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{item.epedName}}</div>
+                  <div class="llt-td-fullstr llt-td-fullstr-epedName" v-if="item.epedNameShow">{{item.epedName}}</div>
+
+                  
+                </div>
                 <div class="llt-td">{{item.inNum}}</div>
                 <div class="llt-td">{{item.localArea}}</div>
                 <div class="llt-td">{{item.address}}</div>
@@ -84,6 +91,7 @@
                   <em class="llt-td-line">|</em>
                   <span class="llt-td-a" @click="goDetection(item.epedId)">诊断</span>
                 </div>
+
               </div>
             </div>
 
@@ -203,6 +211,7 @@ export default {
   methods: {
     // 查询数字化设备列表
     getDigitalList() {
+      const that = this
       api.digital.getEpidemicList(this.epListParams).then(res => {
         console.log('列表', res.data)
         this.digitalList = res.data.data.records
@@ -213,6 +222,22 @@ export default {
         this.digitalList.forEach(item => {
           this.liftselevCodeOptions.push(item.epedId)
         })
+
+        // 用于展示epedName省略
+        setTimeout(() => {
+          this.digitalList.forEach((item, i) => {
+            let el = document.getElementById(item.epedId)
+            let child = el.children[0]
+            // setTimeout(() => {
+              item.epedNameShow = child.clientWidth < child.scrollWidth
+            // }, 300)
+            window.addEventListener('resize', () => {
+              item.epedNameShow = child.clientWidth < child.scrollWidth
+              that.$forceUpdate();
+            })
+          })
+          that.$forceUpdate();
+        }, 300)
 
         // 分页
         this.currentPage = res.data.data.current

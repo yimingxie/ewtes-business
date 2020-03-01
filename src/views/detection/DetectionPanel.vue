@@ -283,7 +283,7 @@
 
 
     <!-- 异常处理弹窗 -->
-    <el-dialog :visible.sync="dialogDeal" title="异常处理" :show-close="false" width="800px">
+    <el-dialog :visible.sync="dialogDeal" title="异常处理" @close="closeDialogDeal" :show-close="false" width="800px">
       <div class="dia-content">
         <div class="det-deal clearfix">
 
@@ -654,6 +654,8 @@ export default {
         // 未处理
         if (this.diaDealInfo.result == 1) {
           this.diaDealState = 'put'
+          this.dealDesc = ''
+          this.dealRadioValue = 2
         } else {
           this.diaDealState = ''
         }
@@ -666,6 +668,9 @@ export default {
     closeDialogDeal() {
       this.currentWarnId = ''
       this.dialogDeal = false
+      this.dealDesc = ''
+      this.dealRadioValue = 2
+      
       // 获取实时状态
       this.getRealList()
       // 历史记录

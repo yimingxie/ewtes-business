@@ -133,11 +133,11 @@ export default {
   cursor pointer;
   border-radius 0 !important;
 }
-.YearMonthPicker .year-month-picker:first-child .el-input__inner{
+.YearMonthPicker .year-month-picker:first-child,.YearMonthPicker .year-month-picker:first-child .el-input__inner{
   border-top-left-radius 4px !important;
   border-bottom-left-radius 4px !important;
 }
-.YearMonthPicker .year-month-picker:last-child .el-input__inner{
+.YearMonthPicker .year-month-picker:last-child,.YearMonthPicker .year-month-picker:last-child .el-input__inner{
   border-top-right-radius 4px !important;
   border-bottom-right-radius 4px !important;
 }

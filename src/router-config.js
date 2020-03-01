@@ -130,6 +130,15 @@ const router = new Router({
       component: (resolve) => require(['./views/digital/ObserveList.vue'], resolve)
     },
     {
+      path: "/observe-list2",
+      name: "observe-list2",
+      meta: {
+        title: "检测任务管理2",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/digital/ObserveList2.vue'], resolve)
+    },
+    {
       path: "/detection-query",
       name: "detection-query",
       meta: {
