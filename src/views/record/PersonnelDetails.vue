@@ -76,20 +76,20 @@
           <!-- 表格 Start -->
           <div style="position:relative;;display:flex;">
             &nbsp;
-            <el-table :data="getStaffInfo.data" style="margin-top:0!important;" max-height="600">
-              <el-table-column prop="time" label="时间">
+            <el-table :data="tableData" style="margin-top:0!important;">
+              <el-table-column prop="time" label="时间" :show-overflow-tooltip="true">
               </el-table-column>
           
-              <el-table-column prop="epedName" label="防疫点">
+              <el-table-column prop="epedName" label="防疫点" :show-overflow-tooltip="true">
               </el-table-column>
               
-              <el-table-column  label="检测区域">
+              <el-table-column  label="检测区域" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                   <span v-html="scope.row.pointName"></span>
                 </template>
               </el-table-column>
 
-              <el-table-column prop="corpName" label="所属单位">
+              <el-table-column prop="corpName" label="所属单位" :show-overflow-tooltip="true">
               </el-table-column>
           
               <el-table-column label="体温">
@@ -110,7 +110,7 @@
           
               <el-table-column label="处理结果">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.result && scope.row.result !== ''">{{result[scope.row.result]}}</span>
+                  <span v-if="scope.row.result && scope.row.result !== ''" :style="{color: scope.row.result == 1 ? '#FF652C' : ''}">{{result[scope.row.result]}}</span>
                   <span v-else>--</span>
                 </template>
               </el-table-column>
@@ -118,7 +118,7 @@
               <!-- <el-table-column prop="areaName" label="接触人数">
               </el-table-column> -->
              
-              <el-table-column prop="areaName" label="是否为高危地点">
+              <el-table-column prop="areaName" label="是否为高危地点" width="120">
                 
                 <!-- <template slot-scope="scope">
                   <span v-html="scope.row.dangerousFlag == 1 ? '是' :'否'"></span>
@@ -144,17 +144,17 @@
           <!-- 表格 End -->
           
           <!-- 分页 Start -->
-          <!-- <div class="pagination_block">
+          <div class="pagination_block">
             <el-pagination
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :page-sizes="[10, 20, 30]"
-              :page-size="staffMLiftParam.limit"
-              :current-page="staffMLiftParam.offset"
+              :page-sizes="[7, 20, 30]"
+              :page-size="tableDataQuery.limit"
+              :current-page="tableDataQuery.offset"
               layout="prev, pager, next, sizes, jumper"
               :total="totalPageSize">
             </el-pagination>
-          </div> -->
+          </div>
           <!-- 分页 End -->
 
         </div>
@@ -345,7 +345,14 @@ export default {
       dialogRelease: false,
       checkDetailsDialog: false,
       detailsList:[],
-      result:['','未处理','已处理','解除警告']
+      result:['','未处理','已处理','解除警告'],
+      tableData:[], //表格数据
+      tableDataQuery:{
+        idCard: this.$route.query.idCard, 
+        epedId: this.$route.query.epedId,
+        limit:7,
+        offset:1
+      }
     }
   },
   components: {
@@ -414,9 +421,12 @@ export default {
   
     // 查询账户详情
     getAllAccountData(){
-      api.person.getPersonDetail({idCard: this.$route.query.idCard, epedId: this.$route.query.epedId}).then((res) => {
+      api.person.getPersonDetail(this.tableDataQuery).then((res) => {
         if(res.data.code === 200 && res.data.message === 'success') {
-          this.getStaffInfo = res.data.data
+          this.getStaffInfo = res.data.data || []
+          this.tableData = this.getStaffInfo.data.records || []
+
+          this.totalPageSize = this.getStaffInfo.data.total || 0
           // 头像
           if(this.getStaffInfo.avatar && this.getStaffInfo.avatar != '' && this.getStaffInfo.avatar != null) {
             // var url = "http://192.168.100.7:8080/domino/view/image?filename=" + item.avatar
@@ -465,16 +475,16 @@ export default {
     // },
     // 每页条数变化
     handleSizeChange(val) {
-      this.staffMLiftParam.limit = val
+      this.tableDataQuery.limit = val
       // console.log(`每页 ${val} 条`);
-      this.getStaffManageLift()
+      this.getAllAccountData()
     },
 
     // 当前页变化
     handleCurrentChange(val) {
-      this.staffMLiftParam.offset = val
+      this.tableDataQuery.offset = val
       // console.log(`当前页: ${val}`);
-      this.getStaffManageLift()
+      this.getAllAccountData()
     },
     // 每页条数变化
     // handleSizeChange2(val) {
@@ -588,5 +598,6 @@ export default {
   .closePanel
     // height: 303px;
     overflow: hidden;
+    padding: 0 19px 20px;
 
 </style>

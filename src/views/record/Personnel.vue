@@ -99,7 +99,7 @@
                         <span style="">{{account.epedName ? account.epedName : '--'}}</span>
                       </div>
                       <!-- <div class="stf_p stf_phone">{{account.username}}</div> -->
-                      <div class="stf_p stf_area">{{account.corpName}}</div>
+                      <div class="stf_p stf_area">{{account.corpName ? account.corpName : '--'}}</div>
                       <div class="stf_p stf_liftnum">{{account.departmentName ? account.departmentName : '--'}} </div>
                     </span>
                     <span class="stf_active" :class="{'activeFree' : 1 == account.warnStatus}">
