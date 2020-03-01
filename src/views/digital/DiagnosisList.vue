@@ -89,7 +89,7 @@
                 </div>
                 <div class="llt-td">{{item.name}}</div>
                 <div class="llt-td">
-                  <div v-if="item.observeTaskId">{{item.taskName}}({{item.observeTaskId}})</div>
+                  <div class="over-el" v-if="item.observeTaskId">{{item.taskName}}({{item.observeTaskId}})</div>
                   <div v-else>--</div>
                 </div>
                 <div class="llt-td">{{item.operator | returnOperatorCN}}</div>

@@ -144,6 +144,23 @@
     text-overflow ellipsis;
     white-space nowrap;
   }
+  .llt-td-fullstr{
+    position: absolute;
+    top: 28px;
+    left 110px;
+    box-shadow: 0 2px 4px 0 rgba(129,144,213,0.28);
+    font-size: 14px;
+    line-height 20px;
+    color: #333;
+    padding: 10px 20px;
+    z-index 9;
+    background: #fff;
+    display none;
+    max-width 600px;
+  }
+  .llt-td:hover .llt-td-fullstr{
+    display block !important;
+  }
   .llt-tr.offline .llt-td{
     color: #999999;
   }
@@ -978,6 +995,11 @@
     min-height: 230px;
     overflow: auto;
     margin-top 10px;
+  }
+  .over-el{
+    overflow hidden;
+    text-overflow: ellipsis;
+    white-space nowrap;
   }
   
   .det-history-tr.warn .det-history-td{
