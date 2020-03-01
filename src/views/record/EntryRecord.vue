@@ -43,10 +43,10 @@
       <div style="position:relative;;display:flex;">
         &nbsp;
         <el-table :data="getAllAccountJson">
-          <el-table-column prop="epedName" label="防疫点名称">
+          <el-table-column prop="epedName" label="防疫点名称" :show-overflow-tooltip="true">
           </el-table-column>
       
-          <el-table-column prop="corpName" label="所属单位">
+          <el-table-column prop="corpName" label="所属单位" :show-overflow-tooltip="true">
           </el-table-column>
           
           <el-table-column prop="pointNum" label="检测区域数">
@@ -187,13 +187,13 @@ export default {
     getCorps(){
       api.person.getCorps().then((res) => {
         if(res.data.code == 200) {
-          // this.corpLists = res.data.data || []
-          var all = [{id: "", name: "全部单位"}]
-          if(res.data.data){
-            this.corpLists = all.concat(res.data.data)
-          } else {
-            this.corpLists = [{id: "", name: "全部单位"}]
-          }
+          this.corpLists = res.data.data || []
+          // var all = [{id: "", name: "全部单位"}]
+          // if(res.data.data){
+          //   this.corpLists = all.concat(res.data.data)
+          // } else {
+          //   this.corpLists = [{id: "", name: "全部单位"}]
+          // }
         } else {
           this.$message.error(res.data.message);
         }
