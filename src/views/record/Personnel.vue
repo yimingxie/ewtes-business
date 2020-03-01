@@ -15,7 +15,7 @@
           </el-option>
         </el-select>
 
-        <span class="splitLine">|</span>
+        <!-- <span class="splitLine">|</span>
         <el-select @change="depSelectChange()" clearable v-model="queryParam.departmentName" placeholder="全部部门" class="regionPicker">
           <el-option
             v-for="item in depLists"
@@ -23,7 +23,7 @@
             :label="item"
             :value="item">
           </el-option>
-        </el-select>
+        </el-select> -->
         <!-- <el-select @change="dotSelectChange()" clearable v-model="queryParam.epedId" placeholder="请选择防疫点" class="regionPicker">
           <el-option
             v-for="item in getAllDotJson"
@@ -497,12 +497,14 @@ export default {
     getCorps(){
       api.person.getCorps().then((res) => {
         if(res.data.code == 200) {
-          var all = [{id: "", name: "全部单位"}]
-          if(res.data.data){
-            this.corpLists = all.concat(res.data.data)
-          } else {
-            this.corpLists = [{id: "", name: "全部单位"}]
-          }
+          this.corpLists = res.data.data || []
+          
+          // var all = [{id: "", name: "全部单位"}]
+          // if(res.data.data){
+          //   this.corpLists = all.concat(res.data.data)
+          // } else {
+          //   this.corpLists = [{id: "", name: "全部单位"}]
+          // }
 
           // 获取员工部门
           this.getCorpDeps()

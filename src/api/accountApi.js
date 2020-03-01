@@ -33,6 +33,12 @@ export default  {
       `${url2}/user`, params
     )
   },
+  // 获取员工详情
+  getAccountDetailA(params) {
+    return http.get(
+      `${url2}/user`, params
+    )
+  },
   // 修改账号
   editManager(params){
     return http.put(
@@ -89,7 +95,7 @@ export default  {
     )
   },
   
-  // 获取账户详情
+  // 获取个人中心详情
   getAccountDetail(){
     return http.get(
       `${url2}/user/space`

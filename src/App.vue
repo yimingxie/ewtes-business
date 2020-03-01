@@ -96,7 +96,7 @@
                   <a class="personalCenter"></a>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="center">个人中心</el-dropdown-item>
-                    <el-dropdown-item command="quit">注销</el-dropdown-item>
+                    <el-dropdown-item command="quit">退出</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>

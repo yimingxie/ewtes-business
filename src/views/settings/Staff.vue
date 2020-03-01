@@ -84,19 +84,19 @@
             type="selection"
             width="55">
           </el-table-column>
-          <el-table-column prop="name" label="姓名">
+          <el-table-column prop="name" label="姓名" :show-overflow-tooltip="true">
           </el-table-column>
       
-          <el-table-column prop="corpName" label="所属单位">
+          <el-table-column prop="corpName" label="所属单位" :show-overflow-tooltip="true">
           </el-table-column>
           
-          <el-table-column  label="部门">
+          <el-table-column  label="部门" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span v-html="scope.row.departmentName ? scope.row.departmentName: '--'" ></span>
             </template>
           </el-table-column>
           
-          <el-table-column label="手机号">
+          <el-table-column label="手机号" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span v-html="scope.row.phone && scope.row.phone !== ''? scope.row.phone: '--'" ></span>
             </template>

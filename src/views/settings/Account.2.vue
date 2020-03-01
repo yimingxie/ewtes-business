@@ -142,7 +142,7 @@
                 width="55">
               </el-table-column>
 
-              <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" placement="right-end">
+              <el-table-column prop="name" label="名称" :show-overflow-tooltip="true">
               </el-table-column>
 
               <el-table-column prop="username" label="账号" :show-overflow-tooltip="true">
@@ -772,6 +772,7 @@ export default {
       count:1,
       clickName:'',
       checkDepName1:'',
+      corpId: ''// 根组织的id
     }
   },
   components: {
@@ -865,10 +866,10 @@ export default {
     // numberInput(){
     //   if(this.addAccountForm.username.length>11)this.addAccountForm.username=this.addAccountForm.username.slice(0,11)
     // },
-    // 添加员工
+
+    // 点击编辑员工-所属组织树状
     handleAddtclick(data, node) {
-      console.log("data" + JSON.stringify(data))
-      this.checkDepName1 = data.name
+      // console.log("data" + JSON.stringify(data))
       this.EditAccountForm.departmentId = data.id
       this.checkDepName1 = data.name
       console.log("this.checkDepName1==" + this.EditAccountForm.departmentId)
@@ -997,9 +998,13 @@ export default {
 
     handleLeftclick(data, Node) {
       console.log("data" + JSON.stringify(data))
+      // 账号列表参数
       this.queryParam.departmentId = Node.level == 1 ? '': data.id
-      // this.queryParam.departmentId = Node.level == 1 ? '': data.id
-      this.addAccountForm.departmentId = Node.level == 1 ? '': data.id
+
+      // 添加账号参数
+      this.addAccountForm.departmentId = Node.level == 1 ? this.corpId : data.id
+
+      console.log("111 this.addAccountForm.departmentId====" +  this.addAccountForm.departmentId)
       // 初始名字
       this.clickName = data.name
       this.getAllAccountData()
@@ -1114,7 +1119,9 @@ export default {
       // if (node.level > 1) return resolve([]);.el
       // if(node.level >= 1) { // 二级节点
       console.log("Node" + Node.level)
-        this.getAllDepartmentData(Node,resolve)
+
+      // 获取组织数据 懒加载
+      this.getAllDepartmentData(Node,resolve)
 
       // }
       // setTimeout(() => {
@@ -1135,12 +1142,20 @@ export default {
     // 查询所有部门
     getAllDepartmentData(Node,resolve){
       // node.forEach(element => {
-        console.log("222===" + Node)
+        console.log("222===" + Node.level)
 
       // });
       api.accountApi.getDepartments(Node.level && Node.level !== 0 ?  Node.data.id :'corp').then((res) => {
         if(res.data.code === 200 && res.data.message === 'success'){
           this.getAllDepJson = res.data.data || []
+
+          // 获取跟组织corpId
+          if(!(Node.level && Node.level !== 0)){
+            this.corpId = res.data.data[0].id || '' // 根组织的id
+            this.addAccountForm.departmentId = this.corpId
+            console.log("this.addAccountForm.departmentId===" + this.addAccountForm.departmentId)
+          }
+          
           // this.totalPageSize = res.data.data.total
           //  this.getAllDepJson[0].isEdit = false
           // console.log("getAllDepJson===" + JSON.stringify(this.getAllDepJson))
@@ -1260,7 +1275,7 @@ export default {
         if(res.data.code === 200 && res.data.message === 'success'){
           this.getAllAccountJson = res.data.data.records
           this.totalPageSize = res.data.data.total
-          console.log("dsgfdsgdfh==" + JSON.stringify(this.getAllAccountJson))
+          // console.log("dsgfdsgdfh==" + JSON.stringify(this.getAllAccountJson))
           // for(var i = 0; i < this.getAllAccountJson.length; i++){
             
           //   // console.log("aaaaaaaaaaaaa===" + this.rolesJson.length)
@@ -1361,22 +1376,27 @@ export default {
     // 编辑账号
     editAccount(index, row) {
       console.log("1111111==" +JSON.stringify(row))
-      this.EditAccountForm.id = row.id
+      api.accountApi.getAccountDetailA({id:row.id}).then((res) => {
+            
+        if(res.data.code == 200){
+          //  this.EditAccountForm.id = row.id
 
-      this.EditAccountForm.username = row.username
+          //   this.EditAccountForm.username = row.username
 
-      this.EditAccountForm.name = row.name
+          //   this.EditAccountForm.name = row.name
 
-      this.EditAccountForm.departmentId = row.departmentId
+          //   this.EditAccountForm.departmentId = row.departmentId
+            this.EditAccountForm = res.data.data
 
-      // this.EditAccountForm.roleId = "-1"
-      // if(row.roleId) {
-      this.EditAccountForm.roleId = parseInt(row.roleId)
-      // }
-      // this.adType = row.type
-      // this.EditAccountForm.phoneNumber = row.phoneNumber
-      // this.edit_roleNameArr = row.roleName.split(',')
-      this.edit_dialogFormVisible = true
+            this.EditAccountForm.roleId = parseInt(this.EditAccountForm.roleId)
+    
+            this.checkDepName1 = res.data.data.departmentName || '' //默认组织名称
+
+            this.edit_dialogFormVisible = true
+        }
+      })
+
+     
 
       // // 重置
       // this.$nextTick(()=>{

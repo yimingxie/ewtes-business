@@ -59,7 +59,7 @@
     display: inline-block;
     transition: background .3s; 
     font-size: 14px;
-    color: #7E8A95;
+    color: #999;
     letter-spacing: 0.03px;
     white-space: nowrap;
     border-radius: 4px;
