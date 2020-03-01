@@ -435,7 +435,7 @@
   <!-- 删除电梯 弹窗 end-->
 
   <!-- 删除组织 弹窗-->
-    <el-dialog width="500px" :show-close="false" title="删除组织" :visible.sync="deleteDepDialog">
+    <el-dialog width="510px" :show-close="false" title="删除组织" :visible.sync="deleteDepDialog">
       <div class="dialog-delete">
         <div class="dia-heading">
           <div class="dia-con-pic">
