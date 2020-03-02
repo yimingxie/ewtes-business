@@ -16,7 +16,7 @@
           <div class="xddetail-list-item-first clearfix">
             <div class="xddetail-list-item clearfix" style="width: 100%">
               <div class="xddetail-list-item-title">内部编号</div>
-              <div class="xddetail-list-item-p">{{inNum}}</div>
+              <div class="xddetail-list-item-p xddetail-list-item-p-parent">{{inNum}}</div>
             </div>
 
           </div>
@@ -642,6 +642,10 @@ export default {
 
 <style lang="stylus" scoped>
 #DiagnosisList{
+  .xddetail-list-item-p-parent{
+    width: calc(100% - 200px) !important;
+    padding-right: 0 !important;
+  }
   .xddetail-name{
     min-width: 160px;
   }

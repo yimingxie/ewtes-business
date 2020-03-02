@@ -227,14 +227,16 @@ export default {
         setTimeout(() => {
           this.digitalList.forEach((item, i) => {
             let el = document.getElementById(item.epedId)
-            let child = el.children[0]
-            // setTimeout(() => {
-              item.epedNameShow = child.clientWidth < child.scrollWidth
-            // }, 300)
-            window.addEventListener('resize', () => {
-              item.epedNameShow = child.clientWidth < child.scrollWidth
-              that.$forceUpdate();
-            })
+            if (el.children.length > 0) {
+              let child = el.children[0]
+              // setTimeout(() => {
+                item.epedNameShow = child.clientWidth < child.scrollWidth
+              // }, 300)
+              window.addEventListener('resize', () => {
+                item.epedNameShow = child.clientWidth < child.scrollWidth
+                that.$forceUpdate();
+              })
+            }
           })
           that.$forceUpdate();
         }, 300)

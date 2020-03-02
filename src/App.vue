@@ -16,12 +16,12 @@
         <div class="logoCollapse">
         </div>
        
-        <el-menu-item  index="/digital-list" route="/digital-list" :disabled="ifDisabled('数字防疫点')" > 
+        <el-menu-item index="/digital-list" route="/digital-list" :disabled="ifDisabled('数字防疫点')" > 
           <i class="menu_icon icon-prevent"></i>
           <span slot="title" @click="menuClick('数字防疫点')">数字防疫点</span>
         </el-menu-item>
         
-        <el-menu-item  index="/detection-query" route="/detection-query" :disabled="ifDisabled('检测诊断')">
+        <el-menu-item index="/detection-query"  :class="$route.path == '/detection-panel' ? 'is-active' : ''" route="/detection-query" :disabled="ifDisabled('检测诊断')">
           <i class="menu_icon icon-diagnosis"></i>
           <span slot="title" @click="menuClick('检测诊断')">检测诊断</span>
         </el-menu-item>
