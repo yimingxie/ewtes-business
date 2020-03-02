@@ -49,9 +49,9 @@
                     <div class="tie" style="font-size: 14px;">2020-02-10 16:29</div>
                    
                   </td> -->
-                  <td><span class="tie">所属单位：</span><span>{{ getStaffInfo.corpName }}</span></td>
+                  <td><span class="tie">所属单位：</span><span>{{ getStaffInfo.corpName ? getStaffInfo.corpName : "--" }}</span></td>
                   <td><span class="tie">所属部门：</span>
-                    <span v-if="getStaffInfo.departmentName">{{ getStaffInfo.departmentName }}</span>
+                    <span v-if="getStaffInfo.departmentName">{{ getStaffInfo.departmentName ? getStaffInfo.departmentName : "--"}}</span>
                     <span v-else>--</span>
                   </td>
                 </tr>
@@ -90,6 +90,9 @@
               </el-table-column>
 
               <el-table-column prop="corpName" label="所属单位" :show-overflow-tooltip="true">
+                <template slot-scope="scope">
+                  <span v-text="scope.row.corpName ? scope.row.corpName:'--'"></span>
+                </template>
               </el-table-column>
           
               <el-table-column label="体温">
@@ -507,6 +510,11 @@ export default {
 
 <style lang="stylus">
 #PersonnelDetails
+  a
+    text-decoration: none;
+    &:hover
+      text-decoration: none;
+
   .detailDialog
     .el-table th
       padding: 10px 0 !important;
@@ -598,6 +606,12 @@ export default {
   .closePanel
     // height: 303px;
     overflow: hidden;
-    padding: 0 19px 20px;
+    padding: 11px 27px 20px;
+  @media screen and (max-width: 1440px) {
+    .closePanel{
+      padding: 0 19px 20px;
+    }
+    
+  }
 
 </style>
