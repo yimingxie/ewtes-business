@@ -58,6 +58,9 @@
 </script>
 
 <style lang="stylus">
+.search1.inputActive{
+  box-shadow: 0 0 10px -2px rgba(12,22,49,0.30);
+}
 .search1{
   transition: .2s all
   position relative;
@@ -79,6 +82,7 @@
     box-sizing: border-box;
     vertical-align: top
   }
+  
   .search_btn{
     background: url('../assets/images/hs/search.png') no-repeat center;
     border-radius: 0 8px 8px 0;
