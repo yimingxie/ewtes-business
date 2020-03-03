@@ -659,28 +659,19 @@ input::placeholder{
 }
 
 // ------------------radio------------------
-.businessRadio
-  .el-radio
-      color: rgba(255,255,255,0.55)!important;
-  .el-radio__inner
-      width: 12px!important;
-      height: 12px!important;
-      background-color: #26282e!important;
-      border: 1px solid rgba(255,255,255,0.30)!important;
-  .el-radio__input.is-checked .el-radio__inner
-      border-color: rgba(66,114,255,0.30)!important;
-      background: #26282E!important;
-  .el-radio__input.is-checked+.el-radio__label
-      color: rgba(255,255,255,0.85)!important;
-  .el-radio__inner::after 
-      width: 8px!important;
-      height: 8px!important;
-      border-radius: 100%!important;
-      background-color: #4272FF!important;
-  .el-radio+.el-radio
-      margin-left: 12px!important;
-  .el-radio__label
-      padding-left: 7px!important;
+.el-radio__inner
+  border: 1px solid #D4D4D4!important;
+.el-radio__input.is-checked .el-radio__inner
+  border-color: #D4D4D4!important;
+  background: #fff!important;
+.el-radio__inner::after
+  background-color: #3572FF!important;
+  width: 8px!important;
+  height: 8px!important;
+.el-radio,.el-radio__input.is-checked+.el-radio__label
+  color #000000!important;
+.el-radio__label
+  padding-left: 12px!important;
 // ------------------radio------------------
 
 
