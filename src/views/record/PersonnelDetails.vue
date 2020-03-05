@@ -232,8 +232,8 @@
 
             <el-table-column label="姓名">
               <template slot-scope="scope">
-                <router-link :to="{path:'/person-detail',query:{idCard: scope.row.idCard, epedId:scope.row.epedId}}" style="color: #3572FF;">
-                  {{scope.row.name}}
+                <router-link :to="{path:'/person-detail',query:{userId: scope.row.userId, epedId:scope.row.epedId}}" style="color: #3572FF;">
+                  {{scope.row.name == ''? '--' :scope.row.name}}
                 </router-link>
               </template>
             </el-table-column>
@@ -343,7 +343,7 @@ export default {
         epedId: '',
         pointId: '',
         date: '',
-        idCard:''
+        userId:''
       },
       dialogRelease: false,
       checkDetailsDialog: false,
@@ -351,7 +351,7 @@ export default {
       result:['','未处理','已处理','解除警告'],
       tableData:[], //表格数据
       tableDataQuery:{
-        idCard: this.$route.query.idCard, 
+        userId: this.$route.query.userId, 
         epedId: this.$route.query.epedId,
         limit:7,
         offset:1
@@ -362,7 +362,7 @@ export default {
     'fotter': fotter,
   },
   mounted() {
-    console.log("params==" + this.$route.query.idCard)
+    console.log("params==" + this.$route.query.userId)
     //人员详情
     this.getAllAccountData()
     // 获取员工管辖电梯
@@ -382,7 +382,7 @@ export default {
       this.staffMLiftParam.epedId = row.epedId
       this.staffMLiftParam.pointId = row.pointId
       this.staffMLiftParam.date = row.time
-      this.staffMLiftParam.idCard = row.idCard
+      this.staffMLiftParam.userId = row.userId
       this.getStaffManageLift()
       this.checkDetailsDialog = true
 
@@ -390,7 +390,7 @@ export default {
 
     // 确认解除异常状态
     confirmRelease(){
-      api.person.relievingAnomalies({id: this.getStaffInfo.id}).then((res) => {
+      api.person.relievingAnomalies({userId: this.getStaffInfo.id}).then((res) => {
         if(res.data.code === 200 && res.data.message === 'success') {
           this.$message.success("解除异常状态成功")
           this.dialogRelease = false

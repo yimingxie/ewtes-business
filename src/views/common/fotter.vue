@@ -3,7 +3,7 @@
     <!-- <span>帮助</span>
     <span>隐私</span>
     <span>条款</span> -->
-    <div>Copyright&nbsp; ©2019-2024 &nbsp;&nbsp;&nbsp;V1.0.0.4</div>
+    <div>Copyright&nbsp; ©2019-2024 &nbsp;&nbsp;&nbsp;V1.0.0.5</div>
     <div class="loginBrand"></div>
   </footer>
 </template>
