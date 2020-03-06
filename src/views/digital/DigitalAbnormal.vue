@@ -348,7 +348,7 @@ export default {
       this.defaultTimestamp = year
 
       let yearStr = year + ''
-      // 查月份
+      // 查全月
       if (yearStr.length === 7) {
         this.abnormalParams.date = yearStr + '-01 00:00:00'
         this.abnormalParams.allDate = 'month'
@@ -358,7 +358,7 @@ export default {
         this.abnormalParams.allDate = 'day'
         this.abnormalParams.date = yearStr + ' 00:00:00'
       }
-      // 查年
+      // 查全年
       else {
         this.abnormalParams.date = yearStr + '-01-01 00:00:00'
         this.abnormalParams.allDate = 'year'
