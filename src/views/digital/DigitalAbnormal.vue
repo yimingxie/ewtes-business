@@ -36,7 +36,8 @@
             <div class="llt-tr clearfix">
               <div class="llt-th">检测区域名称</div>
               <div class="llt-th">日期</div>
-              <div class="llt-th">告警总数</div>
+              <div class="llt-th">累计检测人次</div>
+              <div class="llt-th">累计异常人数</div>
               <div class="llt-th" @click="getDetDetail">操作</div>
             </div>
           </div>
@@ -47,6 +48,7 @@
               <div class="llt-tr-container clearfix">
                 <div class="llt-td">{{item.pointName}}</div>
                 <div class="llt-td">{{item.date | dateFormat3}}</div>
+                <div class="llt-td">{{item.checkCount}}</div>
                 <div class="llt-td">{{item.abnormalCount}}</div>
                 <div class="llt-td">
                   <span class="llt-td-a" @click="getDetDetail(item)">详情</span>
@@ -271,9 +273,10 @@ export default {
       abnormalList: [],
       abnormalParams: {
         "epedId": "",
-        "date": "2020-02-23 00:00:00", // 今天的数据就传2020-02-23 00:00:00 这个月就2020-02-01 00:00:00  今年就2020-01-01 00:00:00
+        "date": "2020-02-23 00:00:00", // 今天的数据就传2020-02-23 00:00:00 这个月就2020-02-01 00:00:00  今年就2020-01-01 00:00:0011111111111
         "limit": 10,
-        "offset": 1
+        "offset": 1,
+        "allDate": "year",
       },
 
       currentPage: 1,
@@ -546,17 +549,32 @@ export default {
 
 <style lang="stylus" scoped>
 #DigitalAbnormal{
+  // .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
+  //   width 30%;
+  // }
+  // .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
+  //   width 27%;
+  // }
+  // .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
+  //   width 28%;
+  // }
+  // .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
+  //   width 15%;
+  // }
   .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
-    width 30%;
+    width 24%;
   }
   .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
-    width 27%;
+    width 23%;
   }
   .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
-    width 28%;
+    width 23%;
   }
   .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
-    width 15%;
+    width 23%;
+  }
+  .llt-thead .llt-th:nth-child(5),.llt-tbody .llt-td:nth-child(5){
+    width 7%;
   }
 
 
