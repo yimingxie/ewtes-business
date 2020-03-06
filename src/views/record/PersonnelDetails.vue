@@ -284,7 +284,7 @@
 <script>
 import Vue from 'vue'
 import api from 'api' //api.person
-import RadioGroup from "../../components/RadioGroup";
+// import RadioGroup from "../../components/RadioGroup";
 import SearchInput from "../../components/SearchInput";
 import fotter from "../../views/common/fotter";
 import moment from 'moment';
