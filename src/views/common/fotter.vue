@@ -5,6 +5,8 @@
     <span>条款</span> -->
     <div>Copyright&nbsp; ©2019-2024 &nbsp;&nbsp;&nbsp;V1.0.0.5</div>
     <div class="loginBrand"></div>
+    <div @click="See('http://www.beian.miit.gov.cn')" style="cursor:pointer" target="_blank">粤ICP备18075564号</div>
+    
   </footer>
 </template>
 
@@ -23,7 +25,12 @@ export default {
     this.$store.commit('SWITCH_LAYOUT', 'admin')
   },
   methods: {
-
+    See (e) {
+      // window.location.href = e
+      window.open(e,'_blank') // 新窗口打开外链接
+      // window.location.href = 'http://www.baidu.com'
+    }
+    
   },
   components: {
 
