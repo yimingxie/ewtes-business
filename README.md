@@ -1,8 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # master
 =======
 # dev
 >>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
+=======
+# release
+>>>>>>> 40ab02b67b1019fd899b704024c248727d89cae4
 
 > A Vue.js project
 
