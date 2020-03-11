@@ -165,11 +165,7 @@ axios.interceptors.response.use(response => {
 
 //在main.js设置全局的请求次数，请求的间隙
  
-<<<<<<< HEAD
 axios.defaults.timeout = 30000
-=======
-axios.defaults.timeout = 10000
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
 
 // axios.defaults.retry = 4;
 // axios.defaults.retryDelay = 1000;
@@ -220,12 +216,11 @@ if (process.env.NODE_ENV == 'development') {
   devURL = `${protocol}//192.168.100.2`
   xiaohuURL = `${protocol}//192.168.100.89:8080`
   shupingURL = `${protocol}//192.168.100.8:8080`
-<<<<<<< HEAD
   // localURL = `${protocol}//192.168.100.17:8080`
   // localURL = `${protocol}//iot.gidomino.com`
-  localURL = `${protocol}//192.168.100.8:8080`
+  // localURL = `${protocol}//192.168.100.8:8080`
   // localURL = `${protocol}//192.168.100.89:8080`
-  // localURL = `${protocol}//lorns.gidomino.com`
+  localURL = `${protocol}//lorns.gidomino.com`
   // localURL = `${protocol}//www.ewtes.com`
 } else if (process.env.NODE_ENV == 'production') {
   //  localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//192.168.100.3`
@@ -234,20 +229,6 @@ if (process.env.NODE_ENV == 'development') {
   // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//lorns.gidomino.com`
   // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//ewtes.gidomino.com`
   localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//www.ewtes.com`
-=======
-  localURL = `${protocol}//192.168.100.17:8080`
-  // localURL = `${protocol}//iot.gidomino.com`
-  // localURL = `${protocol}//192.168.100.3`
-  // localURL = `${protocol}//192.168.100.8:8080`
-  // localURL = `${protocol}//192.168.100.89:8080`
-  // localURL = `${protocol}//lorns.gidomino.com`
-} else if (process.env.NODE_ENV == 'production') {
-  //  localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//192.168.100.3`
-  localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//iot.gidomino.com`
-  // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//lorns.gidomino.com:23680`
-  // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//lorns.gidomino.com`
-  // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//ewtes.gidomino.com`
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
 }
 
 // let AUTH_TOKEN=(function(){
@@ -290,21 +271,13 @@ export default {
     })
   },
   //post请求
-<<<<<<< HEAD
   post (url, param, timeoutParam) {
-=======
-  post (url,param, timeoutParam) {
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
     return new Promise((resolve,reject) => {
       axios({
         method: 'post',
         url,
         data: param,
-<<<<<<< HEAD
         timeout: timeoutParam ? timeoutParam : 30000,
-=======
-        timeout: timeoutParam ? timeoutParam : 10000,
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
         cancelToken: new CancelToken(c => {
           cancel = c
         })
