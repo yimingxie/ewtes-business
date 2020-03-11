@@ -1,4 +1,4 @@
-# master gg
+# master
 
 > A Vue.js project
 
