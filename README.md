@@ -1,4 +1,4 @@
-# dev
+# release
 
 > A Vue.js project
 
