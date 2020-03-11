@@ -164,7 +164,7 @@
         </el-col>
 
         <el-col :span="12">
-          <el-form-item label="所属部门" prop="departmentName" >
+          <el-form-item label="所属部门" prop="departmentName">
             <el-input v-model="addAccountForm.departmentName" placeholder="请输入所属部门" auto-complete="off" clearable size="small" ></el-input>
           </el-form-item>
         </el-col>
@@ -203,10 +203,7 @@
               </el-col>
             </el-row>
         </el-col>
-      
       </el-row>
-      
-      
       
     </el-form>
     <div slot="footer"  class="dialog-footer tar">
@@ -659,15 +656,15 @@ export default {
       },
       adType:'',
       addAccountRules: {
-        // phone: [
-        //   { min: 11, max: 11, message: '手机号错误，请输入11位手机号', trigger: 'blur' },
-        //   {
-        //     required: true,
-        //     pattern: /(^((1[3-9][0-9])\d{8}$))/,
-        //     message: '请输入正确的手机号',
-        //     trigger: 'blur'
-        //   }
-        // ],
+        phone: [
+          { min: 11, max: 11, message: '手机号错误，请输入11位手机号', trigger: 'blur' },
+          {
+            required: true,
+            pattern: /(^((1[3-9][0-9])\d{8}$))/,
+            message: '请输入正确的手机号',
+            trigger: 'blur'
+          }
+        ],
         name: [
           { required: true, message: '请输入真实姓名', trigger: 'blur' },
           // { max: 20, message: '真实姓名字符长度过长，请控制在20位字符以内', trigger: 'blur' },
