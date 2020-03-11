@@ -174,6 +174,15 @@ const router = new Router({
       },
       component: (resolve) => require(['./views/digital/DigitalAbnormal.vue'], resolve)
     },
+    {
+      path: "/det-test",
+      name: "det-test",
+      meta: {
+        title: "测试专用",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/digital/DetTest.vue'], resolve)
+    },
 
     // {
     //   path: "/TreeEg",
