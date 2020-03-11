@@ -125,7 +125,7 @@ axios.interceptors.response.use(response => {
         if(localStorage.getItem('accessToken')) {
           Vue.prototype.$message({
             type: "error",
-            message: "身份已过期，请重新登录"
+            message: "身份已过期，请重新登录 release"
           });
         }
         
