@@ -164,7 +164,11 @@
         </el-col>
 
         <el-col :span="12">
+<<<<<<< HEAD
           <el-form-item label="所属部门" prop="departmentName" >
+=======
+          <el-form-item label="所属部门" prop="departmentName">
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
             <el-input v-model="addAccountForm.departmentName" placeholder="请输入所属部门" auto-complete="off" clearable size="small" ></el-input>
           </el-form-item>
         </el-col>
@@ -203,11 +207,16 @@
               </el-col>
             </el-row>
         </el-col>
+<<<<<<< HEAD
       
       </el-row>
       
       
       
+=======
+      </el-row>
+      
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
     </el-form>
     <div slot="footer"  class="dialog-footer tar">
       <span @click="add_dialogFormVisible = false" class="dialogCancel">取 消</span>
@@ -460,11 +469,17 @@
           <div class="dia-citem clearfix">
             <div class="dia-citem-label">下载模板</div>
             <div class="dia-citem-ib">
+<<<<<<< HEAD
               <!-- <a class="dia-download-link" href="http://lorns.gidomino.com/template/完整模板.xlsx" target="_blank">《完整模板.excel》</a> -->
               <a class="dia-download-link" :href="hrefWanzheng" target="_blank">《完整模板.excel》</a>
               <span style="color: #D8D8D8;margin:0 10px">|</span>
               <!-- <a class="dia-download-link" href="http://lorns.gidomino.com/template/batch-import-template-brief.xlsx" target="_blank">《简要模板.excel》</a> -->
               <!-- <a class="dia-download-link" href="http://lorns.gidomino.com/template/简要模板.xlsx" target="_blank">《简要模板.excel》</a> -->
+=======
+              <a class="dia-download-link" :href="hrefWanzheng" target="_blank">《完整模板.excel》</a>
+              <span style="color: #D8D8D8;margin:0 10px">|</span>
+              <!-- <a class="dia-download-link" href="http://lorns.gidomino.com/template/batch-import-template-brief.xlsx" target="_blank">《简要模板.excel》</a> -->
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
               <a class="dia-download-link" :href="hrefJianyao" target="_blank">《简要模板.excel》</a>
             </div>
           </div>
@@ -661,6 +676,7 @@ export default {
       },
       adType:'',
       addAccountRules: {
+<<<<<<< HEAD
         // phone: [
         //   { min: 11, max: 11, message: '手机号错误，请输入11位手机号', trigger: 'blur' },
         //   {
@@ -670,6 +686,17 @@ export default {
         //     trigger: 'blur'
         //   }
         // ],
+=======
+        phone: [
+          { min: 11, max: 11, message: '手机号错误，请输入11位手机号', trigger: 'blur' },
+          {
+            required: true,
+            pattern: /(^((1[3-9][0-9])\d{8}$))/,
+            message: '请输入正确的手机号',
+            trigger: 'blur'
+          }
+        ],
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
         name: [
           { required: true, message: '请输入真实姓名', trigger: 'blur' },
           // { max: 20, message: '真实姓名字符长度过长，请控制在20位字符以内', trigger: 'blur' },
@@ -733,7 +760,10 @@ export default {
       depLists:[],
       hrefWanzheng:`${http.localURL}/template/完整模板.xlsx`,
       hrefJianyao:`${http.localURL}/template/简要模板.xlsx`,
+<<<<<<< HEAD
       
+=======
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
     }
   },
   components: {

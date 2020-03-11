@@ -47,7 +47,11 @@ const router = new Router({
       path: "/entryRecord",
       name: "entryRecord",
       meta: {
+<<<<<<< HEAD
         title: "防疫点出入记录",
+=======
+        title: "员工详情",
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
         auto: false // 是否需要权限
       },
       component: (resolve) => require(['./views/record/EntryRecord.vue'], resolve)
@@ -74,7 +78,11 @@ const router = new Router({
       path: "/staff",
       name: "staff",
       meta: {
+<<<<<<< HEAD
         title: "员工管理",
+=======
+        title: "员工详情",
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
         auto: false // 是否需要权限
       },
       component: (resolve) => require(['./views/settings/Staff.vue'], resolve)
@@ -174,6 +182,18 @@ const router = new Router({
       },
       component: (resolve) => require(['./views/digital/DigitalAbnormal.vue'], resolve)
     },
+<<<<<<< HEAD
+=======
+    {
+      path: "/det-test",
+      name: "det-test",
+      meta: {
+        title: "测试专用",
+        auto: false // 是否需要权限
+      },
+      component: (resolve) => require(['./views/digital/DetTest.vue'], resolve)
+    },
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
 
     // {
     //   path: "/TreeEg",

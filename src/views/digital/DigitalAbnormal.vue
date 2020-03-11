@@ -36,7 +36,12 @@
             <div class="llt-tr clearfix">
               <div class="llt-th">检测区域名称</div>
               <div class="llt-th">日期</div>
+<<<<<<< HEAD
               <div class="llt-th">告警总数</div>
+=======
+              <div class="llt-th">累计检测人次</div>
+              <div class="llt-th">累计异常人数</div>
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
               <div class="llt-th" @click="getDetDetail">操作</div>
             </div>
           </div>
@@ -47,6 +52,10 @@
               <div class="llt-tr-container clearfix">
                 <div class="llt-td">{{item.pointName}}</div>
                 <div class="llt-td">{{item.date | dateFormat3}}</div>
+<<<<<<< HEAD
+=======
+                <div class="llt-td">{{item.checkCount}}</div>
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
                 <div class="llt-td">{{item.abnormalCount}}</div>
                 <div class="llt-td">
                   <span class="llt-td-a" @click="getDetDetail(item)">详情</span>
@@ -271,9 +280,16 @@ export default {
       abnormalList: [],
       abnormalParams: {
         "epedId": "",
+<<<<<<< HEAD
         "date": "2020-02-23 00:00:00", // 今天的数据就传2020-02-23 00:00:00 这个月就2020-02-01 00:00:00  今年就2020-01-01 00:00:00
         "limit": 10,
         "offset": 1
+=======
+        "date": "2020-02-23 00:00:00", // 今天的数据就传2020-02-23 00:00:00 这个月就2020-02-01 00:00:00  今年就2020-01-01 00:00:0011111111111
+        "limit": 10,
+        "offset": 1,
+        "allDate": "year",
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
       },
 
       currentPage: 1,
@@ -348,7 +364,11 @@ export default {
       this.defaultTimestamp = year
 
       let yearStr = year + ''
+<<<<<<< HEAD
       // 查月份
+=======
+      // 查全月
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
       if (yearStr.length === 7) {
         this.abnormalParams.date = yearStr + '-01 00:00:00'
         this.abnormalParams.allDate = 'month'
@@ -358,7 +378,11 @@ export default {
         this.abnormalParams.allDate = 'day'
         this.abnormalParams.date = yearStr + ' 00:00:00'
       }
+<<<<<<< HEAD
       // 查年
+=======
+      // 查全年
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
       else {
         this.abnormalParams.date = yearStr + '-01-01 00:00:00'
         this.abnormalParams.allDate = 'year'
@@ -546,6 +570,7 @@ export default {
 
 <style lang="stylus" scoped>
 #DigitalAbnormal{
+<<<<<<< HEAD
   .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
     width 30%;
   }
@@ -557,6 +582,34 @@ export default {
   }
   .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
     width 15%;
+=======
+  // .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
+  //   width 30%;
+  // }
+  // .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
+  //   width 27%;
+  // }
+  // .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
+  //   width 28%;
+  // }
+  // .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
+  //   width 15%;
+  // }
+  .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
+    width 24%;
+  }
+  .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
+    width 23%;
+  }
+  .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
+    width 23%;
+  }
+  .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
+    width 23%;
+  }
+  .llt-thead .llt-th:nth-child(5),.llt-tbody .llt-td:nth-child(5){
+    width 7%;
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
   }
 
 

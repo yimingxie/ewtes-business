@@ -62,10 +62,16 @@
       <!-- 维保 end -->
       <div class="codeDiv" v-if="layout === 'admin'">
         <div class="anzhuo">
+<<<<<<< HEAD
           <!-- <div class="kuang"> -->
           <div class="kuang" :style="{'background':'url(' + ccccc + ') no-repeat center 13px / 100px #FFFFFF'}">
             扫描二维码下载
             <!-- <div class="appIcon"></div> -->
+=======
+          <div class="kuang">
+            扫描二维码下载
+            <div class="appIcon"></div>
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
           </div>
           Android
           
@@ -76,7 +82,11 @@
           <div class="kuang">
             <div class="yinying"></div>
             内测中
+<<<<<<< HEAD
             <!-- <div class="appIcon"></div> -->
+=======
+            <div class="appIcon"></div>
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
 
           </div>
         </div>
@@ -125,8 +135,11 @@
   import api from 'api'
   import { mapState, mapGetters, mapActions } from 'vuex'
   import _ from 'lodash'
+<<<<<<< HEAD
   import http from './utils/http'
 
+=======
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
   export default {
     name: 'App',
 
@@ -145,9 +158,13 @@
         theme: "",
         corpType:'',
         auth:{}, //用户角色所拥有权限
+<<<<<<< HEAD
         authDc:{}, //用户角色所拥有权限
         ccccc:`${http.localURL}/apk/rqcode/rq_code.png`
 
+=======
+        authDc:{} //用户角色所拥有权限
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
       }
     },
     components: {
@@ -578,7 +595,11 @@
     width 160px
     height 160px
     text-align center
+<<<<<<< HEAD
     // background url('assets/images/hs/code.png') no-repeat center 13px #FFFFFF;
+=======
+    background url('assets/images/hs/code.png') no-repeat center 13px #FFFFFF;
+>>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
     background-size 100px
     padding-top: 124px;
     position absolute
