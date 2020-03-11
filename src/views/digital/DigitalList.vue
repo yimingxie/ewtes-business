@@ -48,11 +48,8 @@
               <div class="llt-th">区域</div>
               <div class="llt-th">详细地址</div>
               <div class="llt-th">所属单位</div>
-<<<<<<< HEAD
-=======
               <div class="llt-th">累计检测人次</div>
               <div class="llt-th">累计异常人数</div>
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
               <div class="llt-th">监测数</div>
               <div class="llt-th">上次告警</div>
               <!-- <div class="llt-th">状态</div> -->
@@ -82,11 +79,8 @@
                 <div class="llt-td">{{item.localArea}}</div>
                 <div class="llt-td">{{item.address}}</div>
                 <div class="llt-td">{{item.useDepartment ? item.useDepartment : '--'}}</div>
-<<<<<<< HEAD
-=======
                 <div class="llt-td">{{item.checkCount}}</div>
                 <div class="llt-td">{{item.abnormalCount}}</div>
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
                 <div class="llt-td">{{item.monitorNum}}</div>
                 <div class="llt-td">{{item.lastTime | judgeYear}}</div>
                 <!-- <div class="llt-td">
@@ -470,9 +464,6 @@ export default {
 
 <style lang="stylus" scoped>
 #DigitalList{
-<<<<<<< HEAD
-  
-=======
   // .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
   //   width 3%;
   //   text-align center;
@@ -502,41 +493,12 @@ export default {
   // .llt-thead .llt-th:nth-child(9),.llt-tbody .llt-td:nth-child(9){
   //   width 14%;
   // }
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
   .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
     width 3%;
     text-align center;
     text-overflow: clip;
   }
   .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
-<<<<<<< HEAD
-    width 11%;
-  }
-  .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
-    width 8%;
-  }
-  .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
-    width 14%;
-  }
-  .llt-thead .llt-th:nth-child(5),.llt-tbody .llt-td:nth-child(5){
-    width 17%;
-  }
-  .llt-thead .llt-th:nth-child(6),.llt-tbody .llt-td:nth-child(6){
-    width 14%;
-  }
-  .llt-thead .llt-th:nth-child(7),.llt-tbody .llt-td:nth-child(7){
-    width 7%;
-  }
-  .llt-thead .llt-th:nth-child(8),.llt-tbody .llt-td:nth-child(8){
-    width 12%;
-  }
-  .llt-thead .llt-th:nth-child(9),.llt-tbody .llt-td:nth-child(9){
-    width 14%;
-  }
-  // .llt-thead .llt-th:nth-child(10),.llt-tbody .llt-td:nth-child(10){
-  //   width 14%;
-  // }
-=======
     width 10%;
   }
   .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
@@ -566,23 +528,12 @@ export default {
   .llt-thead .llt-th:nth-child(11),.llt-tbody .llt-td:nth-child(11){
     width 14%;
   }
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
 }
 
 
 /* 适配 */
 @media screen and (max-width: 1620px) {
   #DigitalList{
-<<<<<<< HEAD
-    .llt-td{
-      font-size 12px !important;  
-    }
-    .llt-thead .llt-th:nth-child(6),.llt-tbody .llt-td:nth-child(6){
-      width 10%;
-    }
-    .llt-thead .llt-th:nth-child(8),.llt-tbody .llt-td:nth-child(8){
-      width 15%;
-=======
     // .llt-td{
     //   font-size 12px !important;  
     // }
@@ -615,23 +566,12 @@ export default {
     }
     .llt-thead .llt-th:nth-child(11),.llt-tbody .llt-td:nth-child(11){
       width 14%;
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
     }
   }
 }
 
 @media screen and (max-width: 1500px) {
   #DigitalList{
-<<<<<<< HEAD
-    .llt-th, .llt-td{
-      padding: 16px 10px !important;
-    }
-    .llt-thead .llt-th:nth-child(5),.llt-tbody .llt-td:nth-child(5){
-      width 15%;
-    }
-    .llt-thead .llt-th:nth-child(9),.llt-tbody .llt-td:nth-child(9){
-      width 16%;
-=======
     // .llt-th, .llt-td{
     //   padding: 16px 10px !important;
     // }
@@ -658,7 +598,6 @@ export default {
     }
     .llt-thead .llt-th:nth-child(11),.llt-tbody .llt-td:nth-child(11){
       width 15%;
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
     }
   }
 }

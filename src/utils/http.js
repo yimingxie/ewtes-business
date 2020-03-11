@@ -218,10 +218,11 @@ if (process.env.NODE_ENV == 'development') {
   shupingURL = `${protocol}//192.168.100.8:8080`
   // localURL = `${protocol}//192.168.100.17:8080`
   // localURL = `${protocol}//iot.gidomino.com`
-  localURL = `${protocol}//192.168.100.8:8080`
+  // localURL = `${protocol}//192.168.100.8:8080`
   // localURL = `${protocol}//192.168.100.89:8080`
   // localURL = `${protocol}//lorns.gidomino.com`
   // localURL = `${protocol}//www.ewtes.com`
+  localURL = `${protocol}//iot.gidomino.com`
 } else if (process.env.NODE_ENV == 'production') {
   //  localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//192.168.100.3`
   // localURL = iot = devURL = xiaohuURL = shupingURL = `${protocol}//iot.gidomino.com`

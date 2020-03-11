@@ -232,13 +232,8 @@
 
             <el-table-column label="姓名">
               <template slot-scope="scope">
-<<<<<<< HEAD
-                <router-link :to="{path:'/person-detail',query:{idCard: scope.row.idCard, epedId:scope.row.epedId}}" style="color: #3572FF;">
-                  {{scope.row.name}}
-=======
                 <router-link :to="{path:'/person-detail',query:{userId: scope.row.userId, epedId:scope.row.epedId}}" style="color: #3572FF;">
                   {{scope.row.name == ''? '--' :scope.row.name}}
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
                 </router-link>
               </template>
             </el-table-column>
@@ -289,11 +284,7 @@
 <script>
 import Vue from 'vue'
 import api from 'api' //api.person
-<<<<<<< HEAD
-import RadioGroup from "../../components/RadioGroup";
-=======
 // import RadioGroup from "../../components/RadioGroup";
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
 import SearchInput from "../../components/SearchInput";
 import fotter from "../../views/common/fotter";
 import moment from 'moment';
@@ -352,11 +343,7 @@ export default {
         epedId: '',
         pointId: '',
         date: '',
-<<<<<<< HEAD
-        idCard:''
-=======
         userId:''
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
       },
       dialogRelease: false,
       checkDetailsDialog: false,
@@ -364,11 +351,7 @@ export default {
       result:['','未处理','已处理','解除警告'],
       tableData:[], //表格数据
       tableDataQuery:{
-<<<<<<< HEAD
-        idCard: this.$route.query.idCard, 
-=======
         userId: this.$route.query.userId, 
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
         epedId: this.$route.query.epedId,
         limit:7,
         offset:1
@@ -379,11 +362,7 @@ export default {
     'fotter': fotter,
   },
   mounted() {
-<<<<<<< HEAD
-    console.log("params==" + this.$route.query.idCard)
-=======
     console.log("params==" + this.$route.query.userId)
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
     //人员详情
     this.getAllAccountData()
     // 获取员工管辖电梯
@@ -403,11 +382,7 @@ export default {
       this.staffMLiftParam.epedId = row.epedId
       this.staffMLiftParam.pointId = row.pointId
       this.staffMLiftParam.date = row.time
-<<<<<<< HEAD
-      this.staffMLiftParam.idCard = row.idCard
-=======
       this.staffMLiftParam.userId = row.userId
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
       this.getStaffManageLift()
       this.checkDetailsDialog = true
 
@@ -415,11 +390,7 @@ export default {
 
     // 确认解除异常状态
     confirmRelease(){
-<<<<<<< HEAD
-      api.person.relievingAnomalies({id: this.getStaffInfo.id}).then((res) => {
-=======
       api.person.relievingAnomalies({userId: this.getStaffInfo.id}).then((res) => {
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
         if(res.data.code === 200 && res.data.message === 'success') {
           this.$message.success("解除异常状态成功")
           this.dialogRelease = false

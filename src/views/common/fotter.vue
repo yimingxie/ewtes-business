@@ -3,15 +3,8 @@
     <!-- <span>帮助</span>
     <span>隐私</span>
     <span>条款</span> -->
-<<<<<<< HEAD
     <div>Copyright&nbsp; ©2019-2024 &nbsp;&nbsp;&nbsp;V1.0.0.6</div>
     <div class="loginBrand"></div>
-=======
-    <div>Copyright&nbsp; ©2019-2024 &nbsp;&nbsp;&nbsp;V1.0.0.5</div>
-    <div class="loginBrand"></div>
-    <div @click="See('http://www.beian.miit.gov.cn')" style="cursor:pointer" target="_blank">粤ICP备18075564号</div>
-    
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
   </footer>
 </template>
 
@@ -30,16 +23,6 @@ export default {
     this.$store.commit('SWITCH_LAYOUT', 'admin')
   },
   methods: {
-<<<<<<< HEAD
-
-=======
-    See (e) {
-      // window.location.href = e
-      window.open(e,'_blank') // 新窗口打开外链接
-      // window.location.href = 'http://www.baidu.com'
-    }
-    
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
   },
   components: {
 

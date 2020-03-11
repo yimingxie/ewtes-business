@@ -76,11 +76,7 @@
         <el-col :lg="8" :xl="6" :xs='8' :sm='8' :md='8' class="" v-for="(account, index) in getAllAccountJson" :key="index">
           
             <div class="staff-grid-content bg-purple " :class="{'highlightDiv staff_highlight' : account.warnStatus == 1}">
-<<<<<<< HEAD
-               <router-link :to="{path:'/person-detail',query:{idCard: account.idCard, epedId:account.lastEpedId}}">
-=======
                <router-link :to="{path:'/person-detail',query:{userId: account.userId, epedId:account.lastEpedId}}">
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
                 <div class="grid_content">
                   <div class="stf_content">
                     <span class="stf_pic">

@@ -9,13 +9,8 @@
   <div class="makeLoginCenter">
     <div class="title">
       <div class="title1">欢迎使用</div>
-<<<<<<< HEAD
       <div class="title2">eWtes城市公共卫生应急管理溯源系统</div>
     </div>
-=======
-      <div class="title2">EWTES疫情预警及溯源系统</div>
-    </div> 
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
     <div class="loginFormWrap">
       <div class="box">
         <form @submit.prevent="onSubmit" autocomplete="off" class="loginForm">
@@ -80,10 +75,7 @@
   <!-- <img class="loginLeft" src="../../assets/images/hs/loginLeft@1x.png"/>
   <img class="loginRight" src="../../assets/images/hs/loginRight@1x.png"/> -->
   <span class="loginBrand"></span>
-<<<<<<< HEAD
   <div @click="See('http://www.beian.miit.gov.cn')" class="benAn">粤ICP备18075564号</div>
-=======
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
 </div>
 
 </template>
@@ -134,14 +126,11 @@
       }
     },
     methods: {
-<<<<<<< HEAD
       See (e) {
         // window.location.href = e
         window.open(e,'_blank') // 新窗口打开外链接
         // window.location.href = 'http://www.baidu.com'
       },
-=======
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
       getSms(){
         api.log.getSms({"phone" : this.loginForm.account}).then((res) => {
           if(res.data.code === 200){
@@ -428,7 +417,6 @@
     top: 14px;
     right: 17px;
     cursor: pointer;
-<<<<<<< HEAD
   .benAn
     cursor: pointer;
     position: absolute;
@@ -436,8 +424,6 @@
     color: #fff;
     &:hover
       text-decoration: underline;
-=======
->>>>>>> 729a2d2612ab860d52099bade120bfe418f2cbf8
 // @media screen and (max-width: 1920px) {
 //   #login {
     
