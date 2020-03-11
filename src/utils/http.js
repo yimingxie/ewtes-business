@@ -156,7 +156,7 @@ axios.interceptors.response.use(response => {
 	if(error.code == 'ECONNABORTED' && error.message.indexOf('timeout')!=-1 && !originalRequest._retry){
     Vue.prototype.$message({
       type: "error",
-      message: "当前网络不佳，请刷新重试"
+      message: "当前网络不佳，请刷新重试222"
     });
 	}
 
