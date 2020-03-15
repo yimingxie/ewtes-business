@@ -11,7 +11,7 @@
       <div class="digital-detail-tabTop clearfix" style="margin-top: 30px;">
         <div class="digital-detail-tab">
           <span class="on" style="z-index: 4" @click="goDigitalDetail">基本档案</span>
-          <span style="z-index: 3" @click="goAbnormalDetail">异常档案</span>
+          <span style="z-index: 3" @click="goAbnormalDetail">检测档案</span>
         </div>
 
         <div class="digital-detail-tabTop-a clearfix">

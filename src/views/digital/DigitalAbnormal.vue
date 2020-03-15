@@ -210,7 +210,7 @@
                 <div class="det-history-td">2020-02-20 15:20</div>
               </div> -->
 
-              <div class="det-history-tr clearfix" v-for="(item, i) in normalDetailList" :key="i" @click="goStaffDetail(item.id)">
+              <div class="det-history-tr clearfix" v-for="(item, i) in normalDetailList" :key="i" @click="goStaffDetail(item.userId)">
                 <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
                 <div class="det-history-td">{{item.celsius ? item.celsius : '--'}}℃</div>
                 <div class="det-history-td">{{item.time | dateFormatNoSecond}}</div>
@@ -665,7 +665,8 @@ export default {
       const routerObj = this.$router.resolve({
         path: '/person-detail', 
         query: {
-          userId: id
+          userId: id,
+          epedId: this.abnormalParams.epedId
         }
       })
       console.log('routerObj', routerObj)

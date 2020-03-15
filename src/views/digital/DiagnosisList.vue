@@ -16,7 +16,10 @@
           <div class="xddetail-list-item-first clearfix">
             <div class="xddetail-list-item clearfix" style="width: 100%">
               <div class="xddetail-list-item-title">内部编号</div>
-              <div class="xddetail-list-item-p xddetail-list-item-p-parent">{{inNum}}</div>
+              <div class="xddetail-list-item-p xddetail-list-item-p-parent parentRefInNum" ref="parentRefInNum" style="padding-right: 0;">
+                {{inNum ? inNum : '--'}}
+                <div class="xddetail-name-p-full" v-if="inNumShow">{{inNum}}</div>
+              </div>
             </div>
 
           </div>
@@ -237,7 +240,9 @@ export default {
       localArea: "",         
       address: "",
       parentName: "",  
-      parentNameShow: '',  
+      parentNameShow: '',
+      inNumShow: '',
+
 
 
       // --列表--
@@ -312,11 +317,14 @@ export default {
 
     // 展示长度，临时
     const el = this.$refs.parentRef
+    const elInNum = this.$refs.parentRefInNum
     setTimeout(() => {
       this.parentNameShow = el.clientWidth < el.scrollWidth
+      this.inNumShow = elInNum.clientWidth < elInNum.scrollWidth
     }, 300)
     window.addEventListener('resize', () => {
       this.parentNameShow = el.clientWidth < el.scrollWidth
+      this.inNumShow = elInNum.clientWidth < elInNum.scrollWidth
     })
     
   },

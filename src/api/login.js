@@ -33,6 +33,6 @@ export default  {
   
   // 批量录入员工
   batchAddStaff(params) {
-    return http.post(`${url2}/upload/file`, params)
+    return http.post(`${url2}/upload/file`, params, 600000)
   },
 }
