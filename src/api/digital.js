@@ -142,6 +142,11 @@ export default {
     return http.get(`${url1}/epidemic/useDepartment`)
   },
 
+  // 异常档案列表
+  getNormalDetailList(params) {
+    return http.post(`${url1}/epidemic/normal/info`, params)
+  },
+
   
   
 }

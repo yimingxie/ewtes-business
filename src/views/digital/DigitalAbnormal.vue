@@ -9,7 +9,7 @@
       <div class="digital-detail-tabTop clearfix" style="margin-top: 30px;">
         <div class="digital-detail-tab">
           <span style="z-index: 4" @click="goDigitalDetail">基本档案</span>
-          <span class="on" style="z-index: 3" @click="goAbnormalDetail">异常档案</span>
+          <span class="on" style="z-index: 3" @click="goAbnormalDetail">检测档案</span>
         </div>
         <div class="digital-detail-tabTop-a clearfix">
           <div class="digital-detail-tabTop-anav" @click="goObserveList">检测任务管理</div>
@@ -27,7 +27,7 @@
 
             </div>
             <div class="xtitle-heading-h-line"></div>
-            <div class="xtitle-heading-h-p">记录</div>
+            <div class="xtitle-heading-h-p">检测记录</div>
           </div>
         </div>
 
@@ -36,8 +36,8 @@
             <div class="llt-tr clearfix">
               <div class="llt-th">检测区域名称</div>
               <div class="llt-th">日期</div>
-              <div class="llt-th">累计检测人次</div>
-              <div class="llt-th">累计异常人数</div>
+              <!-- <div class="llt-th">累计检测人次</div>
+              <div class="llt-th">累计异常人数</div> -->
               <div class="llt-th" @click="getDetDetail">操作</div>
             </div>
           </div>
@@ -48,8 +48,8 @@
               <div class="llt-tr-container clearfix">
                 <div class="llt-td">{{item.pointName}}</div>
                 <div class="llt-td">{{item.date | dateFormat3}}</div>
-                <div class="llt-td">{{item.checkCount}}</div>
-                <div class="llt-td">{{item.abnormalCount}}</div>
+                <!-- <div class="llt-td">{{item.checkCount}}</div>
+                <div class="llt-td">{{item.abnormalCount}}</div> -->
                 <div class="llt-td">
                   <span class="llt-td-a" @click="getDetDetail(item)">详情</span>
                 </div>
@@ -82,9 +82,21 @@
     <!-- 检测区域详情 -->
     <div class="detdetail-slider" :class="sliderShow ? 'on' : ''">
       <div class="detdetail-slider-close" @click="closeSlider"></div>
-      <div class="detdetail-slider-title">
+      <!-- <div class="detdetail-slider-title">
         <div class="detdetail-slider-title-line"></div>
         <div class="detdetail-slider-title-h">检测区域详情</div>
+      </div> -->
+
+      <!-- 切换记录 -->
+      <div class="detdetail-nav clearfix">
+        <div class="detdetail-nav-span" :class="detDetailNav === 'abnormal' ? 'on' : ''" @click="changeDetDetailNav('abnormal')">
+          异常记录
+          <div class="detdetail-nav-span-line"></div>
+        </div>
+        <div class="detdetail-nav-span" :class="detDetailNav === 'normal' ? 'on' : ''" @click="changeDetDetailNav('normal')">
+          正常记录
+          <div class="detdetail-nav-span-line"></div>
+        </div>
       </div>
 
       <div class="detdetail-info">
@@ -92,7 +104,9 @@
           <div class="detdetail-info-title-icon"></div>
           <div class="detdetail-info-title-p">{{detDetailInfo.pointName}}</div>
         </div>
-        <div class="detdetail-info-data clearfix">
+
+
+        <div class="detdetail-info-data clearfix" v-if="detDetailNav !== 'normal'">
           <div class="detdetail-info-data-box" style="width: 25%">
             <div class="detdetail-info-data-box-h">告警总数</div>
             <div class="detdetail-info-data-box-p" style="color: #F56B25;">
@@ -126,7 +140,7 @@
 
       <div class="detdetail-block"></div>
 
-      <div class="detdetail-warn">
+      <div class="detdetail-warn" v-if="detDetailNav !== 'normal'">
         <div class="detdetail-warn-title">告警列表</div>
         <div class="detdetail-warn-container">
           <div class="x-no-data" style="margin-top: 100px;" v-if="detailWarnList.length === 0">今日暂无告警</div>
@@ -136,7 +150,7 @@
               <div class="det-history-tr clearfix">
                 <div class="det-history-th">姓名</div>
                 <div class="det-history-th">测温结果</div>
-                <div class="det-history-th">时间</div>
+                <div class="det-history-th">检测时间</div>
                 <div class="det-history-th">处理结果</div>
               </div>
             </div>
@@ -166,6 +180,54 @@
                 :page-size="pageSizeDetail"
                 layout="prev, pager, next, sizes, jumper"
                 :total="totalPageDetail">
+              </el-pagination>
+            </div>
+
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 正常记录测温列表 -->
+      <div class="detdetail-warn detdetail-warn-normal" v-if="detDetailNav == 'normal'">
+        <div class="detdetail-warn-title">测温列表</div>
+        <div class="detdetail-warn-container">
+          <div class="x-no-data" style="margin-top: 100px;" v-if="normalDetailList.length === 0">暂无测温记录</div>
+
+          <div class="det-history-table" v-else>
+            <div class="det-history-thead">
+              <div class="det-history-tr clearfix">
+                <div class="det-history-th">姓名</div>
+                <div class="det-history-th">测温结果</div>
+                <div class="det-history-th">检测时间</div>
+              </div>
+            </div>
+            <div class="det-history-tbody">
+              <!-- <div class="det-history-tr clearfix" @click="goStaffDetail()">
+                <div class="det-history-td">张晶晶</div>
+                <div class="det-history-td">36.6℃</div>
+                <div class="det-history-td">2020-02-20 15:20</div>
+              </div> -->
+
+              <div class="det-history-tr clearfix" v-for="(item, i) in normalDetailList" :key="i" @click="goStaffDetail(item.id)">
+                <div class="det-history-td">{{item.name ? item.name : '--'}}</div>
+                <div class="det-history-td">{{item.celsius ? item.celsius : '--'}}℃</div>
+                <div class="det-history-td">{{item.time | dateFormatNoSecond}}</div>
+              </div>
+        
+            </div>
+
+            <!-- 分页 -->
+            <div class="list-page">
+              <el-pagination
+                @size-change="pageSizeChangeNormal"
+                @current-change="currentPageChangeNormal"
+                :current-page="currentPageNormal"
+                :page-sizes="[10, 20, 30]"
+                :page-size="pageSizeNormal"
+                layout="prev, pager, next, sizes, jumper"
+                :total="totalPageNormal">
               </el-pagination>
             </div>
 
@@ -284,6 +346,7 @@ export default {
       pageSize: 10,
 
       // --检测区域详情侧滑--
+      detDetailNav: '', // 控制异常和正常记录展示
       currentDetailItem: '', // 当前查看的详情对象
       sliderShow: false,
       abnormalCount: 0,
@@ -308,6 +371,20 @@ export default {
       currentPageDetail: 1,
       totalPageDetail: 1,
       pageSizeDetail: 10,
+      // 正常记录列表
+      normalDetailListParams: {
+        "pointId": "",
+        "date": "",
+        "limit": 10,
+        "offset": 1
+      },
+      normalDetailList: [],
+      currentPageNormal: 1,
+      totalPageNormal: 1,
+      pageSizeNormal: 10,
+
+
+
 
 
       // --告警处理弹窗--
@@ -383,6 +460,8 @@ export default {
       })
     },
 
+    
+
     // 当前分页改变
     currentPageChange(current) {
       this.abnormalParams.offset = current
@@ -437,12 +516,28 @@ export default {
       })
     },
 
+    // 切换记录
+    changeDetDetailNav(navName) {
+      this.detDetailNav = navName
+
+    },
+
     // 获取检测区域详情
+    // 同时请求异常和正常记录
     getDetDetail(item) {
       this.currentDetailItem = item
       let info = item
       this.sliderShow = true
 
+      // 默认展示异常
+      this.detDetailNav = 'abnormal'
+
+      // 请求正常记录
+      this.normalDetailListParams.pointId = info.pointId
+      this.normalDetailListParams.date = xymFun.dateFormat3(info.date)
+      this.getNormalDetailList()
+
+      // 请求异常记录和详情
       this.abnormalDetailParams.pointId = info.pointId
 
       this.detDetailInfo.pointName = info.pointName
@@ -478,6 +573,31 @@ export default {
       this.abnormalDetailParams.limit = size
       this.getDetDetail(this.currentDetailItem)
     },
+
+    // 获取正常记录档案列表
+    getNormalDetailList() {
+      api.digital.getNormalDetailList(this.normalDetailListParams).then(res => {
+        console.log('正常档案', res.data)
+        this.normalDetailList = res.data.data.records
+        // 分页
+        this.currentPageNormal = res.data.data.current
+        this.totalPageNormal = res.data.data.total
+      })
+    },
+
+    // 当前分页改变
+    currentPageChangeNormal(current) {
+      this.normalDetailListParams.offset = current
+      this.getNormalDetailList()
+    },
+
+    // 分页大小改变
+    pageSizeChangeNormal(size) {
+      this.normalDetailListParams.limit = size
+      this.getNormalDetailList()
+    },
+
+    
 
     // 关闭详情侧滑
     closeSlider() {
@@ -539,6 +659,19 @@ export default {
 
     },
 
+
+    // 跳转到员工详情（新页面）
+    goStaffDetail(id) {
+      const routerObj = this.$router.resolve({
+        path: '/person-detail', 
+        query: {
+          userId: id
+        }
+      })
+      console.log('routerObj', routerObj)
+      window.open(routerObj.href, '_blank')
+    },
+
   },
   components: {
     'year-month-picker': YearMonthPicker
@@ -549,33 +682,33 @@ export default {
 
 <style lang="stylus" scoped>
 #DigitalAbnormal{
-  // .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
-  //   width 30%;
-  // }
-  // .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
-  //   width 27%;
-  // }
-  // .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
-  //   width 28%;
-  // }
+  .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
+    width 44%;
+  }
+  .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
+    width 46%;
+  }
+  .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
+    width 10%;
+  }
   // .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
   //   width 15%;
   // }
-  .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
-    width 24%;
-  }
-  .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
-    width 23%;
-  }
-  .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
-    width 23%;
-  }
-  .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
-    width 23%;
-  }
-  .llt-thead .llt-th:nth-child(5),.llt-tbody .llt-td:nth-child(5){
-    width 7%;
-  }
+  // .llt-thead .llt-th:nth-child(1),.llt-tbody .llt-td:nth-child(1){
+  //   width 24%;
+  // }
+  // .llt-thead .llt-th:nth-child(2),.llt-tbody .llt-td:nth-child(2){
+  //   width 23%;
+  // }
+  // .llt-thead .llt-th:nth-child(3),.llt-tbody .llt-td:nth-child(3){
+  //   width 23%;
+  // }
+  // .llt-thead .llt-th:nth-child(4),.llt-tbody .llt-td:nth-child(4){
+  //   width 23%;
+  // }
+  // .llt-thead .llt-th:nth-child(5),.llt-tbody .llt-td:nth-child(5){
+  //   width 7%;
+  // }
 
 
   .detdetail-warn{
@@ -603,6 +736,27 @@ export default {
       width 20%;
     }
 
+  }
+
+
+  .detdetail-warn-normal{
+    margin-top: 30px;
+    .detdetail-warn-container{
+      height: calc(100vh - 260px);
+    }
+
+    .det-history-thead .det-history-th:nth-child(1),.det-history-tbody .det-history-td:nth-child(1){
+      width 30%;
+    }
+    .det-history-thead .det-history-th:nth-child(2),.det-history-tbody .det-history-td:nth-child(2){
+      width 30%;
+    }
+    .det-history-thead .det-history-th:nth-child(3),.det-history-tbody .det-history-td:nth-child(3){
+      width 40%;
+    }
+    .det-history-tbody .det-history-tr .det-history-td:first-child{
+      color: #3572FF;
+    }
   }
 
 
