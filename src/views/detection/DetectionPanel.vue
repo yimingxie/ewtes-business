@@ -83,7 +83,7 @@
                 <div class="detreal-box-title-icon"></div>
                 <div class="detreal-box-title-p">{{item.pointName}}</div>
               </div>
-              <div class="detreal-box-data clearfix" :class="item.abnormalCount > 0 ? 'warn' : ''" @click="getDetDetail(item)">
+              <div class="detreal-box-data clearfix" :class="item.valid === 0 ? 'warn' : ''" @click="getDetDetail(item)">
                 <div class="detreal-box-data-people clearfix">
                   <div class="drbd-people-flow">
                     <div class="drbd-people-flow-h">异常人数</div>
