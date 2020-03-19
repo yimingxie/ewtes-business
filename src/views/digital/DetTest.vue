@@ -54,6 +54,18 @@ export default {
     }
   },
   mounted() {
+    var i=1;
+    function f(){
+      i++;
+      console.log("打印 :  "+i)
+      return k;
+      function k() {
+          return "I love you!"
+      }
+    }
+
+    console.log(f()())
+    
 
   },
   methods: {
